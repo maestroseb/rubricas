@@ -173,29 +173,35 @@
             line-height: 1.6;
         }
 
-        .clear-data-btn {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 28px;
-            height: 28px;
-            border: none;
-            border-radius: 6px;
-            background: var(--slate-200);
-            color: var(--slate-500);
-            cursor: pointer;
+        .paste-help-actions {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 16px;
+            margin-top: 4px;
+        }
+
+        .clear-data-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border: 1px solid var(--slate-200);
+            border-radius: 6px;
+            background: white;
+            color: var(--slate-500);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.78rem;
+            font-weight: 500;
             transition: all 0.15s;
-            z-index: 2;
         }
 
         .clear-data-btn svg { width: 14px; height: 14px; }
-        .clear-data-btn:hover { background: var(--rose-bg); color: var(--rose); border: 1px solid var(--rose-border); }
+        .clear-data-btn:hover { background: var(--rose-bg); color: var(--rose); border-color: var(--rose-border); }
 
         .icon-pick-wrap {
             position: relative;
+            z-index: 50;
         }
 
         .icon-pick-btn {
@@ -406,6 +412,36 @@
             color: var(--slate-600);
             cursor: text;
         }
+
+        .preview-table .col-weight {
+            width: 68px;
+            min-width: 68px;
+            text-align: center;
+            padding: 6px 4px;
+        }
+
+        .weight-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .weight-total-row td {
+            border-top: 2px solid var(--slate-200);
+            border-bottom: none !important;
+            background: var(--slate-50) !important;
+        }
+
+        .weight-total-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--emerald);
+        }
+
+        .weight-total-val.err { color: var(--rose); }
+        .weight-total-val.ok { color: var(--emerald); }
 
         .preview-table td[contenteditable]:focus {
             outline: 2px solid var(--brand);
@@ -1001,43 +1037,6 @@
         .card:nth-child(5) { animation-delay: 0.2s; }
 
         /* Weight config in setup */
-        .weights-config {
-            margin-top: 14px;
-            padding: 14px 16px;
-            background: var(--slate-50);
-            border: 1px solid var(--slate-200);
-            border-radius: var(--radius-sm);
-        }
-
-        .weights-config-title {
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--slate-400);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .weight-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px 0;
-            border-bottom: 1px solid var(--slate-200);
-        }
-
-        .weight-row:last-child { border-bottom: none; }
-
-        .weight-row-name {
-            flex: 1;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: var(--slate-700);
-        }
-
         .weight-row-input {
             width: 56px;
             padding: 4px 8px;
@@ -1067,22 +1066,6 @@
             font-weight: 500;
             min-width: 12px;
         }
-
-        .weight-total {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 6px;
-            padding-top: 8px;
-            margin-top: 4px;
-            border-top: 2px solid var(--slate-200);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem;
-            font-weight: 600;
-        }
-
-        .weight-total.ok { color: var(--emerald); }
-        .weight-total.err { color: var(--rose); }
 
         .example-link {
             display: inline-flex;
@@ -1144,8 +1127,8 @@
         </div>
         <div class="form-row single">
             <div class="form-group">
-                <label>Subtitulo <span class="hint">(opcional)</span></label>
-                <input class="form-input" type="text" id="cfgSubtitle" placeholder="Ej: 6.o Primaria - CEIP Carlos III">
+                <label>Subtitulo <span class="hint">(opcional &middot; puedes indicar los criterios de evaluacion asociados)</span></label>
+                <input class="form-input" type="text" id="cfgSubtitle" placeholder="Ej: CE 3.1, 4.2 &middot; 6.o Primaria - CEIP Carlos III">
             </div>
         </div>
     </div>
@@ -1178,14 +1161,15 @@
             La primera fila se usa como cabecera si contiene nombres de niveles. Los puntos se extraen del encabezado si aparecen entre parentesis, ej: <code>Excelente (4)</code>.<br><br>
             El numero de <strong>niveles</strong> y sus <strong>nombres</strong> se autodetectan de los datos pegados.
             <br><br>
-            <a class="example-link" onclick="loadExample()">&#x2728; Cargar ejemplo para probar</a>
+            <div class="paste-help-actions">
+                <a class="example-link" onclick="loadExample()">&#x2728; Cargar ejemplo para probar</a>
+                <button type="button" class="clear-data-btn" id="clearDataBtn" onclick="clearData()" style="display:none">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                    Limpiar datos
+                </button>
+            </div>
         </div>
-        <div style="position:relative">
-            <textarea class="form-input" id="cfgData" placeholder="Pega aqui los datos de tu tabla (Ctrl+V / Cmd+V)..."></textarea>
-            <button type="button" class="clear-data-btn" id="clearDataBtn" onclick="clearData()" title="Limpiar datos" style="display:none">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
-        </div>
+        <textarea class="form-input" id="cfgData" placeholder="Pega aqui los datos de tu tabla (Ctrl+V / Cmd+V)..."></textarea>
         <div id="previewArea"></div>
     </div>
 
@@ -1263,7 +1247,7 @@
             </div>
 
             <div class="breakdown">
-                <div class="breakdown-title">Desglose por criterio</div>
+                <div class="breakdown-title">Desglose por indicador</div>
                 <div id="breakdownList"></div>
             </div>
 
@@ -1377,7 +1361,7 @@ function parseLevelHeader(cell) {
 function buildLevels(headerRow, numLevels) {
     const levels = [];
     if (headerRow) {
-        const headers = headerRow.slice(1); // skip "Criterio" column
+        const headers = headerRow.slice(1); // skip indicator column
         for (let i = 0; i < headers.length; i++) {
             const parsed = parseLevelHeader(headers[i]);
             levels.push(parsed);
@@ -1532,7 +1516,7 @@ const generateBtn = document.getElementById('generateBtn');
 let parsedResult = null; // stores last parse result for generate()
 
 dataArea.addEventListener('input', () => {
-    document.getElementById('clearDataBtn').style.display = dataArea.value.trim() ? 'flex' : 'none';
+    document.getElementById('clearDataBtn').style.display = dataArea.value.trim() ? 'inline-flex' : 'none';
     parseAndPreview();
 });
 
@@ -1565,7 +1549,7 @@ function parseAndPreview() {
     const { hasHeader, headerRow, dataRows } = detectHeader(rows);
 
     if (dataRows.length === 0) {
-        previewArea.innerHTML = '<div class="preview-err">Solo se detecto la fila de cabecera. Anade filas de criterios.</div>';
+        previewArea.innerHTML = '<div class="preview-err">Solo se detecto la fila de cabecera. Anade filas de indicadores.</div>';
         generateBtn.disabled = true;
         parsedResult = null;
         return;
@@ -1574,25 +1558,33 @@ function parseAndPreview() {
     // Determine number of levels from the most common row length
     const colCounts = dataRows.map(r => r.length);
     const maxCols = Math.max(...colCounts);
-    const numLevels = maxCols - 1; // first col is criterion name
+    const numLevels = maxCols - 1; // first col is indicator name
 
     const levels = buildLevels(headerRow, numLevels);
 
     // Store for generate()
     parsedResult = { dataRows, levels, hasHeader, headerRow };
 
-    // Build preview table
+    // Build preview table with weights as first column
     const sepLabel = { tab: 'tabulaciones', csv: 'comas (CSV)', pipe: 'pipes (Markdown)' }[separator] || 'desconocido';
+
+    const equalWeight = Math.round(100 / dataRows.length);
+    const weights = dataRows.map((r, idx) => {
+        const w = idx === dataRows.length - 1 ? 100 - equalWeight * (dataRows.length - 1) : equalWeight;
+        return w;
+    });
 
     let html = `<div style="font-size:0.72rem;color:var(--slate-400);margin-top:10px;margin-bottom:6px">Separador detectado: <strong>${sepLabel}</strong> &middot; ${numLevels} nivel(es) &middot; ${hasHeader ? 'Cabecera detectada' : 'Sin cabecera'}</div>`;
     html += '<div class="preview-table-wrap"><table class="preview-table"><thead><tr>';
-    html += '<th>Criterio</th>';
+    html += '<th class="col-weight">Peso</th>';
+    html += '<th>Indicador</th>';
     levels.forEach(l => html += `<th>${esc(l.name)} <span style="opacity:0.5">(${l.pts})</span></th>`);
     html += '</tr></thead><tbody>';
 
     let valid = true;
     dataRows.forEach((r, ri) => {
         html += '<tr>';
+        html += `<td class="col-weight"><div class="weight-cell"><input type="number" class="weight-row-input" id="sw${ri}" value="${weights[ri]}" min="0" max="100" data-idx="${ri}"><span class="weight-row-pct">%</span></div></td>`;
         html += `<td contenteditable="true" data-row="${ri}" data-col="0"><strong>${esc(r[0] || '')}</strong></td>`;
         for (let i = 0; i < numLevels; i++) {
             html += `<td contenteditable="true" data-row="${ri}" data-col="${1 + i}">${esc(r[1 + i] || '')}</td>`;
@@ -1601,41 +1593,20 @@ function parseAndPreview() {
         if (r.length < numLevels + 1) valid = false;
     });
 
-    html += '</tbody></table></div>';
-
+    html += `<tr class="weight-total-row"><td class="col-weight"><div class="weight-cell" id="weightTotal"><span class="weight-total-val">${weights.reduce((s, w) => s + w, 0)}%</span></div></td><td colspan="${numLevels + 1}" style="font-size:0.72rem;color:var(--slate-400)">`;
     if (valid) {
-        html += `<div class="preview-ok">&#x2705; ${dataRows.length} criterio(s) y ${numLevels} nivel(es) detectados correctamente &middot; <span style="color:var(--slate-400);font-weight:400">Haz clic en cualquier celda para editarla</span></div>`;
+        html += `&#x2705; ${dataRows.length} indicador(es) y ${numLevels} nivel(es) detectados &middot; <span>Haz clic en cualquier celda para editarla</span>`;
     } else {
-        html += `<div class="preview-err">&#x26A0;&#xFE0F; Algunas filas tienen menos columnas de las esperadas</div>`;
+        html += `&#x26A0;&#xFE0F; Algunas filas tienen menos columnas de las esperadas`;
     }
-
-    // Weights config section
-    const equalWeight = Math.round(100 / dataRows.length);
-    const weights = dataRows.map((r, idx) => {
-        const w = idx === dataRows.length - 1 ? 100 - equalWeight * (dataRows.length - 1) : equalWeight;
-        return { name: r[0] || 'Criterio', weight: w };
-    });
-
-    html += `<div class="weights-config">
-        <div class="weights-config-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            Pesos por criterio
-        </div>`;
-    dataRows.forEach((r, i) => {
-        html += `<div class="weight-row">
-            <span class="weight-row-name">${esc(r[0] || 'Criterio')}</span>
-            <input type="number" class="weight-row-input" id="sw${i}" value="${weights[i].weight}" min="0" max="100" data-idx="${i}">
-            <span class="weight-row-pct">%</span>
-        </div>`;
-    });
-    html += `<div class="weight-total" id="weightTotal"><span>Total: ${weights.reduce((s, w) => s + w.weight, 0)}%</span></div>`;
-    html += '</div>';
+    html += '</td></tr>';
+    html += '</tbody></table></div>';
 
     previewArea.innerHTML = html;
     generateBtn.disabled = false;
 
     // Store initial weights in parsedResult
-    parsedResult.weights = weights.map(w => w.weight);
+    parsedResult.weights = [...weights];
 
     // Attach edit listeners to sync back to parsedResult
     previewArea.querySelectorAll('td[contenteditable]').forEach(td => {
@@ -1676,8 +1647,7 @@ function parseAndPreview() {
             // Update total display
             const total = parsedResult.weights.reduce((s, w) => s + w, 0);
             const totalEl = document.getElementById('weightTotal');
-            totalEl.innerHTML = `<span>Total: ${total}%</span>`;
-            totalEl.className = `weight-total ${total === 100 ? 'ok' : 'err'}`;
+            totalEl.innerHTML = `<span class="weight-total-val ${total === 100 ? 'ok' : 'err'}">${total}%</span>`;
         });
     });
 }
@@ -1716,13 +1686,14 @@ function loadExample() {
         </div>`;
 
     // CSV example (like Gemini output)
-    dataArea.value = `Criterio,Excelente (4),Bueno (3),Suficiente (2),Insuficiente (1)
+    dataArea.value = `Indicador,Excelente (4),Bueno (3),Suficiente (2),Insuficiente (1)
 Contenido y Precision,"El tema se desarrolla con profundidad, ideas originales y datos precisos.","El tema se cubre bien, aunque falta algo de profundidad o detalle.","Informacion basica presente, pero con algunas omisiones o errores.","El contenido es escaso, irrelevante o contiene errores graves."
 Estructura y Organizacion,"Introduccion, desarrollo y conclusion claramente definidos y conectados.","Sigue la estructura basica, aunque las transiciones son mejorables.","La estructura es confusa en algunos puntos; falta fluidez.","Carece de orden logico; es dificil seguir el hilo del trabajo."
 Redaccion y Ortografia,Texto impecable. Vocabulario variado y sin errores gramaticales.,Muy pocos errores (1-2) que no afectan la comprension.,Varios errores gramaticales o de ortografia que distraen al leer.,Errores constantes que dificultan seriamente la lectura.
 Citas y Fuentes,Cita todas las fuentes correctamente siguiendo el formato pedido (ej. APA).,"La mayoria de las fuentes estan citadas, con errores menores de formato.",Incluye fuentes pero no sigue un formato o faltan citas clave.,No incluye bibliografia ni cita las fuentes utilizadas.
 Presentacion,"Cumple con todos los requisitos de formato (fuente, margenes, limpieza).",Cumple casi todos los requisitos de formato.,Formato descuidado o incompleto.,No sigue ninguna instruccion de formato o entrega desprolija.`;
 
+    document.getElementById('clearDataBtn').style.display = 'inline-flex';
     parseAndPreview();
 }
 
@@ -1748,7 +1719,7 @@ function generate() {
     rubricLevels = levels;
 
     rubricData = dataRows.map((r, idx) => {
-        const obj = { name: r[0] || 'Criterio', weight: weights ? weights[idx] : Math.round(100 / dataRows.length), descriptions: [] };
+        const obj = { name: r[0] || 'Indicador', weight: weights ? weights[idx] : Math.round(100 / dataRows.length), descriptions: [] };
         for (let i = 0; i < rubricLevels.length; i++) obj.descriptions.push(r[1 + i] || '');
         return obj;
     });
@@ -1775,7 +1746,7 @@ function generate() {
 
     // Thead
     const thead = document.getElementById('rubThead');
-    let thHtml = '<tr><th>Criterio</th>';
+    let thHtml = '<tr><th>Indicador</th>';
     rubricLevels.forEach(l => {
         thHtml += `<th>${esc(l.name)}<span class="th-pts">${l.pts} pt${l.pts > 1 ? 's' : ''}</span></th>`;
     });

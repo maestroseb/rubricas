@@ -930,6 +930,68 @@
         }
 
         .example-link:hover { text-decoration: underline; }
+
+        /* Weight toggle & inputs */
+        .weight-input {
+            width: 36px;
+            border: none;
+            background: transparent;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            font-weight: 500;
+            color: var(--brand);
+            text-align: right;
+            outline: none;
+            padding: 0;
+            -moz-appearance: textfield;
+        }
+
+        .weight-input::-webkit-outer-spin-button,
+        .weight-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+        .weight-input:focus { text-decoration: underline; }
+
+        .toggle-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            color: var(--slate-500);
+            font-weight: 500;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 36px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .toggle-switch input { display: none; }
+
+        .toggle-track {
+            position: absolute;
+            inset: 0;
+            background: var(--slate-200);
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+
+        .toggle-switch input:checked + .toggle-track { background: var(--brand); }
+
+        .toggle-knob {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+
+        .toggle-switch input:checked ~ .toggle-knob { transform: translateX(16px); }
     </style>
 </head>
 <body>
@@ -1030,10 +1092,10 @@
             Datos de la rubrica
         </div>
         <div class="paste-help">
-            <strong>Como funciona:</strong> Copia las celdas desde Excel, Google Sheets o cualquier tabla y pegalas aqui. Cada fila es un criterio.<br><br>
+            <strong>Como funciona:</strong> Copia las celdas desde Excel, Google Sheets o desde la respuesta de una IA y pegalas aqui. Cada fila es un criterio.<br><br>
             <strong>Formato esperado (separado por tabulaciones):</strong><br>
-            <code>Criterio</code> <code>Peso</code> <code>Nivel 4</code> <code>Nivel 3</code> <code>Nivel 2</code> <code>Nivel 1</code><br><br>
-            La columna de <strong>Peso</strong> es opcional. Si la incluyes, usa porcentajes (ej: <code>30%</code>) o numeros.
+            <code>Criterio</code> <code>Nivel 4</code> <code>Nivel 3</code> <code>Nivel 2</code> <code>Nivel 1</code><br><br>
+            Los <strong>pesos</strong> se asignan automaticamente (iguales). Podras personalizarlos despues con un toggle en la rubrica generada.
             <br><br>
             <a class="example-link" onclick="loadExample()">&#x2728; Cargar ejemplo para probar</a>
         </div>
@@ -1079,6 +1141,17 @@
             </div>
 
             <div class="fields-row" id="rubFields"></div>
+
+            <div style="margin-bottom:14px;display:flex;align-items:center;justify-content:flex-end">
+                <label class="toggle-wrap">
+                    Personalizar pesos
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="weightToggle" onchange="toggleWeights(this.checked)">
+                        <span class="toggle-track"></span>
+                        <span class="toggle-knob"></span>
+                    </div>
+                </label>
+            </div>
 
             <div class="rubric-wrapper">
                 <table class="rubric-table">
@@ -1148,10 +1221,8 @@ function parseAndPreview() {
         return;
     }
 
-    // Detect if there's a weight column: second column looks like a percentage or number
-    const hasWeight = rows.every(r => r.length >= 2 && /^\d+%?$/.test(r[1]));
     const levelCount = getLevelCount();
-    const expectedCols = hasWeight ? 2 + levelCount : 1 + levelCount;
+    const expectedCols = 1 + levelCount;
 
     // Check if first row is a header row
     let dataRows = rows;
@@ -1171,24 +1242,16 @@ function parseAndPreview() {
     const levelNames = getLevelNames();
     let html = '<div class="preview-table-wrap"><table class="preview-table"><thead><tr>';
     html += '<th>Criterio</th>';
-    if (hasWeight) html += '<th>Peso</th>';
     levelNames.forEach(n => html += `<th>${esc(n)}</th>`);
     html += '</tr></thead><tbody>';
 
     let valid = true;
     dataRows.forEach(r => {
-        const cols = hasWeight ? r : [r[0], ...r.slice(1)];
         html += '<tr>';
-        if (hasWeight) {
-            html += `<td>${esc(r[0] || '')}</td><td>${esc(r[1] || '')}</td>`;
-            for (let i = 0; i < levelCount; i++) html += `<td>${esc(r[2 + i] || '')}</td>`;
-        } else {
-            html += `<td>${esc(r[0] || '')}</td>`;
-            for (let i = 0; i < levelCount; i++) html += `<td>${esc(r[1 + i] || '')}</td>`;
-        }
+        html += `<td>${esc(r[0] || '')}</td>`;
+        for (let i = 0; i < levelCount; i++) html += `<td>${esc(r[1 + i] || '')}</td>`;
         html += '</tr>';
-        const actualCols = r.length;
-        if (actualCols < expectedCols) valid = false;
+        if (r.length < expectedCols) valid = false;
     });
 
     html += '</tbody></table></div>';
@@ -1196,7 +1259,7 @@ function parseAndPreview() {
     if (valid) {
         html += `<div class="preview-ok">&#x2705; ${dataRows.length} criterio(s) detectados correctamente</div>`;
     } else {
-        html += `<div class="preview-err">&#x26A0;&#xFE0F; Algunas filas tienen menos columnas de las esperadas (se esperan ${expectedCols}: criterio${hasWeight ? ' + peso' : ''} + ${levelCount} niveles)</div>`;
+        html += `<div class="preview-err">&#x26A0;&#xFE0F; Algunas filas tienen menos columnas de las esperadas (se esperan ${expectedCols}: criterio + ${levelCount} niveles)</div>`;
     }
 
     previewArea.innerHTML = html;
@@ -1253,12 +1316,12 @@ function loadExample() {
             <button class="remove-btn" onclick="removeField(this)" title="Eliminar">&times;</button>
         </div>`;
 
-    dataArea.value = `Informacion del instrumento\t30%\tIncluye familia, descripcion, materiales, forma de tocar, curiosidades y ejemplos musicales completos\tIncluye la mayoria de la informacion solicitada de forma correcta\tIncluye informacion basica pero incompleta o con algunos errores\tInformacion muy escasa o incorrecta
-Contenido multimedia\t20%\tIncluye imagenes, videos o audios de calidad y bien seleccionados\tIncluye algunos elementos multimedia adecuados\tPocos elementos multimedia o poco relevantes\tNo incluye elementos multimedia o son inadecuados
-Presentacion y diseno\t20%\tDiseno atractivo, organizado, facil de navegar, con buen uso de colores y tipografia\tDiseno ordenado y agradable, aunque mejorable\tDiseno basico pero funcional\tDiseno desordenado o dificil de entender
-Creatividad y originalidad\t15%\tTrabajo muy creativo, con ideas originales y toque personal\tMuestra creatividad en algunos aspectos\tTrabajo correcto pero poco original\tFalta creatividad, muy simple
-Ortografia y expresion\t10%\tSin errores ortograficos, redaccion clara y correcta\tAlgun error ortografico menor, buena expresion\tVarios errores ortograficos, expresion mejorable\tMuchos errores, dificulta la comprension
-Fuentes y bibliografia\t5%\tCita correctamente todas las fuentes utilizadas\tCita la mayoria de fuentes\tCita alguna fuente\tNo cita fuentes`;
+    dataArea.value = `Informacion del instrumento\tIncluye familia, descripcion, materiales, forma de tocar, curiosidades y ejemplos musicales completos\tIncluye la mayoria de la informacion solicitada de forma correcta\tIncluye informacion basica pero incompleta o con algunos errores\tInformacion muy escasa o incorrecta
+Contenido multimedia\tIncluye imagenes, videos o audios de calidad y bien seleccionados\tIncluye algunos elementos multimedia adecuados\tPocos elementos multimedia o poco relevantes\tNo incluye elementos multimedia o son inadecuados
+Presentacion y diseno\tDiseno atractivo, organizado, facil de navegar, con buen uso de colores y tipografia\tDiseno ordenado y agradable, aunque mejorable\tDiseno basico pero funcional\tDiseno desordenado o dificil de entender
+Creatividad y originalidad\tTrabajo muy creativo, con ideas originales y toque personal\tMuestra creatividad en algunos aspectos\tTrabajo correcto pero poco original\tFalta creatividad, muy simple
+Ortografia y expresion\tSin errores ortograficos, redaccion clara y correcta\tAlgun error ortografico menor, buena expresion\tVarios errores ortograficos, expresion mejorable\tMuchos errores, dificulta la comprension
+Fuentes y bibliografia\tCita correctamente todas las fuentes utilizadas\tCita la mayoria de fuentes\tCita alguna fuente\tNo cita fuentes`;
 
     parseAndPreview();
 }
@@ -1286,7 +1349,6 @@ function generate() {
     // Parse data
     const raw = dataArea.value.trim();
     const rows = raw.split('\n').map(r => r.split('\t').map(c => c.trim())).filter(r => r.some(c => c));
-    const hasWeight = rows.every(r => r.length >= 2 && /^\d+%?$/.test(r[1]));
 
     let dataRows = rows;
     const firstRow = rows[0];
@@ -1294,14 +1356,12 @@ function generate() {
         dataRows = rows.slice(1);
     }
 
-    rubricData = dataRows.map(r => {
-        const obj = { name: r[0] || 'Criterio', weight: '', descriptions: [] };
-        if (hasWeight) {
-            obj.weight = r[1] || '';
-            for (let i = 0; i < rubricLevels.length; i++) obj.descriptions.push(r[2 + i] || '');
-        } else {
-            for (let i = 0; i < rubricLevels.length; i++) obj.descriptions.push(r[1 + i] || '');
-        }
+    const equalWeight = Math.round(100 / dataRows.length);
+    rubricData = dataRows.map((r, idx) => {
+        const obj = { name: r[0] || 'Criterio', weight: equalWeight, descriptions: [] };
+        // Last item gets remainder to sum exactly 100
+        if (idx === dataRows.length - 1) obj.weight = 100 - equalWeight * (dataRows.length - 1);
+        for (let i = 0; i < rubricLevels.length; i++) obj.descriptions.push(r[1 + i] || '');
         return obj;
     });
 
@@ -1341,7 +1401,9 @@ function generate() {
         const tr = document.createElement('tr');
         let critHtml = `<td class="criterion-cell">
             <div class="crit-name">${esc(c.name)}</div>
-            ${c.weight ? `<span class="crit-weight">${esc(c.weight)}</span>` : ''}
+            <span class="crit-weight weight-badge" id="wb${i}" style="display:none">
+                <input type="number" class="weight-input" id="wi${i}" value="${c.weight}" min="1" max="100" onchange="updateWeight(${i}, this.value)">%
+            </span>
         </td>`;
         tr.innerHTML = critHtml;
 
@@ -1386,6 +1448,9 @@ function generate() {
 
     // Scale legend
     buildScaleLegend();
+
+    // Reset weight toggle
+    document.getElementById('weightToggle').checked = false;
 
     // Show rubric screen
     document.getElementById('setupScreen').style.display = 'none';
@@ -1513,6 +1578,16 @@ function resetRubric() {
     document.getElementById('gradeLabel').textContent = 'Sin evaluar';
     document.getElementById('statusDot').classList.remove('active');
     document.querySelectorAll('.scale-row').forEach(r => r.classList.remove('active'));
+}
+
+function toggleWeights(show) {
+    rubricData.forEach((_, i) => {
+        document.getElementById(`wb${i}`).style.display = show ? 'inline-flex' : 'none';
+    });
+}
+
+function updateWeight(idx, val) {
+    rubricData[idx].weight = parseInt(val) || 0;
 }
 
 function backToSetup() {

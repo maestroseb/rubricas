@@ -942,6 +942,90 @@
         .card:nth-child(4) { animation-delay: 0.15s; }
         .card:nth-child(5) { animation-delay: 0.2s; }
 
+        /* Weight config in setup */
+        .weights-config {
+            margin-top: 14px;
+            padding: 14px 16px;
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-sm);
+        }
+
+        .weights-config-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--slate-400);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .weight-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        .weight-row:last-child { border-bottom: none; }
+
+        .weight-row-name {
+            flex: 1;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--slate-700);
+        }
+
+        .weight-row-input {
+            width: 56px;
+            padding: 4px 8px;
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-xs);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            text-align: center;
+            color: var(--brand);
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            -moz-appearance: textfield;
+        }
+
+        .weight-row-input::-webkit-outer-spin-button,
+        .weight-row-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+        .weight-row-input:focus {
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+        }
+
+        .weight-row-pct {
+            font-size: 0.72rem;
+            color: var(--slate-400);
+            font-weight: 500;
+            min-width: 12px;
+        }
+
+        .weight-total {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 6px;
+            padding-top: 8px;
+            margin-top: 4px;
+            border-top: 2px solid var(--slate-200);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .weight-total.ok { color: var(--emerald); }
+        .weight-total.err { color: var(--rose); }
+
         .example-link {
             display: inline-flex;
             align-items: center;
@@ -956,67 +1040,7 @@
 
         .example-link:hover { text-decoration: underline; }
 
-        /* Weight toggle & inputs */
-        .weight-input {
-            width: 36px;
-            border: none;
-            background: transparent;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.62rem;
-            font-weight: 500;
-            color: var(--brand);
-            text-align: right;
-            outline: none;
-            padding: 0;
-            -moz-appearance: textfield;
-        }
-
-        .weight-input::-webkit-outer-spin-button,
-        .weight-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-
-        .weight-input:focus { text-decoration: underline; }
-
-        .toggle-wrap {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.78rem;
-            color: var(--slate-500);
-            font-weight: 500;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 36px;
-            height: 20px;
-            cursor: pointer;
-        }
-
-        .toggle-switch input { display: none; }
-
-        .toggle-track {
-            position: absolute;
-            inset: 0;
-            background: var(--slate-200);
-            border-radius: 10px;
-            transition: background 0.2s;
-        }
-
-        .toggle-switch input:checked + .toggle-track { background: var(--brand); }
-
-        .toggle-knob {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 16px;
-            height: 16px;
-            background: white;
-            border-radius: 50%;
-            transition: transform 0.2s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-        }
-
-        .toggle-switch input:checked ~ .toggle-knob { transform: translateX(16px); }
+        /* (weights are now configured in setup screen) */
     </style>
 </head>
 <body>
@@ -1133,17 +1157,6 @@
             </div>
 
             <div class="fields-row" id="rubFields"></div>
-
-            <div style="margin-bottom:14px;display:flex;align-items:center;justify-content:flex-end">
-                <label class="toggle-wrap">
-                    Personalizar pesos
-                    <div class="toggle-switch">
-                        <input type="checkbox" id="weightToggle" onchange="toggleWeights(this.checked)">
-                        <span class="toggle-track"></span>
-                        <span class="toggle-knob"></span>
-                    </div>
-                </label>
-            </div>
 
             <div class="rubric-wrapper">
                 <table class="rubric-table">
@@ -1450,8 +1463,33 @@ function parseAndPreview() {
         html += `<div class="preview-err">&#x26A0;&#xFE0F; Algunas filas tienen menos columnas de las esperadas</div>`;
     }
 
+    // Weights config section
+    const equalWeight = Math.round(100 / dataRows.length);
+    const weights = dataRows.map((r, idx) => {
+        const w = idx === dataRows.length - 1 ? 100 - equalWeight * (dataRows.length - 1) : equalWeight;
+        return { name: r[0] || 'Criterio', weight: w };
+    });
+
+    html += `<div class="weights-config">
+        <div class="weights-config-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Pesos por criterio
+        </div>`;
+    dataRows.forEach((r, i) => {
+        html += `<div class="weight-row">
+            <span class="weight-row-name">${esc(r[0] || 'Criterio')}</span>
+            <input type="number" class="weight-row-input" id="sw${i}" value="${weights[i].weight}" min="0" max="100" data-idx="${i}">
+            <span class="weight-row-pct">%</span>
+        </div>`;
+    });
+    html += `<div class="weight-total" id="weightTotal"><span>Total: ${weights.reduce((s, w) => s + w.weight, 0)}%</span></div>`;
+    html += '</div>';
+
     previewArea.innerHTML = html;
     generateBtn.disabled = false;
+
+    // Store initial weights in parsedResult
+    parsedResult.weights = weights.map(w => w.weight);
 
     // Attach edit listeners to sync back to parsedResult
     previewArea.querySelectorAll('td[contenteditable]').forEach(td => {
@@ -1461,6 +1499,39 @@ function parseAndPreview() {
             if (parsedResult && parsedResult.dataRows[row]) {
                 parsedResult.dataRows[row][col] = td.textContent.trim();
             }
+        });
+    });
+
+    // Weight input listeners with smart rebalancing
+    const setupManual = new Set();
+    previewArea.querySelectorAll('.weight-row-input').forEach(input => {
+        input.addEventListener('change', () => {
+            const idx = parseInt(input.dataset.idx);
+            const newVal = Math.max(0, Math.min(100, parseInt(input.value) || 0));
+            input.value = newVal;
+            parsedResult.weights[idx] = newVal;
+            setupManual.add(idx);
+
+            // Rebalance non-manual weights
+            const totalManual = Array.from(setupManual).reduce((sum, i) => sum + parsedResult.weights[i], 0);
+            const remaining = 100 - totalManual;
+            const autoIndices = parsedResult.weights.map((_, i) => i).filter(i => !setupManual.has(i));
+
+            if (autoIndices.length > 0) {
+                const each = Math.floor(remaining / autoIndices.length);
+                const leftover = remaining - each * autoIndices.length;
+                autoIndices.forEach((i, pos) => {
+                    const w = Math.max(0, each + (pos === autoIndices.length - 1 ? leftover : 0));
+                    parsedResult.weights[i] = w;
+                    document.getElementById(`sw${i}`).value = w;
+                });
+            }
+
+            // Update total display
+            const total = parsedResult.weights.reduce((s, w) => s + w, 0);
+            const totalEl = document.getElementById('weightTotal');
+            totalEl.innerHTML = `<span>Total: ${total}%</span>`;
+            totalEl.className = `weight-total ${total === 100 ? 'ok' : 'err'}`;
         });
     });
 }
@@ -1527,19 +1598,16 @@ function generate() {
     const emoji = getSelectedEmoji() || '\uD83D\uDCCB';
     const fieldNames = Array.from(document.querySelectorAll('.field-entry input')).map(i => i.value.trim()).filter(Boolean);
 
-    const { dataRows, levels } = parsedResult;
+    const { dataRows, levels, weights } = parsedResult;
     rubricLevels = levels;
 
-    const equalWeight = Math.round(100 / dataRows.length);
     rubricData = dataRows.map((r, idx) => {
-        const obj = { name: r[0] || 'Criterio', weight: equalWeight, descriptions: [] };
-        if (idx === dataRows.length - 1) obj.weight = 100 - equalWeight * (dataRows.length - 1);
+        const obj = { name: r[0] || 'Criterio', weight: weights ? weights[idx] : Math.round(100 / dataRows.length), descriptions: [] };
         for (let i = 0; i < rubricLevels.length; i++) obj.descriptions.push(r[1 + i] || '');
         return obj;
     });
 
     rubricScores = {};
-    manualWeights = new Set();
     const maxPerRow = Math.max(...rubricLevels.map(l => l.pts));
     rubricMaxPts = maxPerRow * rubricData.length;
 
@@ -1575,9 +1643,7 @@ function generate() {
         const tr = document.createElement('tr');
         let critHtml = `<td class="criterion-cell">
             <div class="crit-name">${esc(c.name)}</div>
-            <span class="crit-weight weight-badge" id="wb${i}" style="display:none">
-                <input type="number" class="weight-input" id="wi${i}" value="${c.weight}" min="1" max="100" onchange="updateWeight(${i}, this.value)">%
-            </span>
+            <span class="crit-weight weight-badge">${c.weight}%</span>
         </td>`;
         tr.innerHTML = critHtml;
 
@@ -1622,9 +1688,6 @@ function generate() {
 
     // Scale legend
     buildScaleLegend();
-
-    // Reset weight toggle
-    document.getElementById('weightToggle').checked = false;
 
     // Show rubric screen
     document.getElementById('setupScreen').style.display = 'none';
@@ -1766,37 +1829,6 @@ function resetRubric() {
     document.getElementById('gradeLabel').textContent = 'Sin evaluar';
     document.getElementById('statusDot').classList.remove('active');
     document.querySelectorAll('.scale-row').forEach(r => r.classList.remove('active'));
-}
-
-function toggleWeights(show) {
-    rubricData.forEach((_, i) => {
-        document.getElementById(`wb${i}`).style.display = show ? 'inline-flex' : 'none';
-    });
-}
-
-// Track which weights have been manually edited
-let manualWeights = new Set();
-
-function updateWeight(idx, val) {
-    const newVal = Math.max(0, Math.min(100, parseInt(val) || 0));
-    rubricData[idx].weight = newVal;
-    manualWeights.add(idx);
-    document.getElementById(`wi${idx}`).value = newVal;
-
-    // Rebalance: distribute remaining weight among non-manual rows
-    const totalManual = Array.from(manualWeights).reduce((sum, i) => sum + rubricData[i].weight, 0);
-    const remaining = 100 - totalManual;
-    const autoIndices = rubricData.map((_, i) => i).filter(i => !manualWeights.has(i));
-
-    if (autoIndices.length > 0) {
-        const each = Math.floor(remaining / autoIndices.length);
-        let leftover = remaining - each * autoIndices.length;
-        autoIndices.forEach((i, pos) => {
-            const w = each + (pos === autoIndices.length - 1 ? leftover : 0);
-            rubricData[i].weight = Math.max(0, w);
-            document.getElementById(`wi${i}`).value = rubricData[i].weight;
-        });
-    }
 }
 
 function backToSetup() {

@@ -2008,13 +2008,22 @@ function pickRubric(cell, idx, pts, selClass) {
 function recalcRubric() {
     const total = Object.values(rubricScores).reduce((a, b) => a + b, 0);
     const filled = Object.keys(rubricScores).length;
+    const maxPerRow = Math.max(...rubricLevels.map(l => l.pts));
+    const totalWeight = rubricData.reduce((s, c) => s + c.weight, 0);
+
+    // Weighted score: each indicator contributes (pts/max) * (weight/totalWeight)
+    let weightedPct = 0;
+    for (const [idx, pts] of Object.entries(rubricScores)) {
+        const w = rubricData[idx].weight;
+        weightedPct += (pts / maxPerRow) * (w / totalWeight);
+    }
+    const nota10 = weightedPct * 10;
 
     document.getElementById('totalNum').textContent = total;
 
     // Nota sobre 10
     const nota10El = document.getElementById('nota10Val');
     if (total > 0) {
-        const nota10 = (total / rubricMaxPts) * 10;
         nota10El.textContent = nota10.toFixed(2);
         nota10El.style.color = 'white';
     } else {
@@ -2022,11 +2031,11 @@ function recalcRubric() {
         nota10El.style.color = '';
     }
 
-    const offset = CIRC * (1 - total / rubricMaxPts);
+    const offset = CIRC * (1 - weightedPct);
     const ring = document.getElementById('ringVal');
     ring.style.strokeDashoffset = offset;
 
-    const pct = total / rubricMaxPts;
+    const pct = weightedPct;
     let grade, gClass, ringColor;
     if (pct >= 0.9) { grade = 'Sobresaliente (9-10)'; gClass = 'g-sob'; ringColor = '#34d399'; }
     else if (pct >= 0.7) { grade = 'Notable (7-8)'; gClass = 'g-not'; ringColor = '#60a5fa'; }
@@ -2074,7 +2083,6 @@ function buildScaleLegend() {
 }
 
 function resetRubric() {
-    if (!confirm('\u00bfReiniciar toda la r\u00fabrica?')) return;
     rubricScores = {};
     document.querySelectorAll('.lvl').forEach(c => {
         c.classList.remove('sel-top', 'sel-high', 'sel-mid', 'sel-low');
@@ -2173,9 +2181,15 @@ function copyResults() {
         text += '\n';
     });
 
-    // Total
+    // Total (weighted)
     const total = Object.values(rubricScores).reduce((a, b) => a + b, 0);
-    const nota10 = rubricMaxPts > 0 ? ((total / rubricMaxPts) * 10).toFixed(2) : '0';
+    const totalWeight = rubricData.reduce((s, c) => s + c.weight, 0);
+    let weightedPct = 0;
+    for (const [idx, pts] of Object.entries(rubricScores)) {
+        const w = rubricData[idx].weight;
+        weightedPct += (pts / maxPerRow) * (w / totalWeight);
+    }
+    const nota10 = (weightedPct * 10).toFixed(2);
     text += `\nTotal: ${total}/${rubricMaxPts} pts | Nota: ${nota10}/10`;
     text += ` | Evaluados: ${filled}/${rubricData.length}\n`;
 

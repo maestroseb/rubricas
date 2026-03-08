@@ -1801,6 +1801,26 @@ function parseAndPreview() {
 
     const levels = buildLevels(headerRow, numLevels);
 
+    // Sort levels descending by points (highest first, left to right)
+    // and reorder data row descriptions to match
+    const sortOrder = levels.map((l, i) => ({ orig: i, pts: l.pts }))
+        .sort((a, b) => b.pts - a.pts)
+        .map(o => o.orig);
+    const needsReorder = sortOrder.some((o, i) => o !== i);
+    if (needsReorder) {
+        const sortedLevels = sortOrder.map(i => levels[i]);
+        levels.length = 0;
+        sortedLevels.forEach(l => levels.push(l));
+        dataRows.forEach(row => {
+            const descs = sortOrder.map(i => row[1 + i] || '');
+            for (let i = 0; i < descs.length; i++) row[1 + i] = descs[i];
+        });
+        if (headerRow) {
+            const hdrs = sortOrder.map(i => headerRow[1 + i] || '');
+            for (let i = 0; i < hdrs.length; i++) headerRow[1 + i] = hdrs[i];
+        }
+    }
+
     // Store for generate()
     parsedResult = { dataRows, levels, hasHeader, headerRow };
 

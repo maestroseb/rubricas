@@ -1449,6 +1449,59 @@ function parsePipeLine(line) {
     });
 }
 
+// Try parsing concatenated table text (cells joined without separators)
+// This handles text copied from rendered HTML tables where cell boundaries are lost.
+// Key insight: in concatenated text, there's no space between a cell-ending char (.!?)
+// and the next cell's starting capital letter — something that never occurs in normal text.
+function tryParseConcatenated(lines) {
+    // Split point: end-of-cell char immediately before a capital letter, no space
+    const cellBound = /(?<=[a-záéíóúüñ.!?)\]"…0-9])(?=[A-ZÁÉÍÓÚÜÑ¿¡])/;
+    // Numbered-level header pattern: "CRITERIO1 – INSUFICIENTE2 – EN PROCESO..."
+    const numberedLevelRe = /\d+\s*[–—-]\s*[A-Za-záéíóúüñÁÉÍÓÚÜÑ]/;
+
+    let workLines = lines;
+
+    // If single very long line, try to split into rows at numbered criterion boundaries
+    if (lines.length === 1 && lines[0].length > 300) {
+        const parts = lines[0].split(/(?<=[.!?])(?=\d+[\.)]\s)/);
+        if (parts.length >= 3) {
+            workLines = parts.map(s => s.trim()).filter(s => s);
+        }
+    }
+
+    if (workLines.length < 2) return null;
+
+    // Split header line
+    let headerParts = workLines[0].split(cellBound).map(s => s.trim()).filter(s => s);
+
+    // If header is all-caps with numbered levels, try that pattern instead
+    if (headerParts.length < 3 && numberedLevelRe.test(workLines[0])) {
+        headerParts = workLines[0].split(/(?=\d+\s*[–—-]\s*[A-Za-záéíóúüñÁÉÍÓÚÜÑ])/).map(s => s.trim()).filter(s => s);
+    }
+
+    if (headerParts.length < 3) return null;
+
+    const numCols = headerParts.length;
+    const rows = [headerParts];
+
+    for (let i = 1; i < workLines.length; i++) {
+        const parts = workLines[i].split(cellBound).map(s => s.trim()).filter(s => s);
+        if (parts.length === numCols) {
+            rows.push(parts);
+        } else if (parts.length > numCols) {
+            // More splits than expected: merge excess into last column
+            const row = parts.slice(0, numCols - 1);
+            row.push(parts.slice(numCols - 1).join(''));
+            rows.push(row);
+        } else {
+            // Fewer splits than expected: heuristic doesn't apply
+            return null;
+        }
+    }
+
+    return rows.length >= 2 ? { rows, separator: 'concatenated' } : null;
+}
+
 // Detect separator and parse all rows
 function smartParse(raw) {
     // Strip markdown bold/italic markers: **text** → text, *text* → text, __text__ → text, _text_ → text
@@ -1487,6 +1540,10 @@ function smartParse(raw) {
         };
     }
 
+    // Try concatenated text (cells joined without separators, e.g. copied from rendered HTML tables)
+    const concatResult = tryParseConcatenated(lines);
+    if (concatResult) return concatResult;
+
     // Fallback: just return single-column
     return {
         rows: lines.map(l => [l]),
@@ -1501,7 +1558,7 @@ function detectHeader(rows) {
     // Header heuristic: first cell contains "criterio/criterion/categoria" or other cells contain level-like words or "(N)" patterns
     const firstCellIsHeader = /^(criterio|criterion|categor|aspecto|indicador|dimensi)/i.test(first[0]);
     const cellsHavePts = first.slice(1).some(c => /\(\d+\)/.test(c));
-    const cellsHaveLevelWords = first.slice(1).some(c => /^(excelente|sobresaliente|notable|bien|bueno|suficiente|insuficiente|regular|bajo|alto|medio|avanzado|competente|basico|inadequado|excellent|good|fair|poor|needs|beginning|developing|proficient|exemplary)/i.test(c.replace(/\s*\(\d+\)\s*$/, '')));
+    const cellsHaveLevelWords = first.slice(1).some(c => /^(\d+\s*[–—-]\s*)?(excelente|sobresaliente|notable|bien|bueno|suficiente|insuficiente|regular|bajo|alto|medio|avanzado|competente|basico|básico|inadequado|iniciado|en proceso|satisfactorio|conseguido|logrado|excellent|good|fair|poor|needs|beginning|developing|proficient|exemplary)/i.test(c.replace(/\s*\(\d+\)\s*$/, '')));
 
     const hasHeader = firstCellIsHeader || cellsHavePts || cellsHaveLevelWords;
     return {
@@ -1722,7 +1779,7 @@ function parseAndPreview() {
 
     const { rows, separator } = smartParse(raw);
     if (rows.length === 0 || rows[0].length < 2) {
-        previewArea.innerHTML = '<div class="preview-err">No se detectaron datos validos. Asegurate de que el texto tiene columnas separadas por tabulaciones, comas o pipes (|).</div>';
+        previewArea.innerHTML = '<div class="preview-err">No se detectaron datos v\u00e1lidos. Aseg\u00farate de que el texto tiene columnas separadas por tabulaciones, comas, pipes (|) o copiadas desde una tabla.</div>';
         generateBtn.disabled = true;
         parsedResult = null;
         return;
@@ -1748,7 +1805,7 @@ function parseAndPreview() {
     parsedResult = { dataRows, levels, hasHeader, headerRow };
 
     // Build preview table with weights as first column
-    const sepLabel = { tab: 'tabulaciones', csv: 'comas (CSV)', pipe: 'pipes (Markdown)' }[separator] || 'desconocido';
+    const sepLabel = { tab: 'tabulaciones', csv: 'comas (CSV)', pipe: 'pipes (Markdown)', concatenated: 'auto (texto concatenado)' }[separator] || 'desconocido';
 
     const equalWeight = Math.round(100 / dataRows.length);
     const weights = dataRows.map((r, idx) => {

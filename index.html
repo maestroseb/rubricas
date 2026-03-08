@@ -103,6 +103,8 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
+            position: relative;
+            z-index: 2;
             margin-bottom: 20px;
         }
 
@@ -236,14 +238,14 @@
         .icon-dropdown {
             display: none;
             position: absolute;
-            bottom: 100%;
+            top: 100%;
             left: 0;
             z-index: 100;
             background: white;
             border: 1px solid var(--slate-200);
             border-radius: var(--radius-sm);
             box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-            margin-bottom: 6px;
+            margin-top: 6px;
             width: 280px;
             overflow: hidden;
         }

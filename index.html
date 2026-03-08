@@ -1451,6 +1451,10 @@ function parsePipeLine(line) {
 
 // Detect separator and parse all rows
 function smartParse(raw) {
+    // Strip markdown bold/italic markers: **text** → text, *text* → text, __text__ → text, _text_ → text
+    raw = raw.replace(/\*\*(.+?)\*\*/g, '$1').replace(/\*(.+?)\*/g, '$1')
+             .replace(/__(.+?)__/g, '$1').replace(/(?<!\w)_(.+?)_(?!\w)/g, '$1');
+
     const lines = raw.split('\n').map(l => l.trim()).filter(l => l && !/^[\s|:-]+$/.test(l)); // remove empty + markdown separator lines
     if (lines.length === 0) return { rows: [], separator: null };
 
@@ -1675,6 +1679,27 @@ let parsedResult = null; // stores last parse result for generate()
 dataArea.addEventListener('input', () => {
     document.getElementById('clearDataBtn').style.display = dataArea.value.trim() ? 'inline-flex' : 'none';
     parseAndPreview();
+});
+
+// Intercept paste to extract HTML tables from clipboard
+dataArea.addEventListener('paste', (e) => {
+    const html = e.clipboardData.getData('text/html');
+    if (html && /<table[\s>]/i.test(html)) {
+        e.preventDefault();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const table = doc.querySelector('table');
+        if (table) {
+            const rows = Array.from(table.querySelectorAll('tr'));
+            const tsv = rows.map(tr => {
+                const cells = Array.from(tr.querySelectorAll('th, td'));
+                return cells.map(c => c.textContent.trim().replace(/\s+/g, ' ')).join('\t');
+            }).filter(line => line.trim()).join('\n');
+            dataArea.value = tsv;
+            document.getElementById('clearDataBtn').style.display = 'inline-flex';
+            parseAndPreview();
+            return;
+        }
+    }
 });
 
 function clearData() {

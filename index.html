@@ -1568,10 +1568,14 @@ function detectHeader(rows) {
     };
 }
 
-// Extract level name and points from header cell like "Excelente (4)" or just "Excelente"
+// Extract level name and points from header cell like "Excelente (4)", "4 – Excelente", or just "Excelente"
 function parseLevelHeader(cell) {
-    const match = cell.match(/^(.+?)\s*\((\d+)\)\s*$/);
-    if (match) return { name: match[1].trim(), pts: parseInt(match[2]) };
+    // Format: "Name (N)" e.g. "Excelente (4)"
+    const matchParen = cell.match(/^(.+?)\s*\((\d+)\)\s*$/);
+    if (matchParen) return { name: matchParen[1].trim(), pts: parseInt(matchParen[2]) };
+    // Format: "N – Name" or "N - Name" or "N. Name" e.g. "4 – EXCELENTE", "1 - Insuficiente"
+    const matchPrefix = cell.match(/^(\d+)\s*[–—\-\.]\s*(.+)$/);
+    if (matchPrefix) return { name: matchPrefix[2].trim(), pts: parseInt(matchPrefix[1]) };
     return { name: cell.trim(), pts: null };
 }
 
@@ -2083,26 +2087,42 @@ function getSelClass(levelIndex, totalLevels) {
 
 function pickRubric(cell, idx, pts, selClass) {
     const row = cell.parentElement;
+    const isAlreadySelected = cell.classList.contains(selClass);
+
+    // Clear all selections in this row
     row.querySelectorAll('.lvl').forEach(c => {
         c.classList.remove('sel-top', 'sel-high', 'sel-mid', 'sel-low');
+        c.querySelector('input').checked = false;
     });
-    cell.classList.add(selClass);
-    cell.querySelector('input').checked = true;
-    cell.querySelector('.lvl-inner').style.animation = 'pop 0.2s ease';
-    setTimeout(() => cell.querySelector('.lvl-inner').style.animation = '', 200);
-
-    rubricScores[idx] = pts;
-    const ptsCell = document.getElementById(`pts${idx}`);
-    ptsCell.textContent = pts;
-    ptsCell.classList.add('has-val');
 
     const maxPerRow = Math.max(...rubricLevels.map(l => l.pts));
-    document.getElementById(`bf${idx}`).style.width = `${(pts / maxPerRow) * 100}%`;
-    const colors = { 'sel-top': '#34d399', 'sel-high': '#fbbf24', 'sel-mid': '#fb923c', 'sel-low': '#fb7185' };
-    document.getElementById(`bf${idx}`).style.background = colors[selClass] || '#3b82f6';
+    const ptsCell = document.getElementById(`pts${idx}`);
     const bv = document.getElementById(`bv${idx}`);
-    bv.textContent = `${pts}/${maxPerRow}`;
-    bv.classList.add('filled');
+
+    if (isAlreadySelected) {
+        // Toggle off: deselect
+        delete rubricScores[idx];
+        ptsCell.textContent = '\u2013';
+        ptsCell.classList.remove('has-val');
+        document.getElementById(`bf${idx}`).style.width = '0%';
+        bv.textContent = '\u2013';
+        bv.classList.remove('filled');
+    } else {
+        // Select
+        cell.classList.add(selClass);
+        cell.querySelector('input').checked = true;
+        cell.querySelector('.lvl-inner').style.animation = 'pop 0.2s ease';
+        setTimeout(() => cell.querySelector('.lvl-inner').style.animation = '', 200);
+
+        rubricScores[idx] = pts;
+        ptsCell.textContent = pts;
+        ptsCell.classList.add('has-val');
+        document.getElementById(`bf${idx}`).style.width = `${(pts / maxPerRow) * 100}%`;
+        const colors = { 'sel-top': '#34d399', 'sel-high': '#fbbf24', 'sel-mid': '#fb923c', 'sel-low': '#fb7185' };
+        document.getElementById(`bf${idx}`).style.background = colors[selClass] || '#3b82f6';
+        bv.textContent = `${pts}/${maxPerRow}`;
+        bv.classList.add('filled');
+    }
 
     recalcRubric();
 }

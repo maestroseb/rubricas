@@ -1224,9 +1224,60 @@
 
         .save-rubric-btn:hover { background: var(--emerald); color: white; }
         .save-rubric-btn svg { width: 14px; height: 14px; }
+
+        /* ═══════════════════════════════════════
+           LANGUAGE SELECTOR
+           ═══════════════════════════════════════ */
+        .lang-selector {
+            position: fixed;
+            top: 16px;
+            right: 20px;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .lang-selector select {
+            font-family: inherit;
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 6px 28px 6px 10px;
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-sm);
+            background: white;
+            color: var(--slate-700);
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M3 4.5l3 3 3-3'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            transition: border-color 0.15s;
+        }
+        .lang-selector select:hover { border-color: var(--brand); }
+        .lang-selector .lang-icon {
+            width: 16px; height: 16px; color: var(--slate-400);
+        }
+        @media print { .lang-selector { display: none; } }
+        @media (max-width: 700px) {
+            .lang-selector { top: 10px; right: 12px; }
+        }
     </style>
 </head>
 <body>
+
+<!-- Language selector -->
+<div class="lang-selector">
+    <svg class="lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    <select id="langSelect" onchange="setLang(this.value)">
+        <option value="es">Castellano</option>
+        <option value="ca">Català</option>
+        <option value="eu">Euskara</option>
+        <option value="gl">Galego</option>
+        <option value="va">Valencià</option>
+        <option value="en">English</option>
+    </select>
+</div>
 
 <!-- ═══════════════════════════════════════
      SETUP SCREEN
@@ -1236,7 +1287,7 @@
 <div class="setup-screen" id="setupScreen">
     <div class="setup-header">
         <h1><svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>RubricApp</h1>
-        <p>Crea y eval&#xFA;a r&#xFA;bricas interactivas en segundos. Pega tus datos desde cualquier fuente.</p>
+        <p data-i18n="header_tagline">Crea y eval&#xFA;a r&#xFA;bricas interactivas en segundos. Pega tus datos desde cualquier fuente.</p>
     </div>
 
     <!-- Title & basic info + Custom fields side by side -->
@@ -1244,50 +1295,50 @@
         <div class="card">
             <div class="card-title">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-                Informaci&#xF3;n b&#xE1;sica
+                <span data-i18n="basic_info">Informaci&#xF3;n b&#xE1;sica</span>
             </div>
             <div class="title-row" style="margin-bottom:12px">
                 <div class="form-group">
-                    <label>Icono</label>
+                    <label data-i18n="icon_label">Icono</label>
                     <div class="icon-pick-wrap" id="iconPickWrap">
                         <button class="icon-pick-btn" type="button" id="iconPickBtn" onclick="toggleIconPicker()">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                         </button>
                         <div class="icon-dropdown" id="iconDropdown">
                             <div class="icon-search-wrap">
-                                <input type="text" class="icon-search" id="iconSearch" placeholder="Buscar icono..." autocomplete="off">
+                                <input type="text" class="icon-search" id="iconSearch" data-i18n-placeholder="search_icon" placeholder="Buscar icono..." autocomplete="off">
                             </div>
                             <div class="icon-grid-wrap">
                                 <div class="icon-grid" id="iconGrid"></div>
-                                <div class="icon-no-results" id="iconNoResults">Sin resultados</div>
+                                <div class="icon-no-results" id="iconNoResults" data-i18n="no_results">Sin resultados</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>T&#xED;tulo de la r&#xFA;brica</label>
-                    <input class="form-input" type="text" id="cfgTitle" placeholder="Ej: Mi Instrumento de la Orquesta">
+                    <label data-i18n="rubric_title_label">T&#xED;tulo de la r&#xFA;brica</label>
+                    <input class="form-input" type="text" id="cfgTitle" data-i18n-placeholder="title_placeholder" placeholder="Ej: Mi Instrumento de la Orquesta">
                 </div>
             </div>
             <div class="form-group">
-                <label>Subt&#xED;tulo <span class="hint">(opcional &middot; puedes indicar los criterios de evaluaci&#xF3;n asociados)</span></label>
-                <input class="form-input" type="text" id="cfgSubtitle" placeholder="Ej: CE 3.1, 4.2 &middot; 6.o Primaria - CEIP Carlos III">
+                <label><span data-i18n="subtitle_label">Subt&#xED;tulo</span> <span class="hint" data-i18n="subtitle_hint">(opcional &middot; puedes indicar los criterios de evaluaci&#xF3;n asociados)</span></label>
+                <input class="form-input" type="text" id="cfgSubtitle" data-i18n-placeholder="subtitle_placeholder" placeholder="Ej: CE 3.1, 4.2 &middot; 6.o Primaria - CEIP Carlos III">
             </div>
         </div>
 
         <div class="card">
             <div class="card-title">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
-                Campos del alumno
+                <span data-i18n="student_fields">Campos del alumno</span>
             </div>
-            <p style="font-size:0.85rem;color:var(--slate-500);margin-bottom:12px">Campos que aparecen encima de la tabla para rellenar (nombre, grupo, etc.)</p>
+            <p style="font-size:0.85rem;color:var(--slate-500);margin-bottom:12px" data-i18n="student_fields_help">Campos que aparecen encima de la tabla para rellenar (nombre, grupo, etc.)</p>
             <div class="fields-editor" id="fieldsEditor">
                 <div class="field-entry">
-                    <input class="form-input" type="text" value="Alumno/a" placeholder="Nombre del campo">
-                    <button class="remove-btn" onclick="removeField(this)" title="Eliminar">&times;</button>
+                    <input class="form-input" type="text" value="Alumno/a" data-i18n-placeholder="field_placeholder" placeholder="Nombre del campo">
+                    <button class="remove-btn" onclick="removeField(this)" data-i18n-title="delete_title" title="Eliminar">&times;</button>
                 </div>
             </div>
-            <button class="add-field-btn" onclick="addField()" style="margin-top:10px">+ A&#xF1;adir campo</button>
+            <button class="add-field-btn" onclick="addField()" style="margin-top:10px" data-i18n="add_field">+ A&#xF1;adir campo</button>
         </div>
     </div>
 
@@ -1295,39 +1346,39 @@
     <div class="card">
         <div class="card-title">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-            Datos de la r&#xFA;brica
+            <span data-i18n="rubric_data">Datos de la r&#xFA;brica</span>
         </div>
-        <div class="paste-help">
-            <strong>C&#xF3;mo funciona:</strong> Copia y pega desde <strong>cualquier fuente</strong>: Gemini, ChatGPT, Excel, Google Sheets, tablas Markdown...<br><br>
-            Se detectan autom&#xE1;ticamente: <strong>tabulaciones</strong>, <strong>comas (CSV)</strong> y <strong>pipes (Markdown)</strong>.<br>
-            La primera fila se usa como cabecera si contiene nombres de niveles. Los puntos se extraen del encabezado si aparecen entre par&#xE9;ntesis, ej: <code>Excelente (4)</code>.<br><br>
-            El n&#xFA;mero de <strong>niveles</strong> y sus <strong>nombres</strong> se autodetectan de los datos pegados.
+        <div class="paste-help" id="pasteHelp">
+            <strong data-i18n="how_it_works">C&#xF3;mo funciona:</strong> <span data-i18n="paste_help_1">Copia y pega desde <strong>cualquier fuente</strong>: Gemini, ChatGPT, Excel, Google Sheets, tablas Markdown...</span><br><br>
+            <span data-i18n="paste_help_2">Se detectan autom&#xE1;ticamente: <strong>tabulaciones</strong>, <strong>comas (CSV)</strong> y <strong>pipes (Markdown)</strong>.</span><br>
+            <span data-i18n="paste_help_3">La primera fila se usa como cabecera si contiene nombres de niveles. Los puntos se extraen del encabezado si aparecen entre par&#xE9;ntesis, ej: <code>Excelente (4)</code>.</span><br><br>
+            <span data-i18n="paste_help_4">El n&#xFA;mero de <strong>niveles</strong> y sus <strong>nombres</strong> se autodetectan de los datos pegados.</span>
             <br><br>
             <div class="paste-help-actions">
-                <a class="example-link" onclick="loadExample()">&#x2728; Cargar ejemplo para probar</a>
+                <a class="example-link" onclick="loadExample()" data-i18n="load_example">&#x2728; Cargar ejemplo para probar</a>
                 <button type="button" class="clear-data-btn" id="clearDataBtn" onclick="clearData()" style="display:none">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                    Limpiar datos
+                    <span data-i18n="clear_data">Limpiar datos</span>
                 </button>
             </div>
         </div>
         <div class="library-bar" id="libraryBar">
             <div class="library-bar-title">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                Mis r&#xFA;bricas
+                <span data-i18n="my_rubrics">Mis r&#xFA;bricas</span>
             </div>
             <div class="library-list" id="libraryList">
-                <span class="library-empty">Ninguna r&#xFA;brica guardada</span>
+                <span class="library-empty" data-i18n="no_rubrics">Ninguna r&#xFA;brica guardada</span>
             </div>
         </div>
-        <textarea class="form-input" id="cfgData" placeholder="Pega aqu&#xED; los datos de tu tabla (Ctrl+V / Cmd+V)..."></textarea>
+        <textarea class="form-input" id="cfgData" data-i18n-placeholder="paste_placeholder" placeholder="Pega aqu&#xED; los datos de tu tabla (Ctrl+V / Cmd+V)..."></textarea>
         <div id="previewArea"></div>
     </div>
 
     <!-- Generate -->
     <button class="generate-btn" id="generateBtn" onclick="generate()" disabled>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Generar r&#xFA;brica
+        <span data-i18n="generate">Generar r&#xFA;brica</span>
     </button>
 </div>
 
@@ -1348,11 +1399,11 @@
                 <div class="top-actions">
                     <button class="btn" onclick="backToSetup()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-                        Editar
+                        <span data-i18n="btn_edit">Editar</span>
                     </button>
                     <button class="btn" onclick="copyResults()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                        Copiar
+                        <span data-i18n="btn_copy">Copiar</span>
                     </button>
                     <button class="btn" onclick="downloadPDF()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -1360,11 +1411,11 @@
                     </button>
                     <button class="btn" onclick="saveRubricToLibrary()" style="color:var(--emerald)">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                        Guardar
+                        <span data-i18n="btn_save">Guardar</span>
                     </button>
                     <button class="btn btn-danger" onclick="resetRubric()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-                        Reiniciar
+                        <span data-i18n="btn_reset">Reiniciar</span>
                     </button>
                 </div>
             </div>
@@ -1382,7 +1433,7 @@
         <div class="sidebar">
             <div class="sidebar-header">
                 <div class="status-dot" id="statusDot"></div>
-                <h2>Evaluaci&#xF3;n</h2>
+                <h2 data-i18n="evaluation">Evaluaci&#xF3;n</h2>
             </div>
 
             <div class="score-display">
@@ -1401,12 +1452,12 @@
                 </div>
                 <div class="grade-pill" id="gradePill">
                     <span class="grade-dot"></span>
-                    <span id="gradeLabel">Sin evaluar</span>
+                    <span id="gradeLabel" data-i18n="not_evaluated">Sin evaluar</span>
                 </div>
             </div>
 
             <div class="breakdown">
-                <div class="breakdown-title">Desglose por indicador</div>
+                <div class="breakdown-title" data-i18n="breakdown_title">Desglose por indicador</div>
                 <div id="breakdownList"></div>
             </div>
 
@@ -1416,6 +1467,541 @@
 </div>
 
 <script>
+/* ═══════════════════════════════════════════════════
+   I18N - MULTILINGUAL SUPPORT
+   ═══════════════════════════════════════════════════ */
+
+let currentLang = localStorage.getItem('rubricapp_lang') || 'es';
+
+const I18N = {
+es: {
+    header_tagline: 'Crea y evalúa rúbricas interactivas en segundos. Pega tus datos desde cualquier fuente.',
+    basic_info: 'Información básica',
+    icon_label: 'Icono',
+    search_icon: 'Buscar icono...',
+    no_results: 'Sin resultados',
+    rubric_title_label: 'Título de la rúbrica',
+    title_placeholder: 'Ej: Mi Instrumento de la Orquesta',
+    subtitle_label: 'Subtítulo',
+    subtitle_hint: '(opcional · puedes indicar los criterios de evaluación asociados)',
+    subtitle_placeholder: 'Ej: CE 3.1, 4.2 · 6.º Primaria - CEIP Carlos III',
+    student_fields: 'Campos del alumno',
+    student_fields_help: 'Campos que aparecen encima de la tabla para rellenar (nombre, grupo, etc.)',
+    student_default: 'Alumno/a',
+    field_placeholder: 'Nombre del campo',
+    delete_title: 'Eliminar',
+    add_field: '+ Añadir campo',
+    rubric_data: 'Datos de la rúbrica',
+    how_it_works: 'Cómo funciona:',
+    paste_help_1: 'Copia y pega desde <strong>cualquier fuente</strong>: Gemini, ChatGPT, Excel, Google Sheets, tablas Markdown...',
+    paste_help_2: 'Se detectan automáticamente: <strong>tabulaciones</strong>, <strong>comas (CSV)</strong> y <strong>pipes (Markdown)</strong>.',
+    paste_help_3: 'La primera fila se usa como cabecera si contiene nombres de niveles. Los puntos se extraen del encabezado si aparecen entre paréntesis, ej: <code>Excelente (4)</code>.',
+    paste_help_4: 'El número de <strong>niveles</strong> y sus <strong>nombres</strong> se autodetectan de los datos pegados.',
+    load_example: '✨ Cargar ejemplo para probar',
+    clear_data: 'Limpiar datos',
+    my_rubrics: 'Mis rúbricas',
+    no_rubrics: 'Ninguna rúbrica guardada',
+    paste_placeholder: 'Pega aquí los datos de tu tabla (Ctrl+V / Cmd+V)...',
+    generate: 'Generar rúbrica',
+    btn_edit: 'Editar',
+    btn_copy: 'Copiar',
+    btn_save: 'Guardar',
+    btn_reset: 'Reiniciar',
+    evaluation: 'Evaluación',
+    not_evaluated: 'Sin evaluar',
+    breakdown_title: 'Desglose por indicador',
+    grade_sob: 'Sobresaliente (9-10)',
+    grade_not: 'Notable (7-8)',
+    grade_bien: 'Bien (6)',
+    grade_suf: 'Suficiente (5)',
+    grade_ins: 'Insuficiente (0-4)',
+    scale_sob: 'Sobresaliente',
+    scale_not: 'Notable',
+    scale_bien: 'Bien',
+    scale_suf: 'Suficiente',
+    scale_ins: 'Insuficiente',
+    scale_title: 'Escala',
+    no_valid_data: 'No se detectaron datos válidos. Asegúrate de que el texto tiene columnas separadas por tabulaciones, comas, pipes (|) o copiadas desde una tabla.',
+    only_header: 'Solo se detectó la fila de cabecera. Añade filas de indicadores.',
+    sep_tab: 'tabulaciones',
+    sep_csv: 'comas (CSV)',
+    sep_pipe: 'pipes (Markdown)',
+    sep_concat: 'auto (texto concatenado)',
+    sep_unknown: 'desconocido',
+    sep_detected: 'Separador detectado:',
+    levels_word: 'nivel(es)',
+    header_detected: 'Cabecera detectada',
+    no_header: 'Sin cabecera',
+    indicators_detected: 'indicador(es) y',
+    detected_suffix: 'detectados',
+    click_to_edit: 'Haz clic en cualquier celda para editarla',
+    rows_warning: 'Algunas filas tienen menos columnas de las esperadas',
+    weight_label: 'Peso',
+    indicator: 'Indicador',
+    pdf_toast: 'Usa "Guardar como PDF" en el diálogo de impresión',
+    copy_toast: 'Resultados copiados al portapapeles',
+    saved_toast: 'guardada en tu biblioteca',
+    loaded_toast: 'cargada',
+    rubric_default: 'Rúbrica',
+    eval_subtitle: 'Rúbrica de Evaluación',
+    untitled: 'Sin título',
+    not_evaluated_short: 'sin evaluar',
+    total_label: 'Total',
+    grade_word: 'Calificación',
+    evaluated_word: 'Evaluados',
+    score_word: 'Nota',
+    level_default: 'Nivel',
+    example_title: 'Trabajo de Investigación',
+    example_subtitle: '3.º ESO · Lengua Castellana',
+    example_csv: 'Indicador,Excelente (4),Bueno (3),Suficiente (2),Insuficiente (1)\nContenido y Precisión,"El tema se desarrolla con profundidad, ideas originales y datos precisos.","El tema se cubre bien, aunque falta algo de profundidad o detalle.","Información básica presente, pero con algunas omisiones o errores.","El contenido es escaso, irrelevante o contiene errores graves."\nEstructura y Organización,"Introducción, desarrollo y conclusión claramente definidos y conectados.","Sigue la estructura básica, aunque las transiciones son mejorables.","La estructura es confusa en algunos puntos; falta fluidez.","Carece de orden lógico; es difícil seguir el hilo del trabajo."\nRedacción y Ortografía,Texto impecable. Vocabulario variado y sin errores gramaticales.,Muy pocos errores (1-2) que no afectan la comprensión.,Varios errores gramaticales o de ortografía que distraen al leer.,Errores constantes que dificultan seriamente la lectura.\nCitas y Fuentes,Cita todas las fuentes correctamente siguiendo el formato pedido (ej. APA).,"La mayoría de las fuentes están citadas, con errores menores de formato.",Incluye fuentes pero no sigue un formato o faltan citas clave.,No incluye bibliografía ni cita las fuentes utilizadas.\nPresentación,"Cumple con todos los requisitos de formato (fuente, márgenes, limpieza).",Cumple casi todos los requisitos de formato.,Formato descuidado o incompleto.,No sigue ninguna instrucción de formato o entrega desprolija.',
+},
+ca: {
+    header_tagline: 'Crea i avalua rúbriques interactives en segons. Enganxa les teves dades des de qualsevol font.',
+    basic_info: 'Informació bàsica',
+    icon_label: 'Icona',
+    search_icon: 'Cercar icona...',
+    no_results: 'Sense resultats',
+    rubric_title_label: 'Títol de la rúbrica',
+    title_placeholder: 'Ex: El meu Instrument de l\'Orquestra',
+    subtitle_label: 'Subtítol',
+    subtitle_hint: '(opcional · pots indicar els criteris d\'avaluació associats)',
+    subtitle_placeholder: 'Ex: CE 3.1, 4.2 · 6è Primària - CEIP Carlos III',
+    student_fields: 'Camps de l\'alumne',
+    student_fields_help: 'Camps que apareixen a sobre de la taula per omplir (nom, grup, etc.)',
+    student_default: 'Alumne/a',
+    field_placeholder: 'Nom del camp',
+    delete_title: 'Eliminar',
+    add_field: '+ Afegir camp',
+    rubric_data: 'Dades de la rúbrica',
+    how_it_works: 'Com funciona:',
+    paste_help_1: 'Copia i enganxa des de <strong>qualsevol font</strong>: Gemini, ChatGPT, Excel, Google Sheets, taules Markdown...',
+    paste_help_2: 'Es detecten automàticament: <strong>tabulacions</strong>, <strong>comes (CSV)</strong> i <strong>pipes (Markdown)</strong>.',
+    paste_help_3: 'La primera fila s\'usa com a capçalera si conté noms de nivells. Els punts s\'extreuen de l\'encapçalament si apareixen entre parèntesis, ex: <code>Excel·lent (4)</code>.',
+    paste_help_4: 'El nombre de <strong>nivells</strong> i els seus <strong>noms</strong> s\'autodetecten de les dades enganxades.',
+    load_example: '✨ Carregar exemple per provar',
+    clear_data: 'Netejar dades',
+    my_rubrics: 'Les meves rúbriques',
+    no_rubrics: 'Cap rúbrica desada',
+    paste_placeholder: 'Enganxa aquí les dades de la teva taula (Ctrl+V / Cmd+V)...',
+    generate: 'Generar rúbrica',
+    btn_edit: 'Editar',
+    btn_copy: 'Copiar',
+    btn_save: 'Desar',
+    btn_reset: 'Reiniciar',
+    evaluation: 'Avaluació',
+    not_evaluated: 'Sense avaluar',
+    breakdown_title: 'Desglossament per indicador',
+    grade_sob: 'Excel·lent (9-10)',
+    grade_not: 'Notable (7-8)',
+    grade_bien: 'Bé (6)',
+    grade_suf: 'Suficient (5)',
+    grade_ins: 'Insuficient (0-4)',
+    scale_sob: 'Excel·lent',
+    scale_not: 'Notable',
+    scale_bien: 'Bé',
+    scale_suf: 'Suficient',
+    scale_ins: 'Insuficient',
+    scale_title: 'Escala',
+    no_valid_data: 'No s\'han detectat dades vàlides. Assegura\'t que el text té columnes separades per tabulacions, comes, pipes (|) o copiades des d\'una taula.',
+    only_header: 'Només s\'ha detectat la fila de capçalera. Afegeix files d\'indicadors.',
+    sep_tab: 'tabulacions',
+    sep_csv: 'comes (CSV)',
+    sep_pipe: 'pipes (Markdown)',
+    sep_concat: 'auto (text concatenat)',
+    sep_unknown: 'desconegut',
+    sep_detected: 'Separador detectat:',
+    levels_word: 'nivell(s)',
+    header_detected: 'Capçalera detectada',
+    no_header: 'Sense capçalera',
+    indicators_detected: 'indicador(s) i',
+    detected_suffix: 'detectats',
+    click_to_edit: 'Fes clic a qualsevol cel·la per editar-la',
+    rows_warning: 'Algunes files tenen menys columnes de les esperades',
+    weight_label: 'Pes',
+    indicator: 'Indicador',
+    pdf_toast: 'Utilitza "Desa com a PDF" al diàleg d\'impressió',
+    copy_toast: 'Resultats copiats al porta-retalls',
+    saved_toast: 'desada a la teva biblioteca',
+    loaded_toast: 'carregada',
+    rubric_default: 'Rúbrica',
+    eval_subtitle: 'Rúbrica d\'Avaluació',
+    untitled: 'Sense títol',
+    not_evaluated_short: 'sense avaluar',
+    total_label: 'Total',
+    grade_word: 'Qualificació',
+    evaluated_word: 'Avaluats',
+    score_word: 'Nota',
+    level_default: 'Nivell',
+    example_title: 'Treball de Recerca',
+    example_subtitle: '3r ESO · Llengua Catalana',
+    example_csv: 'Indicador,Excel·lent (4),Bo (3),Suficient (2),Insuficient (1)\nContingut i Precisió,"El tema es desenvolupa amb profunditat, idees originals i dades precises.","El tema es cobreix bé, encara que falta una mica de profunditat o detall.","Informació bàsica present, però amb algunes omissions o errors.","El contingut és escàs, irrellevant o conté errors greus."\nEstructura i Organització,"Introducció, desenvolupament i conclusió clarament definits i connectats.","Segueix l\'estructura bàsica, encara que les transicions són millorables.","L\'estructura és confusa en alguns punts; falta fluïdesa.","Manca d\'ordre lògic; és difícil seguir el fil del treball."\nRedacció i Ortografia,Text impecable. Vocabulari variat i sense errors gramaticals.,Molt pocs errors (1-2) que no afecten la comprensió.,Diversos errors gramaticals o d\'ortografia que distreuen en llegir.,Errors constants que dificulten seriosament la lectura.\nCites i Fonts,Cita totes les fonts correctament seguint el format demanat (ex. APA).,"La majoria de les fonts estan citades, amb errors menors de format.",Inclou fonts però no segueix un format o falten cites clau.,No inclou bibliografia ni cita les fonts utilitzades.\nPresentació,"Compleix amb tots els requisits de format (font, marges, netedat).",Compleix gairebé tots els requisits de format.,Format descuidat o incomplet.,No segueix cap instrucció de format o lliurament desendreçat.',
+},
+eu: {
+    header_tagline: 'Sortu eta ebaluatu errubrika interaktiboak segundotan. Itsatsi zure datuak edozein iturritatik.',
+    basic_info: 'Oinarrizko informazioa',
+    icon_label: 'Ikonoa',
+    search_icon: 'Bilatu ikonoa...',
+    no_results: 'Emaitzarik ez',
+    rubric_title_label: 'Errubrikaren izenburua',
+    title_placeholder: 'Ad: Nire Orkestra Tresna',
+    subtitle_label: 'Azpititulua',
+    subtitle_hint: '(aukerakoa · ebaluazio-irizpide lotesgarriak adieraz ditzakezu)',
+    subtitle_placeholder: 'Ad: EI 3.1, 4.2 · LH 6. maila - Carlos III HLHI',
+    student_fields: 'Ikaslearen eremuak',
+    student_fields_help: 'Taularen gainean bete beharreko eremuak (izena, taldea, etab.)',
+    student_default: 'Ikaslea',
+    field_placeholder: 'Eremuaren izena',
+    delete_title: 'Ezabatu',
+    add_field: '+ Eremua gehitu',
+    rubric_data: 'Errubrikaren datuak',
+    how_it_works: 'Nola funtzionatzen du:',
+    paste_help_1: 'Kopiatu eta itsatsi <strong>edozein iturritatik</strong>: Gemini, ChatGPT, Excel, Google Sheets, Markdown taulak...',
+    paste_help_2: 'Automatikoki detektatzen dira: <strong>tabulazioak</strong>, <strong>komak (CSV)</strong> eta <strong>pipeak (Markdown)</strong>.',
+    paste_help_3: 'Lehen ilara goiburu gisa erabiltzen da mailen izenak baditu. Puntuak goiburutik ateratzen dira parentesi artean agertzen badira, ad: <code>Bikain (4)</code>.',
+    paste_help_4: '<strong>Maila</strong> kopurua eta haien <strong>izenak</strong> automatikoki detektatzen dira itsatsitako datuetatik.',
+    load_example: '✨ Adibidea kargatu probatzeko',
+    clear_data: 'Datuak garbitu',
+    my_rubrics: 'Nire errubrikak',
+    no_rubrics: 'Ez dago gordetako errubrikarik',
+    paste_placeholder: 'Itsatsi hemen zure taularen datuak (Ctrl+V / Cmd+V)...',
+    generate: 'Errubrika sortu',
+    btn_edit: 'Editatu',
+    btn_copy: 'Kopiatu',
+    btn_save: 'Gorde',
+    btn_reset: 'Berrezarri',
+    evaluation: 'Ebaluazioa',
+    not_evaluated: 'Ebaluatu gabe',
+    breakdown_title: 'Adierazle bakoitzaren xehetasuna',
+    grade_sob: 'Bikain (9-10)',
+    grade_not: 'Oso ongi (7-8)',
+    grade_bien: 'Ongi (6)',
+    grade_suf: 'Nahiko (5)',
+    grade_ins: 'Gutxi (0-4)',
+    scale_sob: 'Bikain',
+    scale_not: 'Oso ongi',
+    scale_bien: 'Ongi',
+    scale_suf: 'Nahiko',
+    scale_ins: 'Gutxi',
+    scale_title: 'Eskala',
+    no_valid_data: 'Ez dira baliozko daturik detektatu. Ziurtatu testuak tabulazioz, komaz, pipez (|) bereizitako zutabeak dituela edo taula batetik kopiatua dela.',
+    only_header: 'Goiburu ilara soilik detektatu da. Gehitu adierazleen ilarak.',
+    sep_tab: 'tabulazioak',
+    sep_csv: 'komak (CSV)',
+    sep_pipe: 'pipeak (Markdown)',
+    sep_concat: 'auto (kateaturiko testua)',
+    sep_unknown: 'ezezaguna',
+    sep_detected: 'Bereizlea detektatua:',
+    levels_word: 'maila',
+    header_detected: 'Goiburua detektatua',
+    no_header: 'Goibururik gabe',
+    indicators_detected: 'adierazle eta',
+    detected_suffix: 'detektatuak',
+    click_to_edit: 'Egin klik edozein gelaxkatan editatzeko',
+    rows_warning: 'Ilara batzuek espero baino zutabe gutxiago dituzte',
+    weight_label: 'Pisua',
+    indicator: 'Adierazlea',
+    pdf_toast: 'Erabili "Gorde PDF gisa" inprimatze-elkarrizketan',
+    copy_toast: 'Emaitzak arbelean kopiatuta',
+    saved_toast: 'zure liburutegian gordeta',
+    loaded_toast: 'kargatuta',
+    rubric_default: 'Errubrika',
+    eval_subtitle: 'Ebaluazio Errubrika',
+    untitled: 'Izenbururik gabe',
+    not_evaluated_short: 'ebaluatu gabe',
+    total_label: 'Guztira',
+    grade_word: 'Kalifikazioa',
+    evaluated_word: 'Ebaluatuak',
+    score_word: 'Nota',
+    level_default: 'Maila',
+    example_title: 'Ikerketa Lana',
+    example_subtitle: 'DBH 3. · Euskara',
+    example_csv: 'Adierazlea,Bikain (4),Ongi (3),Nahiko (2),Gutxi (1)\nEdukia eta Zehaztasuna,"Gaia sakontasunez garatzen da, ideia originalak eta datu zehatzak dituela.","Gaia ondo lantzen da, nahiz eta sakontasun edo xehetasun pixka bat falta.","Oinarrizko informazioa badago, baina hutsune edo akats batzuekin.","Edukia urria, garrantzirik gabekoa edo akats larriekin."\nEgitura eta Antolaketa,"Sarrera, garapena eta ondorioa argi definituta eta konektatuta.","Oinarrizko egitura jarraitzen du, nahiz eta trantsizioak hobetu daitezkeen.","Egitura nahasia puntu batzuetan; fluxu falta.","Ordena logikorik gabe; zaila da lanaren haria jarraitzea."\nIdazkera eta Ortografia,Testu ezin hobea. Hiztegi anitza eta akats gramatikal gabe.,Oso akats gutxi (1-2) ulermena kaltetzen ez dutenak.,Hainbat akats gramatikal edo ortografiko irakurtzean distraitzen dutenak.,Etengabeko akatsak irakurketa serioski zailtzen dutenak.\nAipamenak eta Iturriak,Iturri guztiak zuzen aipatzen ditu eskatutako formatua jarraituz (ad. APA).,"Iturri gehienak aipatuta daude, formatu-akats txikiekin.",Iturriak barne hartzen ditu baina ez du formaturik jarraitzen edo aipamen garrantzitsuak falta dira.,Ez du bibliografiarik ez eta erabilitako iturririk aipatzen.\nAurkezpena,"Formatu-baldintza guztiak betetzen ditu (letra-tipoa, marjinak, garbitasuna).",Formatu-baldintza ia guztiak betetzen ditu.,Formatua arduragabekoa edo osatugabea.,Ez du formatu-argibiderik jarraitzen edo entrega desegokia.',
+},
+gl: {
+    header_tagline: 'Crea e avalía rúbricas interactivas en segundos. Pega os teus datos desde calquera fonte.',
+    basic_info: 'Información básica',
+    icon_label: 'Icona',
+    search_icon: 'Buscar icona...',
+    no_results: 'Sen resultados',
+    rubric_title_label: 'Título da rúbrica',
+    title_placeholder: 'Ex: O meu Instrumento da Orquestra',
+    subtitle_label: 'Subtítulo',
+    subtitle_hint: '(opcional · podes indicar os criterios de avaliación asociados)',
+    subtitle_placeholder: 'Ex: CE 3.1, 4.2 · 6.º Primaria - CEIP Carlos III',
+    student_fields: 'Campos do alumno',
+    student_fields_help: 'Campos que aparecen enriba da táboa para cubrir (nome, grupo, etc.)',
+    student_default: 'Alumno/a',
+    field_placeholder: 'Nome do campo',
+    delete_title: 'Eliminar',
+    add_field: '+ Engadir campo',
+    rubric_data: 'Datos da rúbrica',
+    how_it_works: 'Como funciona:',
+    paste_help_1: 'Copia e pega desde <strong>calquera fonte</strong>: Gemini, ChatGPT, Excel, Google Sheets, táboas Markdown...',
+    paste_help_2: 'Detéctanse automaticamente: <strong>tabulacións</strong>, <strong>comas (CSV)</strong> e <strong>pipes (Markdown)</strong>.',
+    paste_help_3: 'A primeira fila úsase como cabeceira se contén nomes de niveis. Os puntos extráense do encabezado se aparecen entre parénteses, ex: <code>Excelente (4)</code>.',
+    paste_help_4: 'O número de <strong>niveis</strong> e os seus <strong>nomes</strong> autodetéctanse dos datos pegados.',
+    load_example: '✨ Cargar exemplo para probar',
+    clear_data: 'Limpar datos',
+    my_rubrics: 'As miñas rúbricas',
+    no_rubrics: 'Ningunha rúbrica gardada',
+    paste_placeholder: 'Pega aquí os datos da túa táboa (Ctrl+V / Cmd+V)...',
+    generate: 'Xerar rúbrica',
+    btn_edit: 'Editar',
+    btn_copy: 'Copiar',
+    btn_save: 'Gardar',
+    btn_reset: 'Reiniciar',
+    evaluation: 'Avaliación',
+    not_evaluated: 'Sen avaliar',
+    breakdown_title: 'Desagregación por indicador',
+    grade_sob: 'Sobresaínte (9-10)',
+    grade_not: 'Notable (7-8)',
+    grade_bien: 'Ben (6)',
+    grade_suf: 'Suficiente (5)',
+    grade_ins: 'Insuficiente (0-4)',
+    scale_sob: 'Sobresaínte',
+    scale_not: 'Notable',
+    scale_bien: 'Ben',
+    scale_suf: 'Suficiente',
+    scale_ins: 'Insuficiente',
+    scale_title: 'Escala',
+    no_valid_data: 'Non se detectaron datos válidos. Asegúrate de que o texto ten columnas separadas por tabulacións, comas, pipes (|) ou copiadas desde unha táboa.',
+    only_header: 'Só se detectou a fila de cabeceira. Engade filas de indicadores.',
+    sep_tab: 'tabulacións',
+    sep_csv: 'comas (CSV)',
+    sep_pipe: 'pipes (Markdown)',
+    sep_concat: 'auto (texto concatenado)',
+    sep_unknown: 'descoñecido',
+    sep_detected: 'Separador detectado:',
+    levels_word: 'nivel(es)',
+    header_detected: 'Cabeceira detectada',
+    no_header: 'Sen cabeceira',
+    indicators_detected: 'indicador(es) e',
+    detected_suffix: 'detectados',
+    click_to_edit: 'Fai clic en calquera cela para editala',
+    rows_warning: 'Algunhas filas teñen menos columnas das esperadas',
+    weight_label: 'Peso',
+    indicator: 'Indicador',
+    pdf_toast: 'Usa "Gardar como PDF" no diálogo de impresión',
+    copy_toast: 'Resultados copiados ao portapapeis',
+    saved_toast: 'gardada na túa biblioteca',
+    loaded_toast: 'cargada',
+    rubric_default: 'Rúbrica',
+    eval_subtitle: 'Rúbrica de Avaliación',
+    untitled: 'Sen título',
+    not_evaluated_short: 'sen avaliar',
+    total_label: 'Total',
+    grade_word: 'Cualificación',
+    evaluated_word: 'Avaliados',
+    score_word: 'Nota',
+    level_default: 'Nivel',
+    example_title: 'Traballo de Investigación',
+    example_subtitle: '3.º ESO · Lingua Galega',
+    example_csv: 'Indicador,Excelente (4),Bo (3),Suficiente (2),Insuficiente (1)\nContido e Precisión,"O tema desenvólvese con profundidade, ideas orixinais e datos precisos.","O tema cóbrese ben, aínda que falta algo de profundidade ou detalle.","Información básica presente, pero con algunhas omisións ou erros.","O contido é escaso, irrelevante ou contén erros graves."\nEstrutura e Organización,"Introdución, desenvolvemento e conclusión claramente definidos e conectados.","Segue a estrutura básica, aínda que as transicións son mellorables.","A estrutura é confusa nalgúns puntos; falta fluidez.","Carece de orde lóxica; é difícil seguir o fío do traballo."\nRedacción e Ortografía,Texto impecable. Vocabulario variado e sen erros gramaticais.,Moi poucos erros (1-2) que non afectan a comprensión.,Varios erros gramaticais ou de ortografía que distraen ao ler.,Erros constantes que dificultan seriamente a lectura.\nCitas e Fontes,Cita todas as fontes correctamente seguindo o formato pedido (ex. APA).,"A maioría das fontes están citadas, con erros menores de formato.",Inclúe fontes pero non segue un formato ou faltan citas clave.,Non inclúe bibliografía nin cita as fontes utilizadas.\nPresentación,"Cumpre con todos os requisitos de formato (fonte, marxes, limpeza).",Cumpre case todos os requisitos de formato.,Formato descoidado ou incompleto.,Non segue ningunha instrución de formato ou entrega desaliñada.',
+},
+va: {
+    header_tagline: 'Crea i avalua rúbriques interactives en segons. Apega les teues dades des de qualsevol font.',
+    basic_info: 'Informació bàsica',
+    icon_label: 'Icona',
+    search_icon: 'Buscar icona...',
+    no_results: 'Sense resultats',
+    rubric_title_label: 'Títol de la rúbrica',
+    title_placeholder: 'Ex: El meu Instrument de l\'Orquestra',
+    subtitle_label: 'Subtítol',
+    subtitle_hint: '(opcional · pots indicar els criteris d\'avaluació associats)',
+    subtitle_placeholder: 'Ex: CE 3.1, 4.2 · 6é Primària - CEIP Carlos III',
+    student_fields: 'Camps de l\'alumne',
+    student_fields_help: 'Camps que apareixen damunt de la taula per a omplir (nom, grup, etc.)',
+    student_default: 'Alumne/a',
+    field_placeholder: 'Nom del camp',
+    delete_title: 'Eliminar',
+    add_field: '+ Afegir camp',
+    rubric_data: 'Dades de la rúbrica',
+    how_it_works: 'Com funciona:',
+    paste_help_1: 'Copia i apega des de <strong>qualsevol font</strong>: Gemini, ChatGPT, Excel, Google Sheets, taules Markdown...',
+    paste_help_2: 'Es detecten automàticament: <strong>tabulacions</strong>, <strong>comes (CSV)</strong> i <strong>pipes (Markdown)</strong>.',
+    paste_help_3: 'La primera fila s\'usa com a capçalera si conté noms de nivells. Els punts s\'extrauen de l\'encapçalament si apareixen entre parèntesis, ex: <code>Excel·lent (4)</code>.',
+    paste_help_4: 'El nombre de <strong>nivells</strong> i els seus <strong>noms</strong> s\'autodetecten de les dades apegades.',
+    load_example: '✨ Carregar exemple per a provar',
+    clear_data: 'Netejar dades',
+    my_rubrics: 'Les meues rúbriques',
+    no_rubrics: 'Cap rúbrica guardada',
+    paste_placeholder: 'Apega ací les dades de la teua taula (Ctrl+V / Cmd+V)...',
+    generate: 'Generar rúbrica',
+    btn_edit: 'Editar',
+    btn_copy: 'Copiar',
+    btn_save: 'Guardar',
+    btn_reset: 'Reiniciar',
+    evaluation: 'Avaluació',
+    not_evaluated: 'Sense avaluar',
+    breakdown_title: 'Desglossament per indicador',
+    grade_sob: 'Excel·lent (9-10)',
+    grade_not: 'Notable (7-8)',
+    grade_bien: 'Bé (6)',
+    grade_suf: 'Suficient (5)',
+    grade_ins: 'Insuficient (0-4)',
+    scale_sob: 'Excel·lent',
+    scale_not: 'Notable',
+    scale_bien: 'Bé',
+    scale_suf: 'Suficient',
+    scale_ins: 'Insuficient',
+    scale_title: 'Escala',
+    no_valid_data: 'No s\'han detectat dades vàlides. Assegura\'t que el text té columnes separades per tabulacions, comes, pipes (|) o copiades des d\'una taula.',
+    only_header: 'Només s\'ha detectat la fila de capçalera. Afig files d\'indicadors.',
+    sep_tab: 'tabulacions',
+    sep_csv: 'comes (CSV)',
+    sep_pipe: 'pipes (Markdown)',
+    sep_concat: 'auto (text concatenat)',
+    sep_unknown: 'desconegut',
+    sep_detected: 'Separador detectat:',
+    levels_word: 'nivell(s)',
+    header_detected: 'Capçalera detectada',
+    no_header: 'Sense capçalera',
+    indicators_detected: 'indicador(s) i',
+    detected_suffix: 'detectats',
+    click_to_edit: 'Fes clic en qualsevol cel·la per a editar-la',
+    rows_warning: 'Algunes files tenen menys columnes de les esperades',
+    weight_label: 'Pes',
+    indicator: 'Indicador',
+    pdf_toast: 'Utilitza "Guarda com a PDF" en el diàleg d\'impressió',
+    copy_toast: 'Resultats copiats al porta-retalls',
+    saved_toast: 'guardada en la teua biblioteca',
+    loaded_toast: 'carregada',
+    rubric_default: 'Rúbrica',
+    eval_subtitle: 'Rúbrica d\'Avaluació',
+    untitled: 'Sense títol',
+    not_evaluated_short: 'sense avaluar',
+    total_label: 'Total',
+    grade_word: 'Qualificació',
+    evaluated_word: 'Avaluats',
+    score_word: 'Nota',
+    level_default: 'Nivell',
+    example_title: 'Treball d\'Investigació',
+    example_subtitle: '3r ESO · Llengua Valenciana',
+    example_csv: 'Indicador,Excel·lent (4),Bo (3),Suficient (2),Insuficient (1)\nContingut i Precisió,"El tema es desenvolupa amb profunditat, idees originals i dades precises.","El tema es cobreix bé, encara que falta una mica de profunditat o detall.","Informació bàsica present, però amb algunes omissions o errors.","El contingut és escàs, irrellevant o conté errors greus."\nEstructura i Organització,"Introducció, desenvolupament i conclusió clarament definits i connectats.","Segueix l\'estructura bàsica, encara que les transicions són millorables.","L\'estructura és confusa en alguns punts; falta fluïdesa.","Manca d\'orde lògic; és difícil seguir el fil del treball."\nRedacció i Ortografia,Text impecable. Vocabulari variat i sense errors gramaticals.,Molt pocs errors (1-2) que no afecten la comprensió.,Diversos errors gramaticals o d\'ortografia que distrauen en llegir.,Errors constants que dificulten seriosament la lectura.\nCites i Fonts,Cita totes les fonts correctament seguint el format demanat (ex. APA).,"La majoria de les fonts estan citades, amb errors menors de format.",Inclou fonts però no segueix un format o falten cites clau.,No inclou bibliografia ni cita les fonts utilitzades.\nPresentació,"Compleix amb tots els requisits de format (font, marges, netedat).",Compleix quasi tots els requisits de format.,Format descuidat o incomplet.,No segueix cap instrucció de format o lliurament desordenat.',
+},
+en: {
+    header_tagline: 'Create and evaluate interactive rubrics in seconds. Paste your data from any source.',
+    basic_info: 'Basic information',
+    icon_label: 'Icon',
+    search_icon: 'Search icon...',
+    no_results: 'No results',
+    rubric_title_label: 'Rubric title',
+    title_placeholder: 'E.g.: My Orchestra Instrument',
+    subtitle_label: 'Subtitle',
+    subtitle_hint: '(optional · you can specify associated assessment criteria)',
+    subtitle_placeholder: 'E.g.: SC 3.1, 4.2 · Grade 6 - Springfield Elementary',
+    student_fields: 'Student fields',
+    student_fields_help: 'Fields that appear above the table to fill in (name, group, etc.)',
+    student_default: 'Student',
+    field_placeholder: 'Field name',
+    delete_title: 'Delete',
+    add_field: '+ Add field',
+    rubric_data: 'Rubric data',
+    how_it_works: 'How it works:',
+    paste_help_1: 'Copy and paste from <strong>any source</strong>: Gemini, ChatGPT, Excel, Google Sheets, Markdown tables...',
+    paste_help_2: 'Automatically detected: <strong>tabs</strong>, <strong>commas (CSV)</strong> and <strong>pipes (Markdown)</strong>.',
+    paste_help_3: 'The first row is used as a header if it contains level names. Points are extracted from the header if they appear in parentheses, e.g.: <code>Excellent (4)</code>.',
+    paste_help_4: 'The number of <strong>levels</strong> and their <strong>names</strong> are auto-detected from the pasted data.',
+    load_example: '✨ Load example to try',
+    clear_data: 'Clear data',
+    my_rubrics: 'My rubrics',
+    no_rubrics: 'No saved rubrics',
+    paste_placeholder: 'Paste your table data here (Ctrl+V / Cmd+V)...',
+    generate: 'Generate rubric',
+    btn_edit: 'Edit',
+    btn_copy: 'Copy',
+    btn_save: 'Save',
+    btn_reset: 'Reset',
+    evaluation: 'Evaluation',
+    not_evaluated: 'Not evaluated',
+    breakdown_title: 'Breakdown by indicator',
+    grade_sob: 'Outstanding (9-10)',
+    grade_not: 'Very Good (7-8)',
+    grade_bien: 'Good (6)',
+    grade_suf: 'Sufficient (5)',
+    grade_ins: 'Insufficient (0-4)',
+    scale_sob: 'Outstanding',
+    scale_not: 'Very Good',
+    scale_bien: 'Good',
+    scale_suf: 'Sufficient',
+    scale_ins: 'Insufficient',
+    scale_title: 'Scale',
+    no_valid_data: 'No valid data detected. Make sure the text has columns separated by tabs, commas, pipes (|) or copied from a table.',
+    only_header: 'Only the header row was detected. Add indicator rows.',
+    sep_tab: 'tabs',
+    sep_csv: 'commas (CSV)',
+    sep_pipe: 'pipes (Markdown)',
+    sep_concat: 'auto (concatenated text)',
+    sep_unknown: 'unknown',
+    sep_detected: 'Separator detected:',
+    levels_word: 'level(s)',
+    header_detected: 'Header detected',
+    no_header: 'No header',
+    indicators_detected: 'indicator(s) and',
+    detected_suffix: 'detected',
+    click_to_edit: 'Click any cell to edit it',
+    rows_warning: 'Some rows have fewer columns than expected',
+    weight_label: 'Weight',
+    indicator: 'Indicator',
+    pdf_toast: 'Use "Save as PDF" in the print dialog',
+    copy_toast: 'Results copied to clipboard',
+    saved_toast: 'saved to your library',
+    loaded_toast: 'loaded',
+    rubric_default: 'Rubric',
+    eval_subtitle: 'Evaluation Rubric',
+    untitled: 'Untitled',
+    not_evaluated_short: 'not evaluated',
+    total_label: 'Total',
+    grade_word: 'Grade',
+    evaluated_word: 'Evaluated',
+    score_word: 'Score',
+    level_default: 'Level',
+    example_title: 'Research Project',
+    example_subtitle: 'Year 9 · English Language',
+    example_csv: 'Indicator,Excellent (4),Good (3),Sufficient (2),Insufficient (1)\nContent and Accuracy,"The topic is developed in depth with original ideas and accurate data.","The topic is well covered, though lacking some depth or detail.","Basic information present, but with some omissions or errors.","Content is scarce, irrelevant or contains serious errors."\nStructure and Organisation,"Introduction, development and conclusion clearly defined and connected.","Follows the basic structure, though transitions could be improved.","Structure is confusing at some points; lacks flow.","Lacks logical order; it is difficult to follow the thread of the work."\nWriting and Spelling,Flawless text. Varied vocabulary with no grammatical errors.,Very few errors (1-2) that do not affect comprehension.,Several grammatical or spelling errors that distract the reader.,Constant errors that seriously hinder reading.\nCitations and Sources,All sources correctly cited following the required format (e.g. APA).,"Most sources are cited, with minor formatting errors.",Includes sources but does not follow a format or key citations are missing.,Does not include bibliography or cite the sources used.\nPresentation,"Meets all formatting requirements (font, margins, neatness).",Meets almost all formatting requirements.,Careless or incomplete formatting.,Does not follow any formatting instructions or untidy submission.',
+},
+};
+
+function t(key) {
+    return (I18N[currentLang] && I18N[currentLang][key]) || I18N.es[key] || key;
+}
+
+function applyI18n() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        const val = t(key);
+        // Some keys contain HTML (paste_help_*), use innerHTML for those
+        if (val.includes('<strong>') || val.includes('<code>')) {
+            el.innerHTML = val;
+        } else {
+            el.textContent = val;
+        }
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        el.placeholder = t(el.dataset.i18nPlaceholder);
+    });
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        el.title = t(el.dataset.i18nTitle);
+    });
+    document.documentElement.lang = currentLang;
+}
+
+function setLang(lang) {
+    currentLang = lang;
+    localStorage.setItem('rubricapp_lang', lang);
+    document.getElementById('langSelect').value = lang;
+    applyI18n();
+    // Re-render library (it has translatable empty text)
+    renderLibrary();
+    // Re-render preview if data exists
+    if (parsedResult) parseAndPreview();
+    // Re-render scale legend if rubric is visible
+    if (document.getElementById('rubricScreen').style.display === 'block') {
+        buildScaleLegend();
+        recalcRubric();
+    }
+}
+
 /* ═══════════════════════════════════════════════════
    SMART PARSER
    ═══════════════════════════════════════════════════ */
@@ -1592,7 +2178,7 @@ function buildLevels(headerRow, numLevels) {
         }
     } else {
         for (let i = 0; i < numLevels; i++) {
-            levels.push({ name: `Nivel ${numLevels - i}`, pts: null });
+            levels.push({ name: `${t('level_default')} ${numLevels - i}`, pts: null });
         }
     }
 
@@ -1619,31 +2205,31 @@ function buildLevels(headerRow, numLevels) {
    ═══════════════════════════════════════════════════ */
 
 const ICONS = [
-    { id: 'file-text', tags: 'documento texto archivo', svg: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>' },
-    { id: 'book-open', tags: 'libro lectura leer', svg: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>' },
-    { id: 'graduation', tags: 'graduacion educacion universidad', svg: '<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/>' },
-    { id: 'pencil', tags: 'lapiz escribir editar', svg: '<path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>' },
-    { id: 'clipboard', tags: 'portapapeles rubrica lista', svg: '<rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>' },
-    { id: 'check-square', tags: 'evaluar verificar tarea', svg: '<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>' },
-    { id: 'star', tags: 'estrella puntuacion valoracion', svg: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>' },
-    { id: 'award', tags: 'premio medalla logro', svg: '<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>' },
+    { id: 'file-text', tags: 'documento texto archivo document text file fitxer testu artxiboa', svg: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>' },
+    { id: 'book-open', tags: 'libro lectura leer book reading llibre liburua irakurtzea', svg: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>' },
+    { id: 'graduation', tags: 'graduacion educacion universidad graduation education university graduació unibertsitatea hezkuntza', svg: '<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/>' },
+    { id: 'pencil', tags: 'lapiz escribir editar pencil write edit llapis arkatza idatzi', svg: '<path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>' },
+    { id: 'clipboard', tags: 'portapapeles rubrica lista clipboard rubric list arbela', svg: '<rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>' },
+    { id: 'check-square', tags: 'evaluar verificar tarea evaluate check task avaluar ebaluatu egiaztatu', svg: '<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>' },
+    { id: 'star', tags: 'estrella puntuacion valoracion star score rating estel izarra', svg: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>' },
+    { id: 'award', tags: 'premio medalla logro award medal achievement premi saria domina', svg: '<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>' },
     { id: 'trophy', tags: 'trofeo campeon ganador', svg: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>' },
-    { id: 'target', tags: 'objetivo diana meta', svg: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>' },
-    { id: 'lightbulb', tags: 'idea bombilla creatividad', svg: '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>' },
-    { id: 'music', tags: 'musica nota cancion', svg: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>' },
-    { id: 'palette', tags: 'arte pintura color dibujo', svg: '<circle cx="13.5" cy="6.5" r="0.5" fill="currentColor"/><circle cx="17.5" cy="10.5" r="0.5" fill="currentColor"/><circle cx="8.5" cy="7.5" r="0.5" fill="currentColor"/><circle cx="6.5" cy="12.5" r="0.5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.5-.7 1.5-1.5 0-.4-.13-.77-.38-1.07-.25-.3-.37-.67-.37-1.07 0-.83.67-1.5 1.5-1.5H16c3.31 0 6-2.69 6-6 0-5.17-4.5-9-10-9z"/>' },
-    { id: 'microscope', tags: 'ciencia laboratorio investigar microscopio', svg: '<path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/>' },
+    { id: 'target', tags: 'objetivo diana meta target goal objectiu helburu xede', svg: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>' },
+    { id: 'lightbulb', tags: 'idea bombilla creatividad lightbulb creativity bonbilla sormen', svg: '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>' },
+    { id: 'music', tags: 'musica nota cancion music song musika abesti', svg: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>' },
+    { id: 'palette', tags: 'arte pintura color dibujo art painting drawing artea margoa', svg: '<circle cx="13.5" cy="6.5" r="0.5" fill="currentColor"/><circle cx="17.5" cy="10.5" r="0.5" fill="currentColor"/><circle cx="8.5" cy="7.5" r="0.5" fill="currentColor"/><circle cx="6.5" cy="12.5" r="0.5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.5-.7 1.5-1.5 0-.4-.13-.77-.38-1.07-.25-.3-.37-.67-.37-1.07 0-.83.67-1.5 1.5-1.5H16c3.31 0 6-2.69 6-6 0-5.17-4.5-9-10-9z"/>' },
+    { id: 'microscope', tags: 'ciencia laboratorio investigar microscopio science laboratory research zientzia ikerketa', svg: '<path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/>' },
     { id: 'flask', tags: 'quimica experimento probeta', svg: '<path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16.5h10"/>' },
-    { id: 'globe', tags: 'mundo tierra geografia planeta', svg: '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>' },
-    { id: 'calculator', tags: 'matematicas calcular numeros', svg: '<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><line x1="8" y1="11" x2="8" y2="11.01"/><line x1="12" y1="11" x2="12" y2="11.01"/><line x1="16" y1="11" x2="16" y2="11.01"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="12" y1="15" x2="12" y2="15.01"/><line x1="8" y1="19" x2="8" y2="19.01"/><line x1="12" y1="19" x2="12" y2="19.01"/>' },
-    { id: 'code', tags: 'programacion informatica codigo', svg: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>' },
+    { id: 'globe', tags: 'mundo tierra geografia planeta world earth geography mon geografia mundua lurra', svg: '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>' },
+    { id: 'calculator', tags: 'matematicas calcular numeros mathematics calculate numbers matematiques matematika kalkulatu', svg: '<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><line x1="8" y1="11" x2="8" y2="11.01"/><line x1="12" y1="11" x2="12" y2="11.01"/><line x1="16" y1="11" x2="16" y2="11.01"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="12" y1="15" x2="12" y2="15.01"/><line x1="8" y1="19" x2="8" y2="19.01"/><line x1="12" y1="19" x2="12" y2="19.01"/>' },
+    { id: 'code', tags: 'programacion informatica codigo programming computer code programazio informatika', svg: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>' },
     { id: 'cpu', tags: 'tecnologia ordenador procesador', svg: '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/>' },
     { id: 'camera', tags: 'fotografia imagen foto', svg: '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>' },
     { id: 'film', tags: 'cine pelicula video', svg: '<rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/>' },
     { id: 'users', tags: 'grupo equipo personas colaboracion', svg: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
-    { id: 'heart', tags: 'corazon salud amor', svg: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>' },
-    { id: 'running', tags: 'deporte correr ejercicio educacion fisica', svg: '<circle cx="16" cy="4" r="1"/><path d="m18 7-1.8-1.8c-.5-.5-1.2-.8-2-.8H12l-3 5"/><path d="m14 11-3.3 3.3a1 1 0 0 0 0 1.4l3.3 3.3"/><path d="M2 18h1c1.6 0 3.1-.8 4-2l1.3-2"/><path d="m22 18-3-3"/><path d="M7 8 4 11"/>' },
-    { id: 'sprout', tags: 'naturaleza planta biologia ecologia', svg: '<path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/>' },
+    { id: 'heart', tags: 'corazon salud amor heart health love cor saude bihotza osasuna', svg: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>' },
+    { id: 'running', tags: 'deporte correr ejercicio educacion fisica sport running exercise esport kirola ariketa', svg: '<circle cx="16" cy="4" r="1"/><path d="m18 7-1.8-1.8c-.5-.5-1.2-.8-2-.8H12l-3 5"/><path d="m14 11-3.3 3.3a1 1 0 0 0 0 1.4l3.3 3.3"/><path d="M2 18h1c1.6 0 3.1-.8 4-2l1.3-2"/><path d="m22 18-3-3"/><path d="M7 8 4 11"/>' },
+    { id: 'sprout', tags: 'naturaleza planta biologia ecologia nature plant biology ecology natura biologia', svg: '<path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/>' },
     { id: 'rocket', tags: 'cohete espacio innovacion', svg: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>' },
     { id: 'puzzle', tags: 'juego logica puzle pieza', svg: '<path d="M19.439 7.85c-.049.322.059.648.289.878l1.568 1.568c.47.47.706 1.087.706 1.704s-.235 1.233-.706 1.704l-1.611 1.611a.98.98 0 0 1-.837.276c-.47-.07-.802-.48-.968-.925a2.501 2.501 0 1 0-3.214 3.214c.446.166.855.497.925.968a.979.979 0 0 1-.276.837l-1.61 1.61a2.404 2.404 0 0 1-1.705.707 2.402 2.402 0 0 1-1.704-.706l-1.568-1.568a1.026 1.026 0 0 0-.877-.29c-.493.074-.84.504-1.02.968a2.5 2.5 0 1 1-3.237-3.237c.464-.18.894-.527.967-1.02a1.026 1.026 0 0 0-.289-.877l-1.568-1.568A2.402 2.402 0 0 1 1.998 12c0-.617.236-1.234.706-1.704L4.315 8.685a.98.98 0 0 1 .837-.276c.47.07.802.48.968.925a2.501 2.501 0 1 0 3.214-3.214c-.446-.166-.855-.497-.925-.968a.979.979 0 0 1 .276-.837l1.61-1.61a2.404 2.404 0 0 1 1.705-.707c.618 0 1.234.236 1.704.706l1.568 1.568c.23.23.556.338.877.29.493-.074.84-.504 1.02-.968a2.5 2.5 0 1 1 3.237 3.237c-.464.18-.894.527-.967 1.02Z"/>' },
     { id: 'bar-chart', tags: 'grafico estadistica datos', svg: '<line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>' },
@@ -1651,8 +2237,8 @@ const ICONS = [
     { id: 'compass', tags: 'brujula exploracion orientacion', svg: '<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>' },
     { id: 'clock', tags: 'reloj tiempo horario', svg: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' },
     { id: 'settings', tags: 'ajustes configuracion engranaje', svg: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>' },
-    { id: 'school', tags: 'escuela colegio instituto', svg: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>' },
-    { id: 'message', tags: 'mensaje comunicacion hablar lengua idioma', svg: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>' },
+    { id: 'school', tags: 'escuela colegio instituto school escola ikastetxea eskola', svg: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>' },
+    { id: 'message', tags: 'mensaje comunicacion hablar lengua idioma message language missatge llengua hizkuntza mezua', svg: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>' },
     { id: 'ruler', tags: 'regla medir dibujo tecnico', svg: '<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/><path d="M13.5 6.5 5 15"/>' },
     { id: 'layers', tags: 'capas niveles', svg: '<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>' },
     { id: 'none', tags: 'ninguno vacio sin', svg: '<circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>' },
@@ -1785,7 +2371,7 @@ function parseAndPreview() {
 
     const { rows, separator } = smartParse(raw);
     if (rows.length === 0 || rows[0].length < 2) {
-        previewArea.innerHTML = '<div class="preview-err">No se detectaron datos v\u00e1lidos. Aseg\u00farate de que el texto tiene columnas separadas por tabulaciones, comas, pipes (|) o copiadas desde una tabla.</div>';
+        previewArea.innerHTML = `<div class="preview-err">${t('no_valid_data')}</div>`;
         generateBtn.disabled = true;
         parsedResult = null;
         return;
@@ -1794,7 +2380,7 @@ function parseAndPreview() {
     const { hasHeader, headerRow, dataRows } = detectHeader(rows);
 
     if (dataRows.length === 0) {
-        previewArea.innerHTML = '<div class="preview-err">Solo se detect\u00f3 la fila de cabecera. A\u00f1ade filas de indicadores.</div>';
+        previewArea.innerHTML = `<div class="preview-err">${t('only_header')}</div>`;
         generateBtn.disabled = true;
         parsedResult = null;
         return;
@@ -1831,7 +2417,7 @@ function parseAndPreview() {
     parsedResult = { dataRows, levels, hasHeader, headerRow };
 
     // Build preview table with weights as first column
-    const sepLabel = { tab: 'tabulaciones', csv: 'comas (CSV)', pipe: 'pipes (Markdown)', concatenated: 'auto (texto concatenado)' }[separator] || 'desconocido';
+    const sepLabel = { tab: t('sep_tab'), csv: t('sep_csv'), pipe: t('sep_pipe'), concatenated: t('sep_concat') }[separator] || t('sep_unknown');
 
     const equalWeight = Math.round(100 / dataRows.length);
     const weights = dataRows.map((r, idx) => {
@@ -1839,10 +2425,10 @@ function parseAndPreview() {
         return w;
     });
 
-    let html = `<div style="font-size:0.72rem;color:var(--slate-400);margin-top:10px;margin-bottom:6px">Separador detectado: <strong>${sepLabel}</strong> &middot; ${numLevels} nivel(es) &middot; ${hasHeader ? 'Cabecera detectada' : 'Sin cabecera'}</div>`;
+    let html = `<div style="font-size:0.72rem;color:var(--slate-400);margin-top:10px;margin-bottom:6px">${t('sep_detected')} <strong>${sepLabel}</strong> &middot; ${numLevels} ${t('levels_word')} &middot; ${hasHeader ? t('header_detected') : t('no_header')}</div>`;
     html += '<div class="preview-table-wrap"><table class="preview-table"><thead><tr>';
-    html += '<th class="col-weight">Peso</th>';
-    html += '<th>Indicador</th>';
+    html += `<th class="col-weight">${t('weight_label')}</th>`;
+    html += `<th>${t('indicator')}</th>`;
     levels.forEach(l => html += `<th>${esc(l.name)} <span style="opacity:0.5">(${l.pts})</span></th>`);
     html += '</tr></thead><tbody>';
 
@@ -1860,9 +2446,9 @@ function parseAndPreview() {
 
     html += `<tr class="weight-total-row"><td class="col-weight"><div class="weight-cell" id="weightTotal"><span class="weight-total-val">${weights.reduce((s, w) => s + w, 0)}%</span></div></td><td colspan="${numLevels + 1}" style="font-size:0.72rem;color:var(--slate-400)">`;
     if (valid) {
-        html += `&#x2705; ${dataRows.length} indicador(es) y ${numLevels} nivel(es) detectados &middot; <span>Haz clic en cualquier celda para editarla</span>`;
+        html += `&#x2705; ${dataRows.length} ${t('indicators_detected')} ${numLevels} ${t('levels_word')} ${t('detected_suffix')} &middot; <span>${t('click_to_edit')}</span>`;
     } else {
-        html += `&#x26A0;&#xFE0F; Algunas filas tienen menos columnas de las esperadas`;
+        html += `&#x26A0;&#xFE0F; ${t('rows_warning')}`;
     }
     html += '</td></tr>';
     html += '</tbody></table></div>';
@@ -1927,8 +2513,8 @@ function addField() {
     const editor = document.getElementById('fieldsEditor');
     const entry = document.createElement('div');
     entry.className = 'field-entry';
-    entry.innerHTML = `<input class="form-input" type="text" placeholder="Nombre del campo">
-        <button class="remove-btn" onclick="removeField(this)" title="Eliminar">&times;</button>`;
+    entry.innerHTML = `<input class="form-input" type="text" data-i18n-placeholder="field_placeholder" placeholder="${t('field_placeholder')}">
+        <button class="remove-btn" onclick="removeField(this)" data-i18n-title="delete_title" title="${t('delete_title')}">&times;</button>`;
     editor.appendChild(entry);
 }
 
@@ -1939,24 +2525,19 @@ function removeField(btn) {
 }
 
 function loadExample() {
-    document.getElementById('cfgTitle').value = 'Trabajo de Investigaci\u00f3n';
-    document.getElementById('cfgSubtitle').value = '3.\u00ba ESO \u00B7 Lengua Castellana';
+    document.getElementById('cfgTitle').value = t('example_title');
+    document.getElementById('cfgSubtitle').value = t('example_subtitle');
     selectIcon('pencil');
 
     const editor = document.getElementById('fieldsEditor');
     editor.innerHTML = `
         <div class="field-entry">
-            <input class="form-input" type="text" value="Alumno/a" placeholder="Nombre del campo">
-            <button class="remove-btn" onclick="removeField(this)" title="Eliminar">&times;</button>
+            <input class="form-input" type="text" value="${t('student_default')}" data-i18n-placeholder="field_placeholder" placeholder="${t('field_placeholder')}">
+            <button class="remove-btn" onclick="removeField(this)" data-i18n-title="delete_title" title="${t('delete_title')}">&times;</button>
         </div>`;
 
-    // CSV example (like Gemini output)
-    dataArea.value = `Indicador,Excelente (4),Bueno (3),Suficiente (2),Insuficiente (1)
-Contenido y Precisi\u00f3n,"El tema se desarrolla con profundidad, ideas originales y datos precisos.","El tema se cubre bien, aunque falta algo de profundidad o detalle.","Informaci\u00f3n b\u00e1sica presente, pero con algunas omisiones o errores.","El contenido es escaso, irrelevante o contiene errores graves."
-Estructura y Organizaci\u00f3n,"Introducci\u00f3n, desarrollo y conclusi\u00f3n claramente definidos y conectados.","Sigue la estructura b\u00e1sica, aunque las transiciones son mejorables.","La estructura es confusa en algunos puntos; falta fluidez.","Carece de orden l\u00f3gico; es dif\u00edcil seguir el hilo del trabajo."
-Redacci\u00f3n y Ortograf\u00eda,Texto impecable. Vocabulario variado y sin errores gramaticales.,Muy pocos errores (1-2) que no afectan la comprensi\u00f3n.,Varios errores gramaticales o de ortograf\u00eda que distraen al leer.,Errores constantes que dificultan seriamente la lectura.
-Citas y Fuentes,Cita todas las fuentes correctamente siguiendo el formato pedido (ej. APA).,"La mayor\u00eda de las fuentes est\u00e1n citadas, con errores menores de formato.",Incluye fuentes pero no sigue un formato o faltan citas clave.,No incluye bibliograf\u00eda ni cita las fuentes utilizadas.
-Presentaci\u00f3n,"Cumple con todos los requisitos de formato (fuente, m\u00e1rgenes, limpieza).",Cumple casi todos los requisitos de formato.,Formato descuidado o incompleto.,No sigue ninguna instrucci\u00f3n de formato o entrega desprolija.`;
+    // CSV example (localized)
+    dataArea.value = t('example_csv');
 
     document.getElementById('clearDataBtn').style.display = 'inline-flex';
     parseAndPreview();
@@ -1975,7 +2556,7 @@ const CIRC = 2 * Math.PI * 65;
 function generate() {
     if (!parsedResult) return;
 
-    const title = document.getElementById('cfgTitle').value.trim() || 'R\u00fabrica';
+    const title = document.getElementById('cfgTitle').value.trim() || t('rubric_default');
     const subtitle = document.getElementById('cfgSubtitle').value.trim();
     const iconSvg = getSelectedIconSvg();
     const fieldNames = Array.from(document.querySelectorAll('.field-entry input')).map(i => i.value.trim()).filter(Boolean);
@@ -1984,7 +2565,7 @@ function generate() {
     rubricLevels = levels;
 
     rubricData = dataRows.map((r, idx) => {
-        const obj = { name: r[0] || 'Indicador', weight: weights ? weights[idx] : Math.round(100 / dataRows.length), descriptions: [] };
+        const obj = { name: r[0] || t('indicator'), weight: weights ? weights[idx] : Math.round(100 / dataRows.length), descriptions: [] };
         for (let i = 0; i < rubricLevels.length; i++) obj.descriptions.push(r[1 + i] || '');
         return obj;
     });
@@ -1996,7 +2577,7 @@ function generate() {
     // Populate rubric screen
     document.getElementById('rubIcon').innerHTML = iconSvg || '';
     document.getElementById('rubTitle').textContent = title;
-    document.getElementById('rubSubtitle').textContent = subtitle ? `R\u00fabrica de Evaluaci\u00f3n \u00B7 ${subtitle}` : 'R\u00fabrica de Evaluaci\u00f3n';
+    document.getElementById('rubSubtitle').textContent = subtitle ? `${t('eval_subtitle')} \u00B7 ${subtitle}` : t('eval_subtitle');
     document.title = `${title} | RubricApp`;
 
     // Fields
@@ -2011,7 +2592,7 @@ function generate() {
 
     // Thead
     const thead = document.getElementById('rubThead');
-    let thHtml = '<tr><th>Indicador</th>';
+    let thHtml = `<tr><th>${t('indicator')}</th>`;
     rubricLevels.forEach(l => {
         thHtml += `<th>${esc(l.name)}<span class="th-pts">${l.pts} pt${l.pts > 1 ? 's' : ''}</span></th>`;
     });
@@ -2161,12 +2742,12 @@ function recalcRubric() {
 
     const pct = weightedPct;
     let grade, gClass, ringColor;
-    if (pct >= 0.9) { grade = 'Sobresaliente (9-10)'; gClass = 'g-sob'; ringColor = '#34d399'; }
-    else if (pct >= 0.7) { grade = 'Notable (7-8)'; gClass = 'g-not'; ringColor = '#60a5fa'; }
-    else if (pct >= 0.6) { grade = 'Bien (6)'; gClass = 'g-bien'; ringColor = '#fbbf24'; }
-    else if (pct >= 0.5) { grade = 'Suficiente (5)'; gClass = 'g-suf'; ringColor = '#fb923c'; }
-    else if (total > 0) { grade = 'Insuficiente (0-4)'; gClass = 'g-ins'; ringColor = '#fb7185'; }
-    else { grade = 'Sin evaluar'; gClass = ''; ringColor = '#3b82f6'; }
+    if (pct >= 0.9) { grade = t('grade_sob'); gClass = 'g-sob'; ringColor = '#34d399'; }
+    else if (pct >= 0.7) { grade = t('grade_not'); gClass = 'g-not'; ringColor = '#60a5fa'; }
+    else if (pct >= 0.6) { grade = t('grade_bien'); gClass = 'g-bien'; ringColor = '#fbbf24'; }
+    else if (pct >= 0.5) { grade = t('grade_suf'); gClass = 'g-suf'; ringColor = '#fb923c'; }
+    else if (total > 0) { grade = t('grade_ins'); gClass = 'g-ins'; ringColor = '#fb7185'; }
+    else { grade = t('not_evaluated'); gClass = ''; ringColor = '#3b82f6'; }
 
     ring.style.stroke = ringColor;
     ring.style.filter = `drop-shadow(0 0 8px ${ringColor}66)`;
@@ -2188,14 +2769,14 @@ function buildScaleLegend() {
     const legend = document.getElementById('scaleLegend');
     const max = rubricMaxPts;
     const ranges = [
-        { g: 'sob', dot: 'c-emerald', name: 'Sobresaliente', min: Math.ceil(max * 0.9), max: max, nota: '9-10' },
-        { g: 'not', dot: 'c-blue', name: 'Notable', min: Math.ceil(max * 0.7), max: Math.ceil(max * 0.9) - 1, nota: '7-8' },
-        { g: 'bien', dot: 'c-amber', name: 'Bien', min: Math.ceil(max * 0.6), max: Math.ceil(max * 0.7) - 1, nota: '6' },
-        { g: 'suf', dot: 'c-orange', name: 'Suficiente', min: Math.ceil(max * 0.5), max: Math.ceil(max * 0.6) - 1, nota: '5' },
-        { g: 'ins', dot: 'c-rose', name: 'Insuficiente', min: 0, max: Math.ceil(max * 0.5) - 1, nota: '0-4' },
+        { g: 'sob', dot: 'c-emerald', name: t('scale_sob'), min: Math.ceil(max * 0.9), max: max, nota: '9-10' },
+        { g: 'not', dot: 'c-blue', name: t('scale_not'), min: Math.ceil(max * 0.7), max: Math.ceil(max * 0.9) - 1, nota: '7-8' },
+        { g: 'bien', dot: 'c-amber', name: t('scale_bien'), min: Math.ceil(max * 0.6), max: Math.ceil(max * 0.7) - 1, nota: '6' },
+        { g: 'suf', dot: 'c-orange', name: t('scale_suf'), min: Math.ceil(max * 0.5), max: Math.ceil(max * 0.6) - 1, nota: '5' },
+        { g: 'ins', dot: 'c-rose', name: t('scale_ins'), min: 0, max: Math.ceil(max * 0.5) - 1, nota: '0-4' },
     ];
 
-    let html = '<div class="scale-legend-title">Escala</div>';
+    let html = `<div class="scale-legend-title">${t('scale_title')}</div>`;
     ranges.forEach(r => {
         html += `<div class="scale-row" data-g="${r.g}">
             <span class="s-dot ${r.dot}"></span>
@@ -2232,7 +2813,7 @@ function resetRubric() {
     document.getElementById('ringVal').style.stroke = '#3b82f6';
     document.getElementById('ringVal').style.filter = 'drop-shadow(0 0 6px rgba(59,130,246,0.4))';
     document.getElementById('gradePill').className = 'grade-pill';
-    document.getElementById('gradeLabel').textContent = 'Sin evaluar';
+    document.getElementById('gradeLabel').textContent = t('not_evaluated');
     document.getElementById('statusDot').classList.remove('active');
     document.querySelectorAll('.scale-row').forEach(r => r.classList.remove('active'));
 }
@@ -2268,7 +2849,7 @@ function downloadPDF() {
     setTimeout(() => {
         document.title = `${title} | RubricApp`;
     }, 500);
-    showToast('Usa "Guardar como PDF" en el di\u00e1logo de impresi\u00f3n',
+    showToast(t('pdf_toast'),
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>');
 }
 
@@ -2296,7 +2877,7 @@ function copyResults() {
     const maxPerRow = Math.max(...rubricLevels.map(l => l.pts));
     rubricData.forEach((c, i) => {
         const pts = rubricScores[i];
-        const mark = pts !== undefined ? `${pts}/${maxPerRow}` : 'sin evaluar';
+        const mark = pts !== undefined ? `${pts}/${maxPerRow}` : t('not_evaluated_short');
         text += `  ${c.name} (${c.weight}%): ${mark}`;
         if (pts !== undefined) {
             const levelIdx = rubricLevels.findIndex(l => l.pts === pts);
@@ -2314,16 +2895,16 @@ function copyResults() {
         weightedPct += (pts / maxPerRow) * (w / totalWeight);
     }
     const nota10 = (weightedPct * 10).toFixed(2);
-    text += `\nTotal: ${total}/${rubricMaxPts} pts | Nota: ${nota10}/10`;
-    text += ` | Evaluados: ${filled}/${rubricData.length}\n`;
+    text += `\n${t('total_label')}: ${total}/${rubricMaxPts} pts | ${t('score_word')}: ${nota10}/10`;
+    text += ` | ${t('evaluated_word')}: ${filled}/${rubricData.length}\n`;
 
     // Grade
     const grade = document.getElementById('gradeLabel').textContent;
-    text += `Calificaci\u00f3n: ${grade}\n`;
+    text += `${t('grade_word')}: ${grade}\n`;
 
+    const copyIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
     navigator.clipboard.writeText(text).then(() => {
-        showToast('Resultados copiados al portapapeles',
-            '<svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>');
+        showToast(t('copy_toast'), copyIcon);
     }).catch(() => {
         // Fallback
         const ta = document.createElement('textarea');
@@ -2332,8 +2913,7 @@ function copyResults() {
         ta.select();
         document.execCommand('copy');
         document.body.removeChild(ta);
-        showToast('Resultados copiados al portapapeles',
-            '<svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>');
+        showToast(t('copy_toast'), copyIcon);
     });
 }
 
@@ -2354,7 +2934,7 @@ function saveLibrary(lib) {
 }
 
 function saveRubricToLibrary() {
-    const title = document.getElementById('cfgTitle').value.trim() || document.getElementById('rubTitle').textContent || 'Sin t\u00edtulo';
+    const title = document.getElementById('cfgTitle').value.trim() || document.getElementById('rubTitle').textContent || t('untitled');
     const subtitle = document.getElementById('cfgSubtitle').value.trim();
     const fieldNames = Array.from(document.querySelectorAll('.field-entry input')).map(i => i.value.trim()).filter(Boolean);
 
@@ -2382,7 +2962,7 @@ function saveRubricToLibrary() {
 
     saveLibrary(lib);
     renderLibrary();
-    showToast(`"${title}" guardada en tu biblioteca`,
+    showToast(`"${title}" ${t('saved_toast')}`,
         '<svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>');
 }
 
@@ -2400,8 +2980,8 @@ function loadFromLibrary(id) {
     if (entry.fields && entry.fields.length) {
         editor.innerHTML = entry.fields.map(f =>
             `<div class="field-entry">
-                <input class="form-input" type="text" value="${esc(f)}" placeholder="Nombre del campo">
-                <button class="remove-btn" onclick="removeField(this)" title="Eliminar">&times;</button>
+                <input class="form-input" type="text" value="${esc(f)}" data-i18n-placeholder="field_placeholder" placeholder="${t('field_placeholder')}">
+                <button class="remove-btn" onclick="removeField(this)" data-i18n-title="delete_title" title="${t('delete_title')}">&times;</button>
             </div>`
         ).join('');
     }
@@ -2428,7 +3008,7 @@ function loadFromLibrary(id) {
         }
     }
 
-    showToast(`"${entry.title}" cargada`,
+    showToast(`"${entry.title}" ${t('loaded_toast')}`,
         '<svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>');
     window.scrollTo(0, 0);
 }
@@ -2444,22 +3024,25 @@ function renderLibrary() {
     const lib = getLibrary();
     const list = document.getElementById('libraryList');
     if (lib.length === 0) {
-        list.innerHTML = '<span class="library-empty">Ninguna r\u00fabrica guardada</span>';
+        list.innerHTML = `<span class="library-empty" data-i18n="no_rubrics">${t('no_rubrics')}</span>`;
         return;
     }
     list.innerHTML = lib.map(e => {
         const date = new Date(e.savedAt);
-        const dateStr = date.toLocaleDateString('es', { day: 'numeric', month: 'short' });
+        const localeDateMap = { es: 'es', ca: 'ca', eu: 'eu', gl: 'gl', va: 'ca', en: 'en' };
+        const dateStr = date.toLocaleDateString(localeDateMap[currentLang] || 'es', { day: 'numeric', month: 'short' });
         return `<div class="library-chip" onclick="loadFromLibrary(${e.id})" title="${esc(e.title)} - ${dateStr}">
             ${esc(e.title)}
-            <button class="chip-delete" onclick="deleteFromLibrary(${e.id}, event)" title="Eliminar">
+            <button class="chip-delete" onclick="deleteFromLibrary(${e.id}, event)" title="${t('delete_title')}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>`;
     }).join('');
 }
 
-// Initialize library on load
+// Initialize language and library on load
+document.getElementById('langSelect').value = currentLang;
+applyI18n();
 renderLibrary();
 </script>
 </body>

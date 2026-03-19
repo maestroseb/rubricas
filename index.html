@@ -1262,6 +1262,384 @@
         @media (max-width: 700px) {
             .lang-selector { top: 10px; right: 12px; }
         }
+
+        /* ═══════════════════════════════════════
+           MULTI-STUDENT (feature flag)
+           ═══════════════════════════════════════ */
+        .student-card { display: none; }
+        .multi-mode .student-card { display: block; }
+
+        .student-card .card-title svg { width: 16px; height: 16px; }
+
+        .student-paste-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            margin-bottom: 12px;
+        }
+        .student-paste-row .form-group { flex: 1; margin: 0; }
+        .student-paste-row .form-group:first-child { flex: 0.5; }
+
+        .student-paste-area {
+            width: 100%;
+            min-height: 70px;
+            max-height: 140px;
+            resize: vertical;
+            font-size: 0.85rem;
+        }
+
+        .student-save-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 8px;
+        }
+        .student-save-btn {
+            padding: 7px 16px;
+            border: 1px solid var(--brand);
+            border-radius: var(--radius-xs);
+            background: var(--brand);
+            color: white;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+            white-space: nowrap;
+        }
+        .student-save-btn:hover { background: var(--brand-dark); }
+
+        .slist-bar {
+            margin: 14px 0 0;
+            padding: 10px 14px;
+            background: white;
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .slist-bar-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--slate-400);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .slist-bar-title svg { width: 14px; height: 14px; }
+        .slist-chips {
+            display: flex;
+            gap: 6px;
+            flex: 1;
+            overflow-x: auto;
+            padding: 2px 0;
+        }
+        .slist-chips::-webkit-scrollbar { height: 4px; }
+        .slist-chips::-webkit-scrollbar-thumb { background: var(--slate-200); border-radius: 2px; }
+        .slist-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--slate-600);
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .slist-chip:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
+        .slist-chip.active { border-color: var(--brand); color: var(--brand); background: var(--brand-light); font-weight: 600; }
+        .slist-chip .chip-count {
+            font-size: 0.7rem;
+            background: var(--slate-200);
+            color: var(--slate-500);
+            padding: 1px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .slist-chip.active .chip-count { background: var(--brand); color: white; }
+        .slist-chip .chip-delete {
+            width: 16px; height: 16px; border: none; background: none;
+            color: var(--slate-400); cursor: pointer; padding: 0;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 3px; transition: all 0.1s;
+        }
+        .slist-chip .chip-delete:hover { color: var(--rose); background: var(--rose-bg); }
+        .slist-chip .chip-delete svg { width: 12px; height: 12px; }
+
+        /* Active student list detail */
+        .slist-detail {
+            margin-top: 10px;
+            padding: 12px 14px;
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-sm);
+        }
+        .slist-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .slist-detail-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--slate-700);
+        }
+        .slist-delete-all-btn {
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border: 1px solid var(--rose-border);
+            border-radius: var(--radius-xs);
+            background: var(--rose-bg);
+            color: var(--rose);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.15s;
+        }
+        .slist-delete-all-btn:hover { background: var(--rose); color: white; }
+        .slist-students {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .slist-student-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            background: white;
+            border: 1px solid var(--slate-200);
+            border-radius: 4px;
+            font-size: 0.78rem;
+            color: var(--slate-600);
+        }
+        .slist-student-tag .st-del {
+            width: 14px; height: 14px; border: none; background: none;
+            color: var(--slate-300); cursor: pointer; padding: 0;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 2px; transition: all 0.1s; font-size: 0.7rem;
+        }
+        .slist-student-tag .st-del:hover { color: var(--rose); }
+
+        /* Student navigation bar in rubric screen */
+        .student-nav { display: none; }
+        .multi-mode .student-nav { display: flex; }
+        .student-nav {
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
+        }
+        .student-nav-btn {
+            width: 32px; height: 32px;
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-xs);
+            background: white;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--slate-500);
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+        .student-nav-btn:hover { border-color: var(--brand); color: var(--brand); }
+        .student-nav-btn:disabled { opacity: 0.3; cursor: default; }
+        .student-nav-btn svg { width: 16px; height: 16px; }
+        .student-nav-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--slate-800);
+            flex: 1;
+            text-align: center;
+        }
+        .student-nav-counter {
+            font-size: 0.72rem;
+            color: var(--slate-400);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .student-nav-dots {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 300px;
+        }
+        .student-nav-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--slate-200);
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+        .student-nav-dot.current { background: var(--brand); box-shadow: 0 0 0 2px var(--brand-light); }
+        .student-nav-dot.evaluated { background: var(--emerald); }
+        .student-nav-dot.current.evaluated { background: var(--brand); box-shadow: 0 0 0 2px var(--brand-light); }
+        .student-summary-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-xs);
+            background: white;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--slate-600);
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .student-summary-btn:hover { border-color: var(--brand); color: var(--brand); }
+
+        /* Confirm dialog */
+        .confirm-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: 500;
+            justify-content: center;
+            align-items: center;
+        }
+        .confirm-overlay.open { display: flex; }
+        .confirm-box {
+            background: white;
+            border-radius: var(--radius);
+            padding: 28px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .confirm-box p {
+            font-size: 0.92rem;
+            color: var(--slate-700);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .confirm-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .confirm-actions button {
+            padding: 8px 20px;
+            border-radius: var(--radius-xs);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .confirm-cancel {
+            border: 1px solid var(--slate-200);
+            background: white;
+            color: var(--slate-600);
+        }
+        .confirm-cancel:hover { background: var(--slate-50); }
+        .confirm-danger {
+            border: 1px solid var(--rose);
+            background: var(--rose);
+            color: white;
+        }
+        .confirm-danger:hover { background: var(--rose-text); border-color: var(--rose-text); }
+
+        /* Summary modal */
+        .summary-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: 500;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            overflow-y: auto;
+        }
+        .summary-overlay.open { display: flex; }
+        .summary-box {
+            background: white;
+            border-radius: var(--radius);
+            padding: 28px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .summary-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        .summary-close {
+            width: 28px; height: 28px; border: none; background: var(--slate-100);
+            border-radius: 50%; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; color: var(--slate-500); transition: all 0.15s;
+        }
+        .summary-close:hover { background: var(--slate-200); }
+        .summary-close svg { width: 14px; height: 14px; }
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+        }
+        .summary-table th {
+            text-align: left;
+            padding: 8px 10px;
+            background: var(--slate-50);
+            border-bottom: 2px solid var(--slate-200);
+            font-weight: 700;
+            color: var(--slate-600);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .summary-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--slate-100);
+            color: var(--slate-700);
+        }
+        .summary-table tr:hover td { background: var(--slate-50); }
+        .summary-grade {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .summary-grade.sg-sob { background: var(--emerald-bg); color: var(--emerald-text); }
+        .summary-grade.sg-not { background: var(--brand-light); color: var(--brand-dark); }
+        .summary-grade.sg-bien { background: var(--amber-bg); color: var(--amber-text); }
+        .summary-grade.sg-suf { background: var(--orange-bg); color: var(--orange-text); }
+        .summary-grade.sg-ins { background: var(--rose-bg); color: var(--rose-text); }
+        .summary-grade.sg-none { background: var(--slate-100); color: var(--slate-400); }
+        .summary-avg {
+            margin-top: 14px;
+            padding: 10px 14px;
+            background: var(--slate-50);
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @media print {
+            .student-nav { display: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -1340,6 +1718,35 @@
             </div>
             <button class="add-field-btn" onclick="addField()" style="margin-top:10px" data-i18n="add_field">+ A&#xF1;adir campo</button>
         </div>
+    </div>
+
+    <!-- Student lists (multi-student mode) -->
+    <div class="card student-card" id="studentCard">
+        <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span data-i18n="student_lists">Listas de alumnos</span>
+        </div>
+        <div class="student-paste-row">
+            <div class="form-group">
+                <label data-i18n="group_name">Nombre del grupo</label>
+                <input class="form-input" type="text" id="slistName" data-i18n-placeholder="group_name_placeholder" placeholder="Ej: 3.&#xBA;A ESO">
+            </div>
+            <div class="form-group">
+                <label data-i18n="paste_students">Alumnos (uno por l&#xED;nea)</label>
+                <textarea class="form-input student-paste-area" id="slistPaste" data-i18n-placeholder="paste_students_placeholder" placeholder="Mar&#xED;a L&#xF3;pez&#10;Juan Garc&#xED;a&#10;Ana P&#xE9;rez&#10;..."></textarea>
+            </div>
+        </div>
+        <div class="student-save-row">
+            <button class="student-save-btn" onclick="saveStudentList()" data-i18n="save_list">+ Guardar lista</button>
+        </div>
+        <div class="slist-bar" id="slistBar" style="display:none">
+            <div class="slist-bar-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span data-i18n="my_lists">Mis listas</span>
+            </div>
+            <div class="slist-chips" id="slistChips"></div>
+        </div>
+        <div id="slistDetail"></div>
     </div>
 
     <!-- Paste data -->
@@ -1421,6 +1828,22 @@
             </div>
 
             <div class="fields-row" id="rubFields"></div>
+
+            <!-- Student navigation (multi-student mode) -->
+            <div class="student-nav" id="studentNav">
+                <button class="student-nav-btn" id="navPrev" onclick="navStudent(-1)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <div style="flex:1;text-align:center">
+                    <div class="student-nav-name" id="navName"></div>
+                    <div class="student-nav-dots" id="navDots"></div>
+                </div>
+                <button class="student-nav-btn" id="navNext" onclick="navStudent(1)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+                <div class="student-nav-counter" id="navCounter"></div>
+                <button class="student-summary-btn" onclick="showSummary()" data-i18n="btn_summary">Resumen</button>
+            </div>
 
             <div class="rubric-wrapper">
                 <table class="rubric-table">
@@ -1553,6 +1976,23 @@ es: {
     level_default: 'Nivel',
     example_title: 'Trabajo de Investigación',
     example_subtitle: '3.º ESO · Lengua Castellana',
+    student_lists: 'Listas de alumnos',
+    group_name: 'Nombre del grupo',
+    group_name_placeholder: 'Ej: 3.ºA ESO',
+    paste_students: 'Alumnos (uno por línea)',
+    paste_students_placeholder: 'María López\nJuan García\nAna Pérez\n...',
+    save_list: '+ Guardar lista',
+    my_lists: 'Mis listas',
+    delete_list: 'Eliminar lista',
+    students_word: 'alumnos',
+    confirm_cancel: 'Cancelar',
+    confirm_delete: 'Eliminar',
+    confirm_delete_list: '¿Eliminar la lista',
+    confirm_delete_student: '¿Eliminar a',
+    confirm_from: 'de',
+    btn_summary: 'Resumen',
+    summary_title: 'Resumen de evaluaciones',
+    summary_avg: 'Media',
     example_csv: 'Indicador,Excelente (4),Bueno (3),Suficiente (2),Insuficiente (1)\nContenido y Precisión,"El tema se desarrolla con profundidad, ideas originales y datos precisos.","El tema se cubre bien, aunque falta algo de profundidad o detalle.","Información básica presente, pero con algunas omisiones o errores.","El contenido es escaso, irrelevante o contiene errores graves."\nEstructura y Organización,"Introducción, desarrollo y conclusión claramente definidos y conectados.","Sigue la estructura básica, aunque las transiciones son mejorables.","La estructura es confusa en algunos puntos; falta fluidez.","Carece de orden lógico; es difícil seguir el hilo del trabajo."\nRedacción y Ortografía,Texto impecable. Vocabulario variado y sin errores gramaticales.,Muy pocos errores (1-2) que no afectan la comprensión.,Varios errores gramaticales o de ortografía que distraen al leer.,Errores constantes que dificultan seriamente la lectura.\nCitas y Fuentes,Cita todas las fuentes correctamente siguiendo el formato pedido (ej. APA).,"La mayoría de las fuentes están citadas, con errores menores de formato.",Incluye fuentes pero no sigue un formato o faltan citas clave.,No incluye bibliografía ni cita las fuentes utilizadas.\nPresentación,"Cumple con todos los requisitos de formato (fuente, márgenes, limpieza).",Cumple casi todos los requisitos de formato.,Formato descuidado o incompleto.,No sigue ninguna instrucción de formato o entrega desprolija.',
 },
 ca: {
@@ -1632,6 +2072,23 @@ ca: {
     evaluated_word: 'Avaluats',
     score_word: 'Nota',
     level_default: 'Nivell',
+    student_lists: 'Llistes d\'alumnes',
+    group_name: 'Nom del grup',
+    group_name_placeholder: 'Ex: 3r A ESO',
+    paste_students: 'Alumnes (un per línia)',
+    paste_students_placeholder: 'Maria López\nJoan García\nAna Pérez\n...',
+    save_list: '+ Desar llista',
+    my_lists: 'Les meves llistes',
+    delete_list: 'Eliminar llista',
+    students_word: 'alumnes',
+    confirm_cancel: 'Cancel·lar',
+    confirm_delete: 'Eliminar',
+    confirm_delete_list: 'Eliminar la llista',
+    confirm_delete_student: 'Eliminar',
+    confirm_from: 'de',
+    btn_summary: 'Resum',
+    summary_title: 'Resum d\'avaluacions',
+    summary_avg: 'Mitjana',
     example_title: 'Treball de Recerca',
     example_subtitle: '3r ESO · Llengua Catalana',
     example_csv: 'Indicador,Excel·lent (4),Bo (3),Suficient (2),Insuficient (1)\nContingut i Precisió,"El tema es desenvolupa amb profunditat, idees originals i dades precises.","El tema es cobreix bé, encara que falta una mica de profunditat o detall.","Informació bàsica present, però amb algunes omissions o errors.","El contingut és escàs, irrellevant o conté errors greus."\nEstructura i Organització,"Introducció, desenvolupament i conclusió clarament definits i connectats.","Segueix l\'estructura bàsica, encara que les transicions són millorables.","L\'estructura és confusa en alguns punts; falta fluïdesa.","Manca d\'ordre lògic; és difícil seguir el fil del treball."\nRedacció i Ortografia,Text impecable. Vocabulari variat i sense errors gramaticals.,Molt pocs errors (1-2) que no afecten la comprensió.,Diversos errors gramaticals o d\'ortografia que distreuen en llegir.,Errors constants que dificulten seriosament la lectura.\nCites i Fonts,Cita totes les fonts correctament seguint el format demanat (ex. APA).,"La majoria de les fonts estan citades, amb errors menors de format.",Inclou fonts però no segueix un format o falten cites clau.,No inclou bibliografia ni cita les fonts utilitzades.\nPresentació,"Compleix amb tots els requisits de format (font, marges, netedat).",Compleix gairebé tots els requisits de format.,Format descuidat o incomplet.,No segueix cap instrucció de format o lliurament desendreçat.',
@@ -1713,6 +2170,23 @@ eu: {
     evaluated_word: 'Ebaluatuak',
     score_word: 'Nota',
     level_default: 'Maila',
+    student_lists: 'Ikasle-zerrendak',
+    group_name: 'Taldearen izena',
+    group_name_placeholder: 'Ad: DBH 3.A',
+    paste_students: 'Ikasleak (bat lerroko)',
+    paste_students_placeholder: 'Maria Lopez\nJon Garcia\nAne Perez\n...',
+    save_list: '+ Zerrenda gorde',
+    my_lists: 'Nire zerrendak',
+    delete_list: 'Zerrenda ezabatu',
+    students_word: 'ikasle',
+    confirm_cancel: 'Utzi',
+    confirm_delete: 'Ezabatu',
+    confirm_delete_list: 'Zerrenda ezabatu',
+    confirm_delete_student: 'Ezabatu',
+    confirm_from: '-(e)tik',
+    btn_summary: 'Laburpena',
+    summary_title: 'Ebaluazioen laburpena',
+    summary_avg: 'Batez bestekoa',
     example_title: 'Ikerketa Lana',
     example_subtitle: 'DBH 3. · Euskara',
     example_csv: 'Adierazlea,Bikain (4),Ongi (3),Nahiko (2),Gutxi (1)\nEdukia eta Zehaztasuna,"Gaia sakontasunez garatzen da, ideia originalak eta datu zehatzak dituela.","Gaia ondo lantzen da, nahiz eta sakontasun edo xehetasun pixka bat falta.","Oinarrizko informazioa badago, baina hutsune edo akats batzuekin.","Edukia urria, garrantzirik gabekoa edo akats larriekin."\nEgitura eta Antolaketa,"Sarrera, garapena eta ondorioa argi definituta eta konektatuta.","Oinarrizko egitura jarraitzen du, nahiz eta trantsizioak hobetu daitezkeen.","Egitura nahasia puntu batzuetan; fluxu falta.","Ordena logikorik gabe; zaila da lanaren haria jarraitzea."\nIdazkera eta Ortografia,Testu ezin hobea. Hiztegi anitza eta akats gramatikal gabe.,Oso akats gutxi (1-2) ulermena kaltetzen ez dutenak.,Hainbat akats gramatikal edo ortografiko irakurtzean distraitzen dutenak.,Etengabeko akatsak irakurketa serioski zailtzen dutenak.\nAipamenak eta Iturriak,Iturri guztiak zuzen aipatzen ditu eskatutako formatua jarraituz (ad. APA).,"Iturri gehienak aipatuta daude, formatu-akats txikiekin.",Iturriak barne hartzen ditu baina ez du formaturik jarraitzen edo aipamen garrantzitsuak falta dira.,Ez du bibliografiarik ez eta erabilitako iturririk aipatzen.\nAurkezpena,"Formatu-baldintza guztiak betetzen ditu (letra-tipoa, marjinak, garbitasuna).",Formatu-baldintza ia guztiak betetzen ditu.,Formatua arduragabekoa edo osatugabea.,Ez du formatu-argibiderik jarraitzen edo entrega desegokia.',
@@ -1794,6 +2268,23 @@ gl: {
     evaluated_word: 'Avaliados',
     score_word: 'Nota',
     level_default: 'Nivel',
+    student_lists: 'Listas de alumnos',
+    group_name: 'Nome do grupo',
+    group_name_placeholder: 'Ex: 3.ºA ESO',
+    paste_students: 'Alumnos (un por liña)',
+    paste_students_placeholder: 'María López\nXoán García\nAna Pérez\n...',
+    save_list: '+ Gardar lista',
+    my_lists: 'As miñas listas',
+    delete_list: 'Eliminar lista',
+    students_word: 'alumnos',
+    confirm_cancel: 'Cancelar',
+    confirm_delete: 'Eliminar',
+    confirm_delete_list: 'Eliminar a lista',
+    confirm_delete_student: 'Eliminar a',
+    confirm_from: 'de',
+    btn_summary: 'Resumo',
+    summary_title: 'Resumo de avaliacións',
+    summary_avg: 'Media',
     example_title: 'Traballo de Investigación',
     example_subtitle: '3.º ESO · Lingua Galega',
     example_csv: 'Indicador,Excelente (4),Bo (3),Suficiente (2),Insuficiente (1)\nContido e Precisión,"O tema desenvólvese con profundidade, ideas orixinais e datos precisos.","O tema cóbrese ben, aínda que falta algo de profundidade ou detalle.","Información básica presente, pero con algunhas omisións ou erros.","O contido é escaso, irrelevante ou contén erros graves."\nEstrutura e Organización,"Introdución, desenvolvemento e conclusión claramente definidos e conectados.","Segue a estrutura básica, aínda que as transicións son mellorables.","A estrutura é confusa nalgúns puntos; falta fluidez.","Carece de orde lóxica; é difícil seguir o fío do traballo."\nRedacción e Ortografía,Texto impecable. Vocabulario variado e sen erros gramaticais.,Moi poucos erros (1-2) que non afectan a comprensión.,Varios erros gramaticais ou de ortografía que distraen ao ler.,Erros constantes que dificultan seriamente a lectura.\nCitas e Fontes,Cita todas as fontes correctamente seguindo o formato pedido (ex. APA).,"A maioría das fontes están citadas, con erros menores de formato.",Inclúe fontes pero non segue un formato ou faltan citas clave.,Non inclúe bibliografía nin cita as fontes utilizadas.\nPresentación,"Cumpre con todos os requisitos de formato (fonte, marxes, limpeza).",Cumpre case todos os requisitos de formato.,Formato descoidado ou incompleto.,Non segue ningunha instrución de formato ou entrega desaliñada.',
@@ -1875,6 +2366,23 @@ va: {
     evaluated_word: 'Avaluats',
     score_word: 'Nota',
     level_default: 'Nivell',
+    student_lists: 'Llistes d\'alumnes',
+    group_name: 'Nom del grup',
+    group_name_placeholder: 'Ex: 3r A ESO',
+    paste_students: 'Alumnes (un per línia)',
+    paste_students_placeholder: 'Maria López\nJoan García\nAna Pérez\n...',
+    save_list: '+ Guardar llista',
+    my_lists: 'Les meues llistes',
+    delete_list: 'Eliminar llista',
+    students_word: 'alumnes',
+    confirm_cancel: 'Cancel·lar',
+    confirm_delete: 'Eliminar',
+    confirm_delete_list: 'Eliminar la llista',
+    confirm_delete_student: 'Eliminar',
+    confirm_from: 'de',
+    btn_summary: 'Resum',
+    summary_title: 'Resum d\'avaluacions',
+    summary_avg: 'Mitjana',
     example_title: 'Treball d\'Investigació',
     example_subtitle: '3r ESO · Llengua Valenciana',
     example_csv: 'Indicador,Excel·lent (4),Bo (3),Suficient (2),Insuficient (1)\nContingut i Precisió,"El tema es desenvolupa amb profunditat, idees originals i dades precises.","El tema es cobreix bé, encara que falta una mica de profunditat o detall.","Informació bàsica present, però amb algunes omissions o errors.","El contingut és escàs, irrellevant o conté errors greus."\nEstructura i Organització,"Introducció, desenvolupament i conclusió clarament definits i connectats.","Segueix l\'estructura bàsica, encara que les transicions són millorables.","L\'estructura és confusa en alguns punts; falta fluïdesa.","Manca d\'orde lògic; és difícil seguir el fil del treball."\nRedacció i Ortografia,Text impecable. Vocabulari variat i sense errors gramaticals.,Molt pocs errors (1-2) que no afecten la comprensió.,Diversos errors gramaticals o d\'ortografia que distrauen en llegir.,Errors constants que dificulten seriosament la lectura.\nCites i Fonts,Cita totes les fonts correctament seguint el format demanat (ex. APA).,"La majoria de les fonts estan citades, amb errors menors de format.",Inclou fonts però no segueix un format o falten cites clau.,No inclou bibliografia ni cita les fonts utilitzades.\nPresentació,"Compleix amb tots els requisits de format (font, marges, netedat).",Compleix quasi tots els requisits de format.,Format descuidat o incomplet.,No segueix cap instrucció de format o lliurament desordenat.',
@@ -1956,6 +2464,23 @@ en: {
     evaluated_word: 'Evaluated',
     score_word: 'Score',
     level_default: 'Level',
+    student_lists: 'Student lists',
+    group_name: 'Group name',
+    group_name_placeholder: 'E.g.: Year 9A',
+    paste_students: 'Students (one per line)',
+    paste_students_placeholder: 'Mary Smith\nJohn Davis\nAnna Wilson\n...',
+    save_list: '+ Save list',
+    my_lists: 'My lists',
+    delete_list: 'Delete list',
+    students_word: 'students',
+    confirm_cancel: 'Cancel',
+    confirm_delete: 'Delete',
+    confirm_delete_list: 'Delete the list',
+    confirm_delete_student: 'Remove',
+    confirm_from: 'from',
+    btn_summary: 'Summary',
+    summary_title: 'Evaluation summary',
+    summary_avg: 'Average',
     example_title: 'Research Project',
     example_subtitle: 'Year 9 · English Language',
     example_csv: 'Indicator,Excellent (4),Good (3),Sufficient (2),Insufficient (1)\nContent and Accuracy,"The topic is developed in depth with original ideas and accurate data.","The topic is well covered, though lacking some depth or detail.","Basic information present, but with some omissions or errors.","Content is scarce, irrelevant or contains serious errors."\nStructure and Organisation,"Introduction, development and conclusion clearly defined and connected.","Follows the basic structure, though transitions could be improved.","Structure is confusing at some points; lacks flow.","Lacks logical order; it is difficult to follow the thread of the work."\nWriting and Spelling,Flawless text. Varied vocabulary with no grammatical errors.,Very few errors (1-2) that do not affect comprehension.,Several grammatical or spelling errors that distract the reader.,Constant errors that seriously hinder reading.\nCitations and Sources,All sources correctly cited following the required format (e.g. APA).,"Most sources are cited, with minor formatting errors.",Includes sources but does not follow a format or key citations are missing.,Does not include bibliography or cite the sources used.\nPresentation,"Meets all formatting requirements (font, margins, neatness).",Meets almost all formatting requirements.,Careless or incomplete formatting.,Does not follow any formatting instructions or untidy submission.',
@@ -2656,6 +3181,9 @@ function generate() {
     document.getElementById('setupScreen').style.display = 'none';
     document.getElementById('rubricScreen').style.display = 'block';
     window.scrollTo(0, 0);
+
+    // Multi-student: init navigation
+    if (MULTI_MODE && activeListId) initStudentNav();
 }
 
 function getSelClass(levelIndex, totalLevels) {
@@ -2819,6 +3347,7 @@ function resetRubric() {
 }
 
 function backToSetup() {
+    if (MULTI_MODE && activeListId) saveCurrentStudentEval();
     document.getElementById('rubricScreen').style.display = 'none';
     document.getElementById('setupScreen').style.display = 'block';
     document.title = 'RubricApp';
@@ -3044,6 +3573,443 @@ function renderLibrary() {
 document.getElementById('langSelect').value = currentLang;
 applyI18n();
 renderLibrary();
+
+/* ═══════════════════════════════════════════════════
+   MULTI-STUDENT MODE (feature flag ?multi=1)
+   ═══════════════════════════════════════════════════ */
+
+const MULTI_MODE = new URLSearchParams(window.location.search).has('multi');
+const SLIST_KEY = 'rubricapp_studentlists';
+const EVAL_KEY = 'rubricapp_evaluations';
+
+let activeListId = null;
+let currentStudentIdx = 0;
+let evaluationSessionId = null; // unique per generate() to scope evaluations
+
+if (MULTI_MODE) {
+    document.body.classList.add('multi-mode');
+    renderStudentLists();
+}
+
+function getStudentLists() {
+    try { return JSON.parse(localStorage.getItem(SLIST_KEY)) || []; }
+    catch { return []; }
+}
+
+function saveStudentListsStore(lists) {
+    localStorage.setItem(SLIST_KEY, JSON.stringify(lists));
+}
+
+function saveStudentList() {
+    const name = document.getElementById('slistName').value.trim();
+    const raw = document.getElementById('slistPaste').value.trim();
+    if (!name) { document.getElementById('slistName').focus(); return; }
+    if (!raw) { document.getElementById('slistPaste').focus(); return; }
+
+    const students = raw.split('\n').map(s => s.trim()).filter(Boolean);
+    if (students.length === 0) return;
+
+    const entry = {
+        id: Date.now(),
+        name,
+        students,
+        savedAt: new Date().toISOString()
+    };
+
+    const lists = getStudentLists();
+    const existIdx = lists.findIndex(l => l.name === name);
+    if (existIdx >= 0) {
+        lists[existIdx] = entry;
+    } else {
+        lists.unshift(entry);
+    }
+    if (lists.length > 30) lists.length = 30;
+
+    saveStudentListsStore(lists);
+    document.getElementById('slistName').value = '';
+    document.getElementById('slistPaste').value = '';
+
+    activeListId = entry.id;
+    renderStudentLists();
+    showToast(`"${name}" ${t('saved_toast')}`,
+        '<svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>');
+}
+
+function renderStudentLists() {
+    if (!MULTI_MODE) return;
+    const lists = getStudentLists();
+    const bar = document.getElementById('slistBar');
+    const chips = document.getElementById('slistChips');
+    const detail = document.getElementById('slistDetail');
+
+    if (lists.length === 0) {
+        bar.style.display = 'none';
+        detail.innerHTML = '';
+        activeListId = null;
+        return;
+    }
+
+    bar.style.display = 'flex';
+    chips.innerHTML = lists.map(l => {
+        const isActive = l.id === activeListId;
+        return `<div class="slist-chip ${isActive ? 'active' : ''}" onclick="selectStudentList(${l.id})">
+            ${esc(l.name)}
+            <span class="chip-count">${l.students.length}</span>
+            <button class="chip-delete" onclick="confirmDeleteList(${l.id}, '${esc(l.name)}', ${l.students.length}, event)" title="${t('delete_title')}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>`;
+    }).join('');
+
+    // Render detail for active list
+    if (activeListId) {
+        const list = lists.find(l => l.id === activeListId);
+        if (list) {
+            detail.innerHTML = `<div class="slist-detail">
+                <div class="slist-detail-header">
+                    <span class="slist-detail-title">${esc(list.name)} (${list.students.length})</span>
+                    <button class="slist-delete-all-btn" onclick="confirmDeleteList(${list.id}, '${esc(list.name)}', ${list.students.length})" data-i18n="delete_list">${t('delete_list')}</button>
+                </div>
+                <div class="slist-students">
+                    ${list.students.map((s, i) => `<span class="slist-student-tag">${esc(s)}<button class="st-del" onclick="confirmDeleteStudent(${list.id}, ${i}, '${esc(s)}', '${esc(list.name)}')" title="${t('delete_title')}">&times;</button></span>`).join('')}
+                </div>
+            </div>`;
+        } else {
+            detail.innerHTML = '';
+            activeListId = null;
+        }
+    } else {
+        detail.innerHTML = '';
+    }
+}
+
+function selectStudentList(id) {
+    activeListId = activeListId === id ? null : id;
+    renderStudentLists();
+}
+
+// ── Confirm dialog ──
+
+function showConfirm(message, onConfirm) {
+    let overlay = document.getElementById('confirmOverlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'confirm-overlay';
+        overlay.id = 'confirmOverlay';
+        document.body.appendChild(overlay);
+    }
+    overlay.innerHTML = `<div class="confirm-box">
+        <p>${message}</p>
+        <div class="confirm-actions">
+            <button class="confirm-cancel" onclick="closeConfirm()">${t('confirm_cancel')}</button>
+            <button class="confirm-danger" id="confirmOkBtn">${t('confirm_delete')}</button>
+        </div>
+    </div>`;
+    overlay.classList.add('open');
+    document.getElementById('confirmOkBtn').addEventListener('click', () => {
+        closeConfirm();
+        onConfirm();
+    });
+}
+
+function closeConfirm() {
+    const o = document.getElementById('confirmOverlay');
+    if (o) o.classList.remove('open');
+}
+
+function confirmDeleteList(id, name, count, evt) {
+    if (evt) evt.stopPropagation();
+    showConfirm(
+        `${t('confirm_delete_list')} <strong>"${name}"</strong> (${count} ${t('students_word')})?`,
+        () => deleteStudentList(id)
+    );
+}
+
+function confirmDeleteStudent(listId, studentIdx, studentName, listName) {
+    showConfirm(
+        `${t('confirm_delete_student')} <strong>${studentName}</strong> ${t('confirm_from')} "${listName}"?`,
+        () => removeStudentFromList(listId, studentIdx)
+    );
+}
+
+function deleteStudentList(id) {
+    const lists = getStudentLists().filter(l => l.id !== id);
+    saveStudentListsStore(lists);
+    if (activeListId === id) activeListId = null;
+    renderStudentLists();
+}
+
+function removeStudentFromList(listId, studentIdx) {
+    const lists = getStudentLists();
+    const list = lists.find(l => l.id === listId);
+    if (!list) return;
+    list.students.splice(studentIdx, 1);
+    if (list.students.length === 0) {
+        // Remove empty list
+        const idx = lists.indexOf(list);
+        lists.splice(idx, 1);
+        if (activeListId === listId) activeListId = null;
+    }
+    saveStudentListsStore(lists);
+    renderStudentLists();
+}
+
+// ── Student navigation in rubric screen ──
+
+function getActiveStudents() {
+    if (!activeListId) return [];
+    const lists = getStudentLists();
+    const list = lists.find(l => l.id === activeListId);
+    return list ? list.students : [];
+}
+
+function getEvaluations() {
+    try { return JSON.parse(localStorage.getItem(EVAL_KEY)) || {}; }
+    catch { return {}; }
+}
+
+function saveEvaluations(evals) {
+    localStorage.setItem(EVAL_KEY, JSON.stringify(evals));
+}
+
+function getSessionKey() {
+    return evaluationSessionId || 'default';
+}
+
+function saveCurrentStudentEval() {
+    const students = getActiveStudents();
+    if (!students.length || !evaluationSessionId) return;
+
+    const evals = getEvaluations();
+    if (!evals[getSessionKey()]) evals[getSessionKey()] = {};
+
+    evals[getSessionKey()][currentStudentIdx] = {
+        scores: { ...rubricScores },
+        fieldValues: Array.from(document.querySelectorAll('#rubFields .field-box input')).map(i => i.value)
+    };
+
+    saveEvaluations(evals);
+}
+
+function loadStudentEval(idx) {
+    const evals = getEvaluations();
+    const session = evals[getSessionKey()];
+    const data = session ? session[idx] : null;
+
+    // Reset rubric UI
+    rubricScores = {};
+    document.querySelectorAll('.lvl').forEach(c => {
+        c.classList.remove('sel-top', 'sel-high', 'sel-mid', 'sel-low');
+        c.querySelector('input').checked = false;
+    });
+    rubricData.forEach((_, i) => {
+        const pc = document.getElementById(`pts${i}`);
+        pc.textContent = '\u2013';
+        pc.classList.remove('has-val');
+        document.getElementById(`bf${i}`).style.width = '0%';
+        const bv = document.getElementById(`bv${i}`);
+        bv.textContent = '\u2013';
+        bv.classList.remove('filled');
+    });
+
+    if (data && data.scores) {
+        // Restore scores
+        for (const [idx, pts] of Object.entries(data.scores)) {
+            const i = parseInt(idx);
+            const levelIdx = rubricLevels.findIndex(l => l.pts === pts);
+            if (levelIdx >= 0) {
+                const row = document.querySelectorAll('#rubTbody tr')[i];
+                if (row) {
+                    const cell = row.querySelectorAll('.lvl')[levelIdx];
+                    if (cell) {
+                        const selClass = cell.dataset.selClass;
+                        cell.classList.add(selClass);
+                        cell.querySelector('input').checked = true;
+                        rubricScores[i] = pts;
+
+                        const maxPerRow = Math.max(...rubricLevels.map(l => l.pts));
+                        document.getElementById(`pts${i}`).textContent = pts;
+                        document.getElementById(`pts${i}`).classList.add('has-val');
+                        const colors = { 'sel-top': '#34d399', 'sel-high': '#fbbf24', 'sel-mid': '#fb923c', 'sel-low': '#fb7185' };
+                        document.getElementById(`bf${i}`).style.width = `${(pts / maxPerRow) * 100}%`;
+                        document.getElementById(`bf${i}`).style.background = colors[selClass] || '#3b82f6';
+                        const bv = document.getElementById(`bv${i}`);
+                        bv.textContent = `${pts}/${maxPerRow}`;
+                        bv.classList.add('filled');
+                    }
+                }
+            }
+        }
+    }
+
+    // Restore field values
+    const fields = document.querySelectorAll('#rubFields .field-box input');
+    if (data && data.fieldValues) {
+        fields.forEach((input, i) => { input.value = data.fieldValues[i] || ''; });
+    } else {
+        // Auto-fill first field with student name
+        const students = getActiveStudents();
+        fields.forEach((input, i) => {
+            input.value = i === 0 ? (students[idx] || '') : '';
+        });
+    }
+
+    recalcRubric();
+}
+
+function initStudentNav() {
+    const students = getActiveStudents();
+    if (!students.length || !MULTI_MODE) {
+        document.getElementById('studentNav').style.display = 'none';
+        return;
+    }
+
+    document.getElementById('studentNav').style.display = 'flex';
+    evaluationSessionId = `${activeListId}_${Date.now()}`;
+
+    // Check if there's a previous session for this list
+    const evals = getEvaluations();
+    const existingKeys = Object.keys(evals).filter(k => k.startsWith(`${activeListId}_`));
+    if (existingKeys.length > 0) {
+        // Use the most recent session
+        evaluationSessionId = existingKeys.sort().pop();
+    }
+
+    currentStudentIdx = 0;
+    updateStudentNav();
+    loadStudentEval(0);
+}
+
+function updateStudentNav() {
+    const students = getActiveStudents();
+    const n = students.length;
+
+    document.getElementById('navName').textContent = students[currentStudentIdx] || '';
+    document.getElementById('navCounter').textContent = `${currentStudentIdx + 1} / ${n}`;
+    document.getElementById('navPrev').disabled = currentStudentIdx === 0;
+    document.getElementById('navNext').disabled = currentStudentIdx === n - 1;
+
+    // Dots
+    const evals = getEvaluations();
+    const session = evals[getSessionKey()] || {};
+    const dots = document.getElementById('navDots');
+    dots.innerHTML = students.map((_, i) => {
+        const isCurrent = i === currentStudentIdx;
+        const isEvaluated = session[i] && Object.keys(session[i].scores || {}).length > 0;
+        return `<div class="student-nav-dot ${isCurrent ? 'current' : ''} ${isEvaluated ? 'evaluated' : ''}" onclick="goToStudent(${i})"></div>`;
+    }).join('');
+}
+
+function navStudent(dir) {
+    const students = getActiveStudents();
+    const newIdx = currentStudentIdx + dir;
+    if (newIdx < 0 || newIdx >= students.length) return;
+    saveCurrentStudentEval();
+    currentStudentIdx = newIdx;
+    updateStudentNav();
+    loadStudentEval(currentStudentIdx);
+    window.scrollTo(0, 0);
+}
+
+function goToStudent(idx) {
+    if (idx === currentStudentIdx) return;
+    saveCurrentStudentEval();
+    currentStudentIdx = idx;
+    updateStudentNav();
+    loadStudentEval(currentStudentIdx);
+}
+
+// ── Summary view ──
+
+function showSummary() {
+    saveCurrentStudentEval();
+
+    const students = getActiveStudents();
+    const evals = getEvaluations();
+    const session = evals[getSessionKey()] || {};
+    const maxPerRow = Math.max(...rubricLevels.map(l => l.pts));
+    const totalWeight = rubricData.reduce((s, c) => s + c.weight, 0);
+
+    let overlay = document.getElementById('summaryOverlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'summary-overlay';
+        overlay.id = 'summaryOverlay';
+        document.body.appendChild(overlay);
+    }
+
+    let evaluated = 0;
+    let totalNota = 0;
+    const rows = students.map((name, i) => {
+        const data = session[i];
+        const scores = data ? data.scores || {} : {};
+        const filled = Object.keys(scores).length;
+
+        if (filled === 0) {
+            return `<tr onclick="goToStudentFromSummary(${i})" style="cursor:pointer">
+                <td>${i + 1}</td><td>${esc(name)}</td>
+                <td style="color:var(--slate-400)">—</td>
+                <td><span class="summary-grade sg-none">${t('not_evaluated')}</span></td>
+            </tr>`;
+        }
+
+        let weightedPct = 0;
+        for (const [idx, pts] of Object.entries(scores)) {
+            const w = rubricData[idx].weight;
+            weightedPct += (pts / maxPerRow) * (w / totalWeight);
+        }
+        const nota = (weightedPct * 10).toFixed(2);
+        evaluated++;
+        totalNota += parseFloat(nota);
+
+        let gClass, gLabel;
+        if (weightedPct >= 0.9) { gClass = 'sg-sob'; gLabel = t('scale_sob'); }
+        else if (weightedPct >= 0.7) { gClass = 'sg-not'; gLabel = t('scale_not'); }
+        else if (weightedPct >= 0.6) { gClass = 'sg-bien'; gLabel = t('scale_bien'); }
+        else if (weightedPct >= 0.5) { gClass = 'sg-suf'; gLabel = t('scale_suf'); }
+        else { gClass = 'sg-ins'; gLabel = t('scale_ins'); }
+
+        return `<tr onclick="goToStudentFromSummary(${i})" style="cursor:pointer">
+            <td>${i + 1}</td><td><strong>${esc(name)}</strong></td>
+            <td style="font-family:'JetBrains Mono',monospace;font-weight:600">${nota}</td>
+            <td><span class="summary-grade ${gClass}">${gLabel}</span></td>
+        </tr>`;
+    }).join('');
+
+    const avgNota = evaluated > 0 ? (totalNota / evaluated).toFixed(2) : '—';
+
+    overlay.innerHTML = `<div class="summary-box">
+        <div class="summary-header">
+            <h3>${t('summary_title')}</h3>
+            <button class="summary-close" onclick="closeSummary()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <table class="summary-table">
+            <thead><tr><th>#</th><th>${t('student_default')}</th><th>${t('score_word')}</th><th>${t('grade_word')}</th></tr></thead>
+            <tbody>${rows}</tbody>
+        </table>
+        <div class="summary-avg">
+            <span>${t('evaluated_word')}: ${evaluated}/${students.length}</span>
+            <span>${t('summary_avg')}: <strong>${avgNota}</strong> / 10</span>
+        </div>
+    </div>`;
+
+    overlay.classList.add('open');
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeSummary();
+    });
+}
+
+function closeSummary() {
+    const o = document.getElementById('summaryOverlay');
+    if (o) o.classList.remove('open');
+}
+
+function goToStudentFromSummary(idx) {
+    closeSummary();
+    goToStudent(idx);
+}
 </script>
 </body>
 </html>

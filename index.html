@@ -1269,51 +1269,7 @@
         .student-card { display: none; }
         .multi-mode .student-card { display: block; }
 
-        .student-card .card-title svg { width: 16px; height: 16px; }
-
-        .student-paste-row {
-            display: flex;
-            gap: 10px;
-            align-items: flex-end;
-            margin-bottom: 12px;
-        }
-        .student-paste-row .form-group { flex: 1; margin: 0; }
-        .student-paste-row .form-group:first-child { flex: 0.5; }
-
-        .student-paste-area {
-            width: 100%;
-            min-height: 70px;
-            max-height: 140px;
-            resize: vertical;
-            font-size: 0.85rem;
-        }
-
-        .student-save-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-top: 8px;
-        }
-        .student-save-btn {
-            padding: 7px 16px;
-            border: 1px solid var(--brand);
-            border-radius: var(--radius-xs);
-            background: var(--brand);
-            color: white;
-            font-size: 0.82rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.15s;
-            white-space: nowrap;
-        }
-        .student-save-btn:hover { background: var(--brand-dark); }
-
-        .slist-bar {
-            margin: 14px 0 0;
-            padding: 10px 14px;
-            background: white;
-            border: 1px solid var(--slate-200);
-            border-radius: var(--radius-sm);
+        .slist-compact {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -1340,6 +1296,20 @@
         }
         .slist-chips::-webkit-scrollbar { height: 4px; }
         .slist-chips::-webkit-scrollbar-thumb { background: var(--slate-200); border-radius: 2px; }
+        .slist-add-btn {
+            padding: 6px 14px;
+            border: 1px dashed var(--slate-300);
+            border-radius: 6px;
+            background: none;
+            color: var(--slate-500);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .slist-add-btn:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
         .slist-chip {
             display: inline-flex;
             align-items: center;
@@ -1376,26 +1346,101 @@
         .slist-chip .chip-delete:hover { color: var(--rose); background: var(--rose-bg); }
         .slist-chip .chip-delete svg { width: 12px; height: 12px; }
 
-        /* Active student list detail */
-        .slist-detail {
-            margin-top: 10px;
-            padding: 12px 14px;
-            background: var(--slate-50);
-            border: 1px solid var(--slate-200);
-            border-radius: var(--radius-sm);
+        /* Student list modal */
+        .slist-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: 500;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 60px 20px;
         }
-        .slist-detail-header {
+        .slist-modal-overlay.open { display: flex; }
+        .slist-modal {
+            background: white;
+            border-radius: var(--radius);
+            padding: 28px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .slist-modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 20px;
         }
-        .slist-detail-title {
+        .slist-modal-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .slist-modal-header h3 svg { width: 18px; height: 18px; color: var(--slate-400); }
+        .slist-modal-close {
+            width: 28px; height: 28px; border: none; background: var(--slate-100);
+            border-radius: 50%; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; color: var(--slate-500); transition: all 0.15s;
+        }
+        .slist-modal-close:hover { background: var(--slate-200); }
+        .slist-modal-close svg { width: 14px; height: 14px; }
+        .slist-modal .form-group { margin-bottom: 14px; }
+        .slist-modal .form-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--slate-600);
+            margin-bottom: 6px;
+        }
+        .slist-modal textarea.form-input {
+            width: 100%;
+            min-height: 120px;
+            max-height: 250px;
+            resize: vertical;
+            font-size: 0.85rem;
+        }
+        .slist-modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 18px;
+        }
+        .slist-modal-actions button {
+            padding: 8px 20px;
+            border-radius: var(--radius-xs);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .slist-modal-cancel {
+            border: 1px solid var(--slate-200);
+            background: white;
+            color: var(--slate-600);
+        }
+        .slist-modal-cancel:hover { background: var(--slate-50); }
+        .slist-modal-save {
+            border: 1px solid var(--brand);
+            background: var(--brand);
+            color: white;
+        }
+        .slist-modal-save:hover { background: var(--brand-dark); }
+
+        /* Student tags inside modal (edit mode) */
+        .slist-edit-section { margin-top: 18px; }
+        .slist-edit-title {
             font-size: 0.82rem;
             font-weight: 700;
-            color: var(--slate-700);
+            color: var(--slate-600);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .slist-delete-all-btn {
+        .slist-edit-delete-btn {
             font-size: 0.72rem;
             padding: 4px 10px;
             border: 1px solid var(--rose-border);
@@ -1406,7 +1451,7 @@
             font-weight: 600;
             transition: all 0.15s;
         }
-        .slist-delete-all-btn:hover { background: var(--rose); color: white; }
+        .slist-edit-delete-btn:hover { background: var(--rose); color: white; }
         .slist-students {
             display: flex;
             flex-wrap: wrap;
@@ -1416,11 +1461,11 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            padding: 3px 8px;
-            background: white;
+            padding: 4px 10px;
+            background: var(--slate-50);
             border: 1px solid var(--slate-200);
             border-radius: 4px;
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             color: var(--slate-600);
         }
         .slist-student-tag .st-del {
@@ -1720,33 +1765,18 @@
         </div>
     </div>
 
-    <!-- Student lists (multi-student mode) -->
+    <!-- Student lists bar (multi-student mode) -->
     <div class="card student-card" id="studentCard">
-        <div class="card-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <span data-i18n="student_lists">Listas de alumnos</span>
-        </div>
-        <div class="student-paste-row">
-            <div class="form-group">
-                <label data-i18n="group_name">Nombre del grupo</label>
-                <input class="form-input" type="text" id="slistName" data-i18n-placeholder="group_name_placeholder" placeholder="Ej: 3.&#xBA;A ESO">
-            </div>
-            <div class="form-group">
-                <label data-i18n="paste_students">Alumnos (uno por l&#xED;nea)</label>
-                <textarea class="form-input student-paste-area" id="slistPaste" data-i18n-placeholder="paste_students_placeholder" placeholder="Mar&#xED;a L&#xF3;pez&#10;Juan Garc&#xED;a&#10;Ana P&#xE9;rez&#10;..."></textarea>
-            </div>
-        </div>
-        <div class="student-save-row">
-            <button class="student-save-btn" onclick="saveStudentList()" data-i18n="save_list">+ Guardar lista</button>
-        </div>
-        <div class="slist-bar" id="slistBar" style="display:none">
+        <div class="slist-compact">
             <div class="slist-bar-title">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 <span data-i18n="my_lists">Mis listas</span>
             </div>
-            <div class="slist-chips" id="slistChips"></div>
+            <div class="slist-chips" id="slistChips">
+                <span class="library-empty" data-i18n="no_lists">Ninguna lista guardada</span>
+            </div>
+            <button class="slist-add-btn" onclick="openStudentModal()" data-i18n="new_list">+ Nueva lista</button>
         </div>
-        <div id="slistDetail"></div>
     </div>
 
     <!-- Paste data -->
@@ -1982,6 +2012,10 @@ es: {
     paste_students: 'Alumnos (uno por línea)',
     paste_students_placeholder: 'María López\nJuan García\nAna Pérez\n...',
     save_list: '+ Guardar lista',
+    new_list: '+ Nueva lista',
+    edit_list: 'Editar lista',
+    no_lists: 'Ninguna lista guardada',
+    group_default: 'Grupo',
     my_lists: 'Mis listas',
     delete_list: 'Eliminar lista',
     students_word: 'alumnos',
@@ -2078,6 +2112,10 @@ ca: {
     paste_students: 'Alumnes (un per línia)',
     paste_students_placeholder: 'Maria López\nJoan García\nAna Pérez\n...',
     save_list: '+ Desar llista',
+    new_list: '+ Nova llista',
+    edit_list: 'Editar llista',
+    no_lists: 'Cap llista desada',
+    group_default: 'Grup',
     my_lists: 'Les meves llistes',
     delete_list: 'Eliminar llista',
     students_word: 'alumnes',
@@ -2176,6 +2214,10 @@ eu: {
     paste_students: 'Ikasleak (bat lerroko)',
     paste_students_placeholder: 'Maria Lopez\nJon Garcia\nAne Perez\n...',
     save_list: '+ Zerrenda gorde',
+    new_list: '+ Zerrenda berria',
+    edit_list: 'Zerrenda editatu',
+    no_lists: 'Ez dago zerrendarik gordeta',
+    group_default: 'Taldea',
     my_lists: 'Nire zerrendak',
     delete_list: 'Zerrenda ezabatu',
     students_word: 'ikasle',
@@ -2274,6 +2316,10 @@ gl: {
     paste_students: 'Alumnos (un por liña)',
     paste_students_placeholder: 'María López\nXoán García\nAna Pérez\n...',
     save_list: '+ Gardar lista',
+    new_list: '+ Nova lista',
+    edit_list: 'Editar lista',
+    no_lists: 'Ningunha lista gardada',
+    group_default: 'Grupo',
     my_lists: 'As miñas listas',
     delete_list: 'Eliminar lista',
     students_word: 'alumnos',
@@ -2372,6 +2418,10 @@ va: {
     paste_students: 'Alumnes (un per línia)',
     paste_students_placeholder: 'Maria López\nJoan García\nAna Pérez\n...',
     save_list: '+ Guardar llista',
+    new_list: '+ Nova llista',
+    edit_list: 'Editar llista',
+    no_lists: 'Cap llista guardada',
+    group_default: 'Grup',
     my_lists: 'Les meues llistes',
     delete_list: 'Eliminar llista',
     students_word: 'alumnes',
@@ -2470,6 +2520,10 @@ en: {
     paste_students: 'Students (one per line)',
     paste_students_placeholder: 'Mary Smith\nJohn Davis\nAnna Wilson\n...',
     save_list: '+ Save list',
+    new_list: '+ New list',
+    edit_list: 'Edit list',
+    no_lists: 'No lists saved',
+    group_default: 'Group',
     my_lists: 'My lists',
     delete_list: 'Delete list',
     students_word: 'students',
@@ -3600,6 +3654,96 @@ function saveStudentListsStore(lists) {
     localStorage.setItem(SLIST_KEY, JSON.stringify(lists));
 }
 
+// ── Student list modal ──
+
+let editingListId = null; // when editing an existing list in the modal
+
+function openStudentModal(listId) {
+    editingListId = listId || null;
+    let overlay = document.getElementById('slistModalOverlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'slist-modal-overlay';
+        overlay.id = 'slistModalOverlay';
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeStudentModal();
+        });
+    }
+
+    const list = editingListId ? getStudentLists().find(l => l.id === editingListId) : null;
+    const title = list ? t('edit_list') : t('new_list');
+    const nameVal = list ? esc(list.name) : '';
+    const pasteVal = list ? list.students.join('\n') : '';
+
+    let editSection = '';
+    if (list) {
+        editSection = `<div class="slist-edit-section">
+            <div class="slist-edit-title">
+                <span>${list.students.length} ${t('students_word')}</span>
+                <button class="slist-edit-delete-btn" onclick="confirmDeleteList(${list.id}, '${esc(list.name)}', ${list.students.length})">${t('delete_list')}</button>
+            </div>
+            <div class="slist-students">
+                ${list.students.map((s, i) => `<span class="slist-student-tag">${esc(s)}<button class="st-del" onclick="removeStudentFromListModal(${list.id}, ${i})" title="${t('delete_title')}">&times;</button></span>`).join('')}
+            </div>
+        </div>`;
+    }
+
+    overlay.innerHTML = `<div class="slist-modal">
+        <div class="slist-modal-header">
+            <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                ${title}
+            </h3>
+            <button class="slist-modal-close" onclick="closeStudentModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="form-group">
+            <label data-i18n="group_name">${t('group_name')}</label>
+            <input class="form-input" type="text" id="slistName" value="${nameVal}" data-i18n-placeholder="group_name_placeholder" placeholder="${t('group_name_placeholder')}">
+        </div>
+        <div class="form-group">
+            <label data-i18n="paste_students">${t('paste_students')}</label>
+            <textarea class="form-input" id="slistPaste" data-i18n-placeholder="paste_students_placeholder" placeholder="${t('paste_students_placeholder')}">${pasteVal}</textarea>
+        </div>
+        ${editSection}
+        <div class="slist-modal-actions">
+            <button class="slist-modal-cancel" onclick="closeStudentModal()">${t('confirm_cancel')}</button>
+            <button class="slist-modal-save" onclick="saveStudentList()">${t('save_list')}</button>
+        </div>
+    </div>`;
+
+    overlay.classList.add('open');
+    setTimeout(() => document.getElementById('slistName').focus(), 50);
+}
+
+function closeStudentModal() {
+    const o = document.getElementById('slistModalOverlay');
+    if (o) o.classList.remove('open');
+    editingListId = null;
+}
+
+function removeStudentFromListModal(listId, studentIdx) {
+    const lists = getStudentLists();
+    const list = lists.find(l => l.id === listId);
+    if (!list) return;
+    list.students.splice(studentIdx, 1);
+    if (list.students.length === 0) {
+        const idx = lists.indexOf(list);
+        lists.splice(idx, 1);
+        if (activeListId === listId) activeListId = null;
+        saveStudentListsStore(lists);
+        closeStudentModal();
+        renderStudentLists();
+        return;
+    }
+    saveStudentListsStore(lists);
+    // Re-render modal in-place
+    openStudentModal(listId);
+    renderStudentLists();
+}
+
 function saveStudentList() {
     const name = document.getElementById('slistName').value.trim();
     const raw = document.getElementById('slistPaste').value.trim();
@@ -3609,28 +3753,38 @@ function saveStudentList() {
     const students = raw.split('\n').map(s => s.trim()).filter(Boolean);
     if (students.length === 0) return;
 
-    const entry = {
-        id: Date.now(),
-        name,
-        students,
-        savedAt: new Date().toISOString()
-    };
-
     const lists = getStudentLists();
-    const existIdx = lists.findIndex(l => l.name === name);
-    if (existIdx >= 0) {
-        lists[existIdx] = entry;
+
+    if (editingListId) {
+        const existing = lists.find(l => l.id === editingListId);
+        if (existing) {
+            existing.name = name;
+            existing.students = students;
+            existing.savedAt = new Date().toISOString();
+        }
     } else {
-        lists.unshift(entry);
+        const entry = {
+            id: Date.now(),
+            name,
+            students,
+            savedAt: new Date().toISOString()
+        };
+        const existIdx = lists.findIndex(l => l.name === name);
+        if (existIdx >= 0) {
+            lists[existIdx] = entry;
+            activeListId = entry.id;
+        } else {
+            lists.unshift(entry);
+            activeListId = entry.id;
+        }
     }
+
     if (lists.length > 30) lists.length = 30;
-
     saveStudentListsStore(lists);
-    document.getElementById('slistName').value = '';
-    document.getElementById('slistPaste').value = '';
 
-    activeListId = entry.id;
+    closeStudentModal();
     renderStudentLists();
+    updateFieldsForMulti();
     showToast(`"${name}" ${t('saved_toast')}`,
         '<svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>');
 }
@@ -3638,54 +3792,48 @@ function saveStudentList() {
 function renderStudentLists() {
     if (!MULTI_MODE) return;
     const lists = getStudentLists();
-    const bar = document.getElementById('slistBar');
     const chips = document.getElementById('slistChips');
-    const detail = document.getElementById('slistDetail');
 
     if (lists.length === 0) {
-        bar.style.display = 'none';
-        detail.innerHTML = '';
+        chips.innerHTML = `<span class="library-empty" data-i18n="no_lists">${t('no_lists')}</span>`;
         activeListId = null;
+        updateFieldsForMulti();
         return;
     }
 
-    bar.style.display = 'flex';
     chips.innerHTML = lists.map(l => {
         const isActive = l.id === activeListId;
         return `<div class="slist-chip ${isActive ? 'active' : ''}" onclick="selectStudentList(${l.id})">
             ${esc(l.name)}
             <span class="chip-count">${l.students.length}</span>
-            <button class="chip-delete" onclick="confirmDeleteList(${l.id}, '${esc(l.name)}', ${l.students.length}, event)" title="${t('delete_title')}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <button class="chip-delete" onclick="openStudentModal(${l.id}); event.stopPropagation();" title="${t('edit_list')}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </button>
         </div>`;
     }).join('');
-
-    // Render detail for active list
-    if (activeListId) {
-        const list = lists.find(l => l.id === activeListId);
-        if (list) {
-            detail.innerHTML = `<div class="slist-detail">
-                <div class="slist-detail-header">
-                    <span class="slist-detail-title">${esc(list.name)} (${list.students.length})</span>
-                    <button class="slist-delete-all-btn" onclick="confirmDeleteList(${list.id}, '${esc(list.name)}', ${list.students.length})" data-i18n="delete_list">${t('delete_list')}</button>
-                </div>
-                <div class="slist-students">
-                    ${list.students.map((s, i) => `<span class="slist-student-tag">${esc(s)}<button class="st-del" onclick="confirmDeleteStudent(${list.id}, ${i}, '${esc(s)}', '${esc(list.name)}')" title="${t('delete_title')}">&times;</button></span>`).join('')}
-                </div>
-            </div>`;
-        } else {
-            detail.innerHTML = '';
-            activeListId = null;
-        }
-    } else {
-        detail.innerHTML = '';
-    }
 }
 
 function selectStudentList(id) {
     activeListId = activeListId === id ? null : id;
     renderStudentLists();
+    updateFieldsForMulti();
+}
+
+// Auto-set fields to "Nombre" + "Grupo" when a list is activated
+function updateFieldsForMulti() {
+    if (!MULTI_MODE) return;
+    const editor = document.getElementById('fieldsEditor');
+    if (activeListId) {
+        editor.innerHTML = `
+            <div class="field-entry">
+                <input class="form-input" type="text" value="${t('student_default')}" data-i18n-placeholder="field_placeholder" placeholder="${t('field_placeholder')}">
+                <button class="remove-btn" onclick="removeField(this)" data-i18n-title="delete_title" title="${t('delete_title')}">&times;</button>
+            </div>
+            <div class="field-entry">
+                <input class="form-input" type="text" value="${t('group_default')}" data-i18n-placeholder="field_placeholder" placeholder="${t('field_placeholder')}">
+                <button class="remove-btn" onclick="removeField(this)" data-i18n-title="delete_title" title="${t('delete_title')}">&times;</button>
+            </div>`;
+    }
 }
 
 // ── Confirm dialog ──
@@ -3725,33 +3873,13 @@ function confirmDeleteList(id, name, count, evt) {
     );
 }
 
-function confirmDeleteStudent(listId, studentIdx, studentName, listName) {
-    showConfirm(
-        `${t('confirm_delete_student')} <strong>${studentName}</strong> ${t('confirm_from')} "${listName}"?`,
-        () => removeStudentFromList(listId, studentIdx)
-    );
-}
-
 function deleteStudentList(id) {
     const lists = getStudentLists().filter(l => l.id !== id);
     saveStudentListsStore(lists);
     if (activeListId === id) activeListId = null;
+    closeStudentModal();
     renderStudentLists();
-}
-
-function removeStudentFromList(listId, studentIdx) {
-    const lists = getStudentLists();
-    const list = lists.find(l => l.id === listId);
-    if (!list) return;
-    list.students.splice(studentIdx, 1);
-    if (list.students.length === 0) {
-        // Remove empty list
-        const idx = lists.indexOf(list);
-        lists.splice(idx, 1);
-        if (activeListId === listId) activeListId = null;
-    }
-    saveStudentListsStore(lists);
-    renderStudentLists();
+    updateFieldsForMulti();
 }
 
 // ── Student navigation in rubric screen ──
@@ -3847,10 +3975,13 @@ function loadStudentEval(idx) {
     if (data && data.fieldValues) {
         fields.forEach((input, i) => { input.value = data.fieldValues[i] || ''; });
     } else {
-        // Auto-fill first field with student name
+        // Auto-fill: first field = student name, second field = group name
         const students = getActiveStudents();
+        const activeList = activeListId ? getStudentLists().find(l => l.id === activeListId) : null;
         fields.forEach((input, i) => {
-            input.value = i === 0 ? (students[idx] || '') : '';
+            if (i === 0) input.value = students[idx] || '';
+            else if (i === 1 && activeList) input.value = activeList.name;
+            else input.value = '';
         });
     }
 

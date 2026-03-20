@@ -990,7 +990,7 @@
             .crit-name { font-size: 8pt; }
             .main-panel { padding: 0; }
             .top-bar { margin-bottom: 12px; }
-            .fields-row { margin-bottom: 10px; }
+            .fields-row { margin-bottom: 10px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
             .field-box { border: 1px solid #ccc; }
             .lvl:not([class*="sel-"]) .lvl-inner { opacity: 0.3; }
             * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -1017,7 +1017,7 @@
 
         @media (max-width: 768px) {
             .main-panel { padding: 16px; }
-            .fields-row { grid-template-columns: 1fr; }
+            .fields-row { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
             .rubric-wrapper { overflow-x: auto; }
             .rubric-table { min-width: 680px; }
             .top-bar { flex-direction: column; align-items: flex-start; }
@@ -1683,6 +1683,54 @@
             justify-content: space-between;
         }
 
+        .summary-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
+        .summary-tab {
+            padding: 6px 14px;
+            border: 1px solid var(--slate-200);
+            border-radius: 6px;
+            background: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--slate-500);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s;
+        }
+        .summary-tab:hover { border-color: var(--brand); color: var(--brand); }
+        .summary-tab.active { background: var(--brand); border-color: var(--brand); color: white; }
+        .summary-tab .tab-count {
+            font-size: 0.68rem;
+            background: rgba(255,255,255,0.2);
+            padding: 1px 5px;
+            border-radius: 8px;
+            margin-left: 4px;
+        }
+        .summary-tab:not(.active) .tab-count { background: var(--slate-100); color: var(--slate-400); }
+
+        .summary-dl-btn {
+            padding: 6px 14px;
+            border: 1px solid var(--slate-200);
+            border-radius: 6px;
+            background: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--slate-600);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .summary-dl-btn:hover { border-color: var(--brand); color: var(--brand); }
+        .summary-dl-btn svg { width: 14px; height: 14px; }
+
         @media print {
             .student-nav { display: none !important; }
         }
@@ -2028,6 +2076,9 @@ es: {
     btn_summary: 'Resumen',
     summary_title: 'Resumen de evaluaciones',
     summary_avg: 'Media',
+    summary_all: 'Todos',
+    summary_all_short: 'completo',
+    pdf_all_toast: 'PDF generado con todos los alumnos',
     example_csv: 'Indicador,Excelente (4),Bueno (3),Suficiente (2),Insuficiente (1)\nContenido y Precisión,"El tema se desarrolla con profundidad, ideas originales y datos precisos.","El tema se cubre bien, aunque falta algo de profundidad o detalle.","Información básica presente, pero con algunas omisiones o errores.","El contenido es escaso, irrelevante o contiene errores graves."\nEstructura y Organización,"Introducción, desarrollo y conclusión claramente definidos y conectados.","Sigue la estructura básica, aunque las transiciones son mejorables.","La estructura es confusa en algunos puntos; falta fluidez.","Carece de orden lógico; es difícil seguir el hilo del trabajo."\nRedacción y Ortografía,Texto impecable. Vocabulario variado y sin errores gramaticales.,Muy pocos errores (1-2) que no afectan la comprensión.,Varios errores gramaticales o de ortografía que distraen al leer.,Errores constantes que dificultan seriamente la lectura.\nCitas y Fuentes,Cita todas las fuentes correctamente siguiendo el formato pedido (ej. APA).,"La mayoría de las fuentes están citadas, con errores menores de formato.",Incluye fuentes pero no sigue un formato o faltan citas clave.,No incluye bibliografía ni cita las fuentes utilizadas.\nPresentación,"Cumple con todos los requisitos de formato (fuente, márgenes, limpieza).",Cumple casi todos los requisitos de formato.,Formato descuidado o incompleto.,No sigue ninguna instrucción de formato o entrega desprolija.',
 },
 ca: {
@@ -2128,6 +2179,9 @@ ca: {
     btn_summary: 'Resum',
     summary_title: 'Resum d\'avaluacions',
     summary_avg: 'Mitjana',
+    summary_all: 'Tots',
+    summary_all_short: 'complet',
+    pdf_all_toast: 'PDF generat amb tots els alumnes',
     example_title: 'Treball de Recerca',
     example_subtitle: '3r ESO · Llengua Catalana',
     example_csv: 'Indicador,Excel·lent (4),Bo (3),Suficient (2),Insuficient (1)\nContingut i Precisió,"El tema es desenvolupa amb profunditat, idees originals i dades precises.","El tema es cobreix bé, encara que falta una mica de profunditat o detall.","Informació bàsica present, però amb algunes omissions o errors.","El contingut és escàs, irrellevant o conté errors greus."\nEstructura i Organització,"Introducció, desenvolupament i conclusió clarament definits i connectats.","Segueix l\'estructura bàsica, encara que les transicions són millorables.","L\'estructura és confusa en alguns punts; falta fluïdesa.","Manca d\'ordre lògic; és difícil seguir el fil del treball."\nRedacció i Ortografia,Text impecable. Vocabulari variat i sense errors gramaticals.,Molt pocs errors (1-2) que no afecten la comprensió.,Diversos errors gramaticals o d\'ortografia que distreuen en llegir.,Errors constants que dificulten seriosament la lectura.\nCites i Fonts,Cita totes les fonts correctament seguint el format demanat (ex. APA).,"La majoria de les fonts estan citades, amb errors menors de format.",Inclou fonts però no segueix un format o falten cites clau.,No inclou bibliografia ni cita les fonts utilitzades.\nPresentació,"Compleix amb tots els requisits de format (font, marges, netedat).",Compleix gairebé tots els requisits de format.,Format descuidat o incomplet.,No segueix cap instrucció de format o lliurament desendreçat.',
@@ -2230,6 +2284,9 @@ eu: {
     btn_summary: 'Laburpena',
     summary_title: 'Ebaluazioen laburpena',
     summary_avg: 'Batez bestekoa',
+    summary_all: 'Denak',
+    summary_all_short: 'osoa',
+    pdf_all_toast: 'PDF sortua ikasle guztiekin',
     example_title: 'Ikerketa Lana',
     example_subtitle: 'DBH 3. · Euskara',
     example_csv: 'Adierazlea,Bikain (4),Ongi (3),Nahiko (2),Gutxi (1)\nEdukia eta Zehaztasuna,"Gaia sakontasunez garatzen da, ideia originalak eta datu zehatzak dituela.","Gaia ondo lantzen da, nahiz eta sakontasun edo xehetasun pixka bat falta.","Oinarrizko informazioa badago, baina hutsune edo akats batzuekin.","Edukia urria, garrantzirik gabekoa edo akats larriekin."\nEgitura eta Antolaketa,"Sarrera, garapena eta ondorioa argi definituta eta konektatuta.","Oinarrizko egitura jarraitzen du, nahiz eta trantsizioak hobetu daitezkeen.","Egitura nahasia puntu batzuetan; fluxu falta.","Ordena logikorik gabe; zaila da lanaren haria jarraitzea."\nIdazkera eta Ortografia,Testu ezin hobea. Hiztegi anitza eta akats gramatikal gabe.,Oso akats gutxi (1-2) ulermena kaltetzen ez dutenak.,Hainbat akats gramatikal edo ortografiko irakurtzean distraitzen dutenak.,Etengabeko akatsak irakurketa serioski zailtzen dutenak.\nAipamenak eta Iturriak,Iturri guztiak zuzen aipatzen ditu eskatutako formatua jarraituz (ad. APA).,"Iturri gehienak aipatuta daude, formatu-akats txikiekin.",Iturriak barne hartzen ditu baina ez du formaturik jarraitzen edo aipamen garrantzitsuak falta dira.,Ez du bibliografiarik ez eta erabilitako iturririk aipatzen.\nAurkezpena,"Formatu-baldintza guztiak betetzen ditu (letra-tipoa, marjinak, garbitasuna).",Formatu-baldintza ia guztiak betetzen ditu.,Formatua arduragabekoa edo osatugabea.,Ez du formatu-argibiderik jarraitzen edo entrega desegokia.',
@@ -2332,6 +2389,9 @@ gl: {
     btn_summary: 'Resumo',
     summary_title: 'Resumo de avaliacións',
     summary_avg: 'Media',
+    summary_all: 'Todos',
+    summary_all_short: 'completo',
+    pdf_all_toast: 'PDF xerado con todos os alumnos',
     example_title: 'Traballo de Investigación',
     example_subtitle: '3.º ESO · Lingua Galega',
     example_csv: 'Indicador,Excelente (4),Bo (3),Suficiente (2),Insuficiente (1)\nContido e Precisión,"O tema desenvólvese con profundidade, ideas orixinais e datos precisos.","O tema cóbrese ben, aínda que falta algo de profundidade ou detalle.","Información básica presente, pero con algunhas omisións ou erros.","O contido é escaso, irrelevante ou contén erros graves."\nEstrutura e Organización,"Introdución, desenvolvemento e conclusión claramente definidos e conectados.","Segue a estrutura básica, aínda que as transicións son mellorables.","A estrutura é confusa nalgúns puntos; falta fluidez.","Carece de orde lóxica; é difícil seguir o fío do traballo."\nRedacción e Ortografía,Texto impecable. Vocabulario variado e sen erros gramaticais.,Moi poucos erros (1-2) que non afectan a comprensión.,Varios erros gramaticais ou de ortografía que distraen ao ler.,Erros constantes que dificultan seriamente a lectura.\nCitas e Fontes,Cita todas as fontes correctamente seguindo o formato pedido (ex. APA).,"A maioría das fontes están citadas, con erros menores de formato.",Inclúe fontes pero non segue un formato ou faltan citas clave.,Non inclúe bibliografía nin cita as fontes utilizadas.\nPresentación,"Cumpre con todos os requisitos de formato (fonte, marxes, limpeza).",Cumpre case todos os requisitos de formato.,Formato descoidado ou incompleto.,Non segue ningunha instrución de formato ou entrega desaliñada.',
@@ -2434,6 +2494,9 @@ va: {
     btn_summary: 'Resum',
     summary_title: 'Resum d\'avaluacions',
     summary_avg: 'Mitjana',
+    summary_all: 'Tots',
+    summary_all_short: 'complet',
+    pdf_all_toast: 'PDF generat amb tots els alumnes',
     example_title: 'Treball d\'Investigació',
     example_subtitle: '3r ESO · Llengua Valenciana',
     example_csv: 'Indicador,Excel·lent (4),Bo (3),Suficient (2),Insuficient (1)\nContingut i Precisió,"El tema es desenvolupa amb profunditat, idees originals i dades precises.","El tema es cobreix bé, encara que falta una mica de profunditat o detall.","Informació bàsica present, però amb algunes omissions o errors.","El contingut és escàs, irrellevant o conté errors greus."\nEstructura i Organització,"Introducció, desenvolupament i conclusió clarament definits i connectats.","Segueix l\'estructura bàsica, encara que les transicions són millorables.","L\'estructura és confusa en alguns punts; falta fluïdesa.","Manca d\'orde lògic; és difícil seguir el fil del treball."\nRedacció i Ortografia,Text impecable. Vocabulari variat i sense errors gramaticals.,Molt pocs errors (1-2) que no afecten la comprensió.,Diversos errors gramaticals o d\'ortografia que distrauen en llegir.,Errors constants que dificulten seriosament la lectura.\nCites i Fonts,Cita totes les fonts correctament seguint el format demanat (ex. APA).,"La majoria de les fonts estan citades, amb errors menors de format.",Inclou fonts però no segueix un format o falten cites clau.,No inclou bibliografia ni cita les fonts utilitzades.\nPresentació,"Compleix amb tots els requisits de format (font, marges, netedat).",Compleix quasi tots els requisits de format.,Format descuidat o incomplet.,No segueix cap instrucció de format o lliurament desordenat.',
@@ -2536,6 +2599,9 @@ en: {
     btn_summary: 'Summary',
     summary_title: 'Evaluation summary',
     summary_avg: 'Average',
+    summary_all: 'All',
+    summary_all_short: 'all',
+    pdf_all_toast: 'PDF generated with all students',
     example_title: 'Research Project',
     example_subtitle: 'Year 9 · English Language',
     example_csv: 'Indicator,Excellent (4),Good (3),Sufficient (2),Insufficient (1)\nContent and Accuracy,"The topic is developed in depth with original ideas and accurate data.","The topic is well covered, though lacking some depth or detail.","Basic information present, but with some omissions or errors.","Content is scarce, irrelevant or contains serious errors."\nStructure and Organisation,"Introduction, development and conclusion clearly defined and connected.","Follows the basic structure, though transitions could be improved.","Structure is confusing at some points; lacks flow.","Lacks logical order; it is difficult to follow the thread of the work."\nWriting and Spelling,Flawless text. Varied vocabulary with no grammatical errors.,Very few errors (1-2) that do not affect comprehension.,Several grammatical or spelling errors that distract the reader.,Constant errors that seriously hinder reading.\nCitations and Sources,All sources correctly cited following the required format (e.g. APA).,"Most sources are cited, with minor formatting errors.",Includes sources but does not follow a format or key citations are missing.,Does not include bibliography or cite the sources used.\nPresentation,"Meets all formatting requirements (font, margins, neatness).",Meets almost all formatting requirements.,Careless or incomplete formatting.,Does not follow any formatting instructions or untidy submission.',
@@ -4077,14 +4143,42 @@ function goToStudent(idx) {
 
 // ── Summary view ──
 
-function showSummary() {
-    saveCurrentStudentEval();
+let summaryFilter = null; // null = all, or listId
 
-    const students = getActiveStudents();
+function calcStudentGrade(studentIdx) {
     const evals = getEvaluations();
     const session = evals[getSessionKey()] || {};
+    const data = session[studentIdx];
+    const scores = data ? data.scores || {} : {};
+    const filled = Object.keys(scores).length;
     const maxPerRow = Math.max(...rubricLevels.map(l => l.pts));
     const totalWeight = rubricData.reduce((s, c) => s + c.weight, 0);
+
+    if (filled === 0) return { filled: 0, nota: null, pct: 0, gClass: 'sg-none', gLabel: t('not_evaluated'), scores };
+
+    let weightedPct = 0;
+    for (const [idx, pts] of Object.entries(scores)) {
+        const w = rubricData[idx].weight;
+        weightedPct += (pts / maxPerRow) * (w / totalWeight);
+    }
+    const nota = (weightedPct * 10).toFixed(2);
+
+    let gClass, gLabel;
+    if (weightedPct >= 0.9) { gClass = 'sg-sob'; gLabel = t('scale_sob'); }
+    else if (weightedPct >= 0.7) { gClass = 'sg-not'; gLabel = t('scale_not'); }
+    else if (weightedPct >= 0.6) { gClass = 'sg-bien'; gLabel = t('scale_bien'); }
+    else if (weightedPct >= 0.5) { gClass = 'sg-suf'; gLabel = t('scale_suf'); }
+    else { gClass = 'sg-ins'; gLabel = t('scale_ins'); }
+
+    return { filled, nota, pct: weightedPct, gClass, gLabel, scores };
+}
+
+function showSummary(filterListId) {
+    saveCurrentStudentEval();
+    summaryFilter = filterListId !== undefined ? filterListId : null;
+
+    const allStudents = getActiveStudents();
+    const maxPerRow = Math.max(...rubricLevels.map(l => l.pts));
 
     let overlay = document.getElementById('summaryOverlay');
     if (!overlay) {
@@ -4092,75 +4186,247 @@ function showSummary() {
         overlay.className = 'summary-overlay';
         overlay.id = 'summaryOverlay';
         document.body.appendChild(overlay);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeSummary();
+        });
     }
+
+    // Build group tabs (only if multiple groups)
+    const groups = [];
+    const seenIds = new Set();
+    allStudents.forEach(st => {
+        if (!seenIds.has(st.listId)) {
+            seenIds.add(st.listId);
+            groups.push({ id: st.listId, name: st.listName });
+        }
+    });
+    const showTabs = groups.length > 1;
+
+    let tabsHtml = '';
+    if (showTabs) {
+        tabsHtml = `<div class="summary-tabs">
+            <div class="summary-tab ${summaryFilter === null ? 'active' : ''}" onclick="showSummary(null)">
+                ${t('summary_all')}<span class="tab-count">${allStudents.length}</span>
+            </div>
+            ${groups.map(g => {
+                const count = allStudents.filter(s => s.listId === g.id).length;
+                return `<div class="summary-tab ${summaryFilter === g.id ? 'active' : ''}" onclick="showSummary(${g.id})">
+                    ${esc(g.name)}<span class="tab-count">${count}</span>
+                </div>`;
+            }).join('')}
+        </div>`;
+    }
+
+    // Filter students
+    const filtered = summaryFilter !== null
+        ? allStudents.map((st, i) => ({ ...st, globalIdx: i })).filter(st => st.listId === summaryFilter)
+        : allStudents.map((st, i) => ({ ...st, globalIdx: i }));
 
     let evaluated = 0;
     let totalNota = 0;
-    const rows = students.map((st, i) => {
-        const data = session[i];
-        const scores = data ? data.scores || {} : {};
-        const filled = Object.keys(scores).length;
-        const groupTag = activeListIds.size > 1 ? ` <span style="color:var(--slate-400);font-size:0.75rem">(${esc(st.listName)})</span>` : '';
+    const rows = filtered.map((st, localIdx) => {
+        const grade = calcStudentGrade(st.globalIdx);
+        const groupTag = showTabs && summaryFilter === null ? ` <span style="color:var(--slate-400);font-size:0.75rem">(${esc(st.listName)})</span>` : '';
 
-        if (filled === 0) {
-            return `<tr onclick="goToStudentFromSummary(${i})" style="cursor:pointer">
-                <td>${i + 1}</td><td>${esc(st.name)}${groupTag}</td>
+        if (grade.filled === 0) {
+            return `<tr onclick="goToStudentFromSummary(${st.globalIdx})" style="cursor:pointer">
+                <td>${localIdx + 1}</td><td>${esc(st.name)}${groupTag}</td>
                 <td style="color:var(--slate-400)">—</td>
-                <td><span class="summary-grade sg-none">${t('not_evaluated')}</span></td>
+                <td><span class="summary-grade sg-none">${grade.gLabel}</span></td>
             </tr>`;
         }
 
-        let weightedPct = 0;
-        for (const [idx, pts] of Object.entries(scores)) {
-            const w = rubricData[idx].weight;
-            weightedPct += (pts / maxPerRow) * (w / totalWeight);
-        }
-        const nota = (weightedPct * 10).toFixed(2);
         evaluated++;
-        totalNota += parseFloat(nota);
+        totalNota += parseFloat(grade.nota);
 
-        let gClass, gLabel;
-        if (weightedPct >= 0.9) { gClass = 'sg-sob'; gLabel = t('scale_sob'); }
-        else if (weightedPct >= 0.7) { gClass = 'sg-not'; gLabel = t('scale_not'); }
-        else if (weightedPct >= 0.6) { gClass = 'sg-bien'; gLabel = t('scale_bien'); }
-        else if (weightedPct >= 0.5) { gClass = 'sg-suf'; gLabel = t('scale_suf'); }
-        else { gClass = 'sg-ins'; gLabel = t('scale_ins'); }
-
-        return `<tr onclick="goToStudentFromSummary(${i})" style="cursor:pointer">
-            <td>${i + 1}</td><td><strong>${esc(st.name)}</strong>${groupTag}</td>
-            <td style="font-family:'JetBrains Mono',monospace;font-weight:600">${nota}</td>
-            <td><span class="summary-grade ${gClass}">${gLabel}</span></td>
+        return `<tr onclick="goToStudentFromSummary(${st.globalIdx})" style="cursor:pointer">
+            <td>${localIdx + 1}</td><td><strong>${esc(st.name)}</strong>${groupTag}</td>
+            <td style="font-family:'JetBrains Mono',monospace;font-weight:600">${grade.nota}</td>
+            <td><span class="summary-grade ${grade.gClass}">${grade.gLabel}</span></td>
         </tr>`;
     }).join('');
 
     const avgNota = evaluated > 0 ? (totalNota / evaluated).toFixed(2) : '—';
+    const filterTitle = summaryFilter !== null ? groups.find(g => g.id === summaryFilter)?.name || '' : '';
+    const heading = summaryFilter !== null ? `${t('summary_title')} — ${esc(filterTitle)}` : t('summary_title');
 
     overlay.innerHTML = `<div class="summary-box">
         <div class="summary-header">
-            <h3>${t('summary_title')}</h3>
-            <button class="summary-close" onclick="closeSummary()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
+            <h3>${heading}</h3>
+            <div style="display:flex;gap:8px;align-items:center">
+                <button class="summary-dl-btn" onclick="downloadAllPDF()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    PDF ${t('summary_all_short')}
+                </button>
+                <button class="summary-close" onclick="closeSummary()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
         </div>
+        ${tabsHtml}
         <table class="summary-table">
             <thead><tr><th>#</th><th>${t('student_default')}</th><th>${t('score_word')}</th><th>${t('grade_word')}</th></tr></thead>
             <tbody>${rows}</tbody>
         </table>
         <div class="summary-avg">
-            <span>${t('evaluated_word')}: ${evaluated}/${students.length}</span>
+            <span>${t('evaluated_word')}: ${evaluated}/${filtered.length}</span>
             <span>${t('summary_avg')}: <strong>${avgNota}</strong> / 10</span>
         </div>
     </div>`;
 
     overlay.classList.add('open');
-    overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) closeSummary();
-    });
 }
 
 function closeSummary() {
     const o = document.getElementById('summaryOverlay');
     if (o) o.classList.remove('open');
+}
+
+// ── Multi-student PDF ──
+
+function downloadAllPDF() {
+    saveCurrentStudentEval();
+
+    const students = getActiveStudents();
+    const evals = getEvaluations();
+    const session = evals[getSessionKey()] || {};
+    const maxPerRow = Math.max(...rubricLevels.map(l => l.pts));
+    const totalWeight = rubricData.reduce((s, c) => s + c.weight, 0);
+    const title = document.getElementById('rubTitle').textContent || 'Rúbrica';
+    const subtitle = document.getElementById('rubSubtitle').textContent || '';
+
+    // Build groups for summary
+    const groups = [];
+    const seenIds = new Set();
+    students.forEach(st => {
+        if (!seenIds.has(st.listId)) {
+            seenIds.add(st.listId);
+            groups.push({ id: st.listId, name: st.listName });
+        }
+    });
+
+    // Summary table per group
+    let summaryHtml = '';
+    const renderGroup = (label, studs) => {
+        let evalCount = 0, totalN = 0;
+        const rows = studs.map((st, i) => {
+            const grade = calcStudentGrade(st.globalIdx);
+            if (grade.filled > 0) { evalCount++; totalN += parseFloat(grade.nota); }
+            const notaDisplay = grade.nota || '—';
+            return `<tr><td>${i+1}</td><td>${st.name}</td><td>${notaDisplay}</td><td><span class="sg ${grade.gClass}">${grade.gLabel}</span></td></tr>`;
+        }).join('');
+        const avg = evalCount > 0 ? (totalN / evalCount).toFixed(2) : '—';
+        return `<div class="pdf-group">
+            <h3>${label}</h3>
+            <table><thead><tr><th>#</th><th>${t('student_default')}</th><th>${t('score_word')}</th><th>${t('grade_word')}</th></tr></thead><tbody>${rows}</tbody></table>
+            <div class="pdf-avg">${t('evaluated_word')}: ${evalCount}/${studs.length} · ${t('summary_avg')}: ${avg}/10</div>
+        </div>`;
+    };
+
+    const indexedStudents = students.map((st, i) => ({ ...st, globalIdx: i }));
+    if (groups.length > 1) {
+        groups.forEach(g => {
+            const groupStudents = indexedStudents.filter(s => s.listId === g.id);
+            summaryHtml += renderGroup(g.name, groupStudents);
+        });
+    } else {
+        summaryHtml = renderGroup(groups[0]?.name || title, indexedStudents);
+    }
+
+    // Individual rubrics
+    let rubricPages = '';
+    students.forEach((st, i) => {
+        const grade = calcStudentGrade(i);
+        if (grade.filled === 0) return;
+
+        const data = session[i];
+        const fieldVals = data?.fieldValues || [];
+
+        // Build rubric table
+        let theadCells = `<th>${t('indicator')}</th>`;
+        rubricLevels.forEach(l => { theadCells += `<th>${l.name} (${l.pts})</th>`; });
+        theadCells += `<th>Pts</th>`;
+
+        let tbodyRows = '';
+        rubricData.forEach((c, ci) => {
+            let cells = `<td class="crit">${c.name} <span class="w">(${c.weight}%)</span></td>`;
+            rubricLevels.forEach((l, li) => {
+                const isSelected = grade.scores[ci] === l.pts;
+                const selClass = isSelected ? getSelClass(li, rubricLevels.length) : '';
+                cells += `<td class="${selClass}">${c.descriptions[li] || ''}</td>`;
+            });
+            const pts = grade.scores[ci];
+            cells += `<td class="pts">${pts !== undefined ? pts : '—'}</td>`;
+            tbodyRows += `<tr>${cells}</tr>`;
+        });
+
+        const nota = grade.nota || '—';
+        rubricPages += `<div class="page-break">
+            <div class="stu-header">
+                <div class="stu-fields">${st.name} · ${st.listName}</div>
+                <div class="stu-score">${t('score_word')}: ${nota}/10 — ${grade.gLabel}</div>
+            </div>
+            <table class="rubric"><thead><tr>${theadCells}</tr></thead><tbody>${tbodyRows}</tbody></table>
+        </div>`;
+    });
+
+    // Build full HTML page
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+    <title>${title} - ${t('summary_title')}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Figtree', -apple-system, sans-serif; font-size: 9pt; color: #1e293b; padding: 20px; }
+        h1 { font-size: 16pt; margin-bottom: 2px; }
+        h2 { font-size: 10pt; color: #64748b; font-weight: 400; margin-bottom: 16px; }
+        h3 { font-size: 11pt; margin-bottom: 8px; color: #334155; }
+        .pdf-group { margin-bottom: 20px; }
+        .pdf-group table { width: 100%; border-collapse: collapse; margin-bottom: 6px; }
+        .pdf-group th { text-align: left; padding: 5px 8px; background: #f1f5f9; border-bottom: 2px solid #e2e8f0; font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.04em; color: #475569; }
+        .pdf-group td { padding: 5px 8px; border-bottom: 1px solid #f1f5f9; }
+        .pdf-avg { font-size: 8.5pt; font-weight: 600; color: #475569; margin-bottom: 8px; }
+        .sg { padding: 1px 6px; border-radius: 3px; font-size: 7.5pt; font-weight: 600; }
+        .sg-sob { background: #d1fae5; color: #065f46; }
+        .sg-not { background: #dbeafe; color: #1e40af; }
+        .sg-bien { background: #fef3c7; color: #92400e; }
+        .sg-suf { background: #ffedd5; color: #9a3412; }
+        .sg-ins { background: #ffe4e6; color: #9f1239; }
+        .sg-none { background: #f1f5f9; color: #94a3b8; }
+        .page-break { page-break-before: always; padding-top: 10px; }
+        .stu-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+        .stu-fields { font-size: 11pt; font-weight: 700; }
+        .stu-score { font-size: 9pt; font-weight: 600; color: #475569; }
+        .rubric { width: 100%; border-collapse: collapse; font-size: 7.5pt; }
+        .rubric th { padding: 5px 6px; background: #f1f5f9; border: 1px solid #e2e8f0; font-size: 7pt; text-transform: uppercase; letter-spacing: 0.03em; color: #475569; text-align: center; }
+        .rubric th:first-child { text-align: left; }
+        .rubric td { padding: 5px 6px; border: 1px solid #e2e8f0; vertical-align: top; line-height: 1.3; }
+        .rubric .crit { font-weight: 600; white-space: nowrap; }
+        .rubric .w { color: #94a3b8; font-weight: 400; }
+        .rubric .pts { text-align: center; font-weight: 700; font-size: 8.5pt; }
+        .rubric .sel-top { background: #d1fae5; }
+        .rubric .sel-high { background: #fef3c7; }
+        .rubric .sel-mid { background: #ffedd5; }
+        .rubric .sel-low { background: #ffe4e6; }
+        @media print {
+            body { padding: 0; }
+            .page-break { page-break-before: always; }
+            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style></head><body>
+    <h1>${esc(title)}</h1>
+    <h2>${esc(subtitle)}</h2>
+    ${summaryHtml}
+    ${rubricPages}
+    </body></html>`;
+
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    win.onload = () => {
+        setTimeout(() => { win.print(); }, 300);
+    };
+
+    showToast(t('pdf_all_toast'),
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>');
 }
 
 function goToStudentFromSummary(idx) {

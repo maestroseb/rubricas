@@ -4112,7 +4112,7 @@ function initStudentNav() {
         return;
     }
 
-    document.getElementById('studentNav').style.display = 'flex';
+    document.getElementById('studentNav').style.display = 'block';
     const listKey = [...activeListIds].sort().join('+');
     evaluationSessionId = `${listKey}_${Date.now()}`;
 
@@ -4282,6 +4282,10 @@ function showSummary(filterListId) {
         <div class="summary-header">
             <h3>${heading}</h3>
             <div style="display:flex;gap:8px;align-items:center">
+                <button class="summary-dl-btn" onclick="copySummaryTable()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    ${t('btn_copy')}
+                </button>
                 <button class="summary-dl-btn" onclick="downloadAllPDF()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     PDF ${t('summary_all_short')}
@@ -4303,6 +4307,52 @@ function showSummary(filterListId) {
     </div>`;
 
     overlay.classList.add('open');
+}
+
+function copySummaryTable() {
+    saveCurrentStudentEval();
+    const allStudents = getActiveStudents();
+    const evals = getEvaluations();
+    const session = evals[getSessionKey()] || {};
+    const maxPerRow = Math.max(...rubricLevels.map(l => l.pts));
+
+    // Filter by active tab
+    const filtered = summaryFilter !== null
+        ? allStudents.map((st, i) => ({ ...st, globalIdx: i })).filter(st => st.listId === summaryFilter)
+        : allStudents.map((st, i) => ({ ...st, globalIdx: i }));
+
+    // Header row: Alumno/a + criterion names as codes
+    const headers = ['Alumno/a'];
+    rubricData.forEach(c => headers.push(c.name));
+    headers.push(t('score_word'));
+
+    // Data rows
+    const rows = filtered.map(st => {
+        const data = session[st.globalIdx];
+        const scores = data ? data.scores || {} : {};
+        const cols = [st.name];
+        rubricData.forEach((c, i) => {
+            if (scores[i] !== undefined) {
+                // Scale to 10 and format with comma decimal
+                const val = ((scores[i] / maxPerRow) * 10).toFixed(2).replace('.', ',');
+                cols.push(val);
+            } else {
+                cols.push('');
+            }
+        });
+        // Overall grade
+        const grade = calcStudentGrade(st.globalIdx);
+        cols.push(grade.nota ? grade.nota.replace('.', ',') : '');
+        return cols;
+    });
+
+    // Build TSV (tab-separated for paste into spreadsheets)
+    const tsv = [headers.join('\t'), ...rows.map(r => r.join('\t'))].join('\n');
+
+    navigator.clipboard.writeText(tsv).then(() => {
+        const copyIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+        showToast(t('copy_toast'), copyIcon);
+    });
 }
 
 function closeSummary() {

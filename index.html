@@ -1355,16 +1355,18 @@
             z-index: 500;
             justify-content: center;
             align-items: flex-start;
-            padding: 60px 20px;
+            padding: 40px 20px;
+            overflow-y: auto;
         }
         .slist-modal-overlay.open { display: flex; }
         .slist-modal {
             background: white;
             border-radius: var(--radius);
             padding: 28px;
-            max-width: 520px;
+            max-width: 700px;
             width: 100%;
             box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            margin: auto 0;
         }
         .slist-modal-header {
             display: flex;
@@ -1477,9 +1479,8 @@
         .slist-student-tag .st-del:hover { color: var(--rose); }
 
         /* Student navigation bar in rubric screen */
-        .student-nav { display: none; }
-        .multi-mode .student-nav { display: flex; }
         .student-nav {
+            display: none;
             align-items: center;
             gap: 10px;
             padding: 10px 16px;
@@ -3135,6 +3136,9 @@ const CIRC = 2 * Math.PI * 65;
 function generate() {
     if (!parsedResult) return;
 
+    // Multi-mode: ensure Nombre + Grupo fields before reading them
+    if (MULTI_MODE && activeListId) updateFieldsForMulti();
+
     const title = document.getElementById('cfgTitle').value.trim() || t('rubric_default');
     const subtitle = document.getElementById('cfgSubtitle').value.trim();
     const iconSvg = getSelectedIconSvg();
@@ -3236,8 +3240,14 @@ function generate() {
     document.getElementById('rubricScreen').style.display = 'block';
     window.scrollTo(0, 0);
 
-    // Multi-student: init navigation
-    if (MULTI_MODE && activeListId) initStudentNav();
+    // Multi-student: init or hide navigation
+    if (MULTI_MODE) {
+        if (activeListId && getActiveStudents().length > 0) {
+            initStudentNav();
+        } else {
+            document.getElementById('studentNav').style.display = 'none';
+        }
+    }
 }
 
 function getSelClass(levelIndex, totalLevels) {

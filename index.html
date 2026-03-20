@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RubricApp</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='10' y='6' width='44' height='54' rx='5' fill='%233b82f6'/%3E%3Crect x='14' y='14' width='36' height='42' rx='3' fill='white'/%3E%3Crect x='22' y='1' width='20' height='10' rx='5' fill='%232563eb'/%3E%3Ccircle cx='32' cy='6' r='3' fill='%23bfdbfe'/%3E%3Cpath d='M19 24 l3 3 l6-6' stroke='%2322c55e' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='32' y1='22' x2='46' y2='22' stroke='%23e2e8f0' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M19 34 l3 3 l6-6' stroke='%2322c55e' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='32' y1='32' x2='46' y2='32' stroke='%23e2e8f0' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M19 44 l3 3 l6-6' stroke='%23f59e0b' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='32' y1='42' x2='46' y2='42' stroke='%23e2e8f0' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
     <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -4426,8 +4427,8 @@ function copySummaryTable() {
     const criteriaStr = document.getElementById('cfgCriteria').value.trim();
     const criteriaList = criteriaStr ? criteriaStr.split(/\s*,\s*/).filter(Boolean) : [];
 
-    // Header row: Alumno/a + criterion names (or indicators) + overall score + grade
-    const headers = ['Alumno/a'];
+    // Header row: Alumno + criterion names (or indicators) + overall score + grade
+    const headers = ['Alumno'];
     rubricData.forEach(c => headers.push(c.name));
     if (criteriaList.length > 1) {
         criteriaList.forEach(c => headers.push(criterionCode(c)));

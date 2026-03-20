@@ -4427,8 +4427,8 @@ function copySummaryTable() {
     const criteriaStr = document.getElementById('cfgCriteria').value.trim();
     const criteriaList = criteriaStr ? criteriaStr.split(/\s*,\s*/).filter(Boolean) : [];
 
-    // Header row: Alumno/a + criterion names (or indicators) + overall score + grade
-    const headers = ['Alumno/a'];
+    // Header row: Alumno + criterion names (or indicators) + overall score + grade
+    const headers = ['Alumno'];
     rubricData.forEach(c => headers.push(c.name));
     if (criteriaList.length > 1) {
         criteriaList.forEach(c => headers.push(criterionCode(c)));

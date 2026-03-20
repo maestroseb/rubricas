@@ -3817,10 +3817,10 @@ applyI18n();
 renderLibrary();
 
 /* ═══════════════════════════════════════════════════
-   MULTI-STUDENT MODE (feature flag ?multi=1)
+   MULTI-STUDENT MODE
    ═══════════════════════════════════════════════════ */
 
-const MULTI_MODE = new URLSearchParams(window.location.search).has('multi');
+const MULTI_MODE = true;
 const SLIST_KEY = 'rubricapp_studentlists';
 const EVAL_KEY = 'rubricapp_evaluations';
 

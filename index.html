@@ -4677,12 +4677,22 @@ document.addEventListener('keydown', (e) => {
             if (cell) {
                 const selClass = cell.dataset.selClass;
                 pickRubric(cell, kbFocusRow, rubricLevels[levelIdx].pts, selClass);
+                // Auto-advance to next row (or next student on last row)
+                if (kbFocusRow < numRows - 1) {
+                    setKbFocus(kbFocusRow + 1);
+                } else {
+                    const students = getActiveStudents();
+                    if (MULTI_MODE && students.length > 0 && currentStudentIdx < students.length - 1) {
+                        navStudent(1);
+                        setKbFocus(0);
+                    }
+                }
             }
         }
         return;
     }
 
-    // Enter: advance to next row, or next student
+    // Enter: advance to next row, or next student (still useful for skipping rows)
     if (e.key === 'Enter') {
         e.preventDefault();
         if (kbFocusRow < 0) {
@@ -4692,7 +4702,6 @@ document.addEventListener('keydown', (e) => {
         if (kbFocusRow < numRows - 1) {
             setKbFocus(kbFocusRow + 1);
         } else {
-            // Last row — advance to next student if multi-mode
             const students = getActiveStudents();
             if (MULTI_MODE && students.length > 0 && currentStudentIdx < students.length - 1) {
                 navStudent(1);

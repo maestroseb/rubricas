@@ -1001,6 +1001,8 @@
             .fields-row { margin-bottom: 10px; }
             .field-box { border: 1px solid #ccc; }
             .lvl:not([class*="sel-"]) .lvl-inner { opacity: 0.3; }
+            .rubric-table tbody tr.kb-focus { outline: none; }
+            .rubric-table tbody tr.kb-focus .criterion-cell { background: transparent; }
             * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
 
@@ -1820,9 +1822,9 @@
                 <label><span data-i18n="subtitle_label">Subt&#xED;tulo</span> <span class="hint" data-i18n="subtitle_hint">(opcional)</span></label>
                 <input class="form-input" type="text" id="cfgSubtitle" data-i18n-placeholder="subtitle_placeholder" placeholder="Ej: 6.o Primaria - CEIP Carlos III">
             </div>
-            <div class="form-group">
+            <div class="form-group" style="margin-top:10px">
                 <label><span data-i18n="criteria_label">Criterio(s) de evaluaci&#xF3;n</span> <span class="hint" data-i18n="criteria_hint">(opcional &middot; se autodetecta de los datos si es posible)</span></label>
-                <input class="form-input" type="text" id="cfgCriteria" data-i18n-placeholder="criteria_placeholder" placeholder="Ej: CE 3.1, 4.2">
+                <input class="form-input" type="text" id="cfgCriteria" data-i18n-placeholder="criteria_placeholder" placeholder="Ej: LCL.3.1.2">
                 <p class="criteria-suggestion" id="criteriaSuggestion" style="display:none;font-size:0.8rem;color:var(--brand);margin-top:4px;cursor:pointer"></p>
             </div>
         </div>
@@ -2022,7 +2024,7 @@ es: {
     subtitle_placeholder: 'Ej: 6.º Primaria - CEIP Carlos III',
     criteria_label: 'Criterio(s) de evaluación',
     criteria_hint: '(opcional · se autodetecta de los datos si es posible)',
-    criteria_placeholder: 'Ej: CE 3.1, 4.2',
+    criteria_placeholder: 'Ej: LCL.3.1.2, LCL.3.9.1',
     criteria_suggestion: 'Sugerencia detectada: ',
     criteria_use: 'Usar',
     student_fields: 'Campos del alumno',
@@ -2132,7 +2134,7 @@ ca: {
     subtitle_placeholder: 'Ex: 6è Primària - CEIP Carlos III',
     criteria_label: 'Criteri(s) d\'avaluació',
     criteria_hint: '(opcional · s\'autodetecta de les dades si és possible)',
-    criteria_placeholder: 'Ex: CE 3.1, 4.2',
+    criteria_placeholder: 'Ex: LCL.3.1.2, LCL.3.9.1',
     criteria_suggestion: 'Suggeriment detectat: ',
     criteria_use: 'Usar',
     student_fields: 'Camps de l\'alumne',
@@ -2242,7 +2244,7 @@ eu: {
     subtitle_placeholder: 'Ad: LH 6. maila - Carlos III HLHI',
     criteria_label: 'Ebaluazio-irizpidea(k)',
     criteria_hint: '(aukerakoa · datuetatik automatikoki detektatzen da ahal bada)',
-    criteria_placeholder: 'Ad: EI 3.1, 4.2',
+    criteria_placeholder: 'Ad: LCL.3.1.2, LCL.3.9.1',
     criteria_suggestion: 'Detektatutako iradokizuna: ',
     criteria_use: 'Erabili',
     student_fields: 'Ikaslearen eremuak',
@@ -2352,7 +2354,7 @@ gl: {
     subtitle_placeholder: 'Ex: 6.º Primaria - CEIP Carlos III',
     criteria_label: 'Criterio(s) de avaliación',
     criteria_hint: '(opcional · autodetéctase dos datos se é posible)',
-    criteria_placeholder: 'Ex: CE 3.1, 4.2',
+    criteria_placeholder: 'Ex: LCL.3.1.2, LCL.3.9.1',
     criteria_suggestion: 'Suxestión detectada: ',
     criteria_use: 'Usar',
     student_fields: 'Campos do alumno',
@@ -2462,7 +2464,7 @@ va: {
     subtitle_placeholder: 'Ex: 6é Primària - CEIP Carlos III',
     criteria_label: 'Criteri(s) d\'avaluació',
     criteria_hint: '(opcional · s\'autodetecta de les dades si és possible)',
-    criteria_placeholder: 'Ex: CE 3.1, 4.2',
+    criteria_placeholder: 'Ex: LCL.3.1.2, LCL.3.9.1',
     criteria_suggestion: 'Suggeriment detectat: ',
     criteria_use: 'Usar',
     student_fields: 'Camps de l\'alumne',
@@ -2572,7 +2574,7 @@ en: {
     subtitle_placeholder: 'E.g.: Grade 6 - Springfield Elementary',
     criteria_label: 'Assessment criteria',
     criteria_hint: '(optional · auto-detected from data if possible)',
-    criteria_placeholder: 'E.g.: SC 3.1, 4.2',
+    criteria_placeholder: 'E.g.: LCL.3.1.2, LCL.3.9.1',
     criteria_suggestion: 'Detected suggestion: ',
     criteria_use: 'Use',
     student_fields: 'Student fields',
@@ -3076,9 +3078,9 @@ function suggestCriteriaFromData(raw, headerRow, dataRows) {
     // Don't suggest if user already filled it
     if (cfgCriteria.value.trim()) { suggestionEl.style.display = 'none'; return; }
 
-    // Look for criteria-code patterns like CE 3.1, CC 4.2, EI 3.1, SC 3.1, etc.
-    // Common Spanish curriculum patterns: CE, CC, CCL, STEM, CD, CPSAA, CC, CCEC, CP
-    const criteriaPattern = /\b(CE|CC|CCL|STEM|CD|CPSAA|CCEC|CP|EI|SC|AC)\s*\d+[\.\d]*/gi;
+    // Look for criteria-code patterns like CE 3.1, LCL.3.1.2, MAT.2.1, etc.
+    // Common Spanish curriculum patterns: CE, CC, CCL, STEM, CD, CPSAA, CCEC, CP, LCL, MAT, CN, CS, EA, EF, LCE, LCL
+    const criteriaPattern = /\b(CE|CC|CCL|STEM|CD|CPSAA|CCEC|CP|EI|SC|AC|LCL|MAT|CN|CS|EA|EF|LCE|INF|MUS|EPV|TEC|BIO|FYQ|GEH|LCA|LCR)[.\s]*\d+[\.\d]*/gi;
 
     // Search in the first column (indicator names) of data rows
     const allFirstCols = dataRows.map(r => r[0] || '').join(' ');
@@ -4332,6 +4334,10 @@ function showSummary(filterListId) {
         ? allStudents.map((st, i) => ({ ...st, globalIdx: i })).filter(st => st.listId === summaryFilter)
         : allStudents.map((st, i) => ({ ...st, globalIdx: i }));
 
+    // Parse criteria for summary columns
+    const criteriaStr = document.getElementById('cfgCriteria').value.trim();
+    const criteriaList = criteriaStr ? criteriaStr.split(/\s*,\s*/).filter(Boolean) : [];
+
     let evaluated = 0;
     let totalNota = 0;
     const rows = filtered.map((st, localIdx) => {
@@ -4339,9 +4345,12 @@ function showSummary(filterListId) {
         const groupTag = showTabs && summaryFilter === null ? ` <span style="color:var(--slate-400);font-size:0.75rem">(${esc(st.listName)})</span>` : '';
 
         if (grade.filled === 0) {
+            const emptyCritCols = criteriaList.length > 1
+                ? criteriaList.map(() => '<td style="color:var(--slate-400)">—</td>').join('')
+                : '<td style="color:var(--slate-400)">—</td>';
             return `<tr onclick="goToStudentFromSummary(${st.globalIdx})" style="cursor:pointer">
                 <td>${localIdx + 1}</td><td>${esc(st.name)}${groupTag}</td>
-                <td style="color:var(--slate-400)">—</td>
+                ${emptyCritCols}
                 <td><span class="summary-grade sg-none">${grade.gLabel}</span></td>
             </tr>`;
         }
@@ -4349,9 +4358,14 @@ function showSummary(filterListId) {
         evaluated++;
         totalNota += parseFloat(grade.nota);
 
+        const notaCell = `<td style="font-family:'JetBrains Mono',monospace;font-weight:600">${grade.nota}</td>`;
+        const critCols = criteriaList.length > 1
+            ? criteriaList.map(() => notaCell).join('')
+            : notaCell;
+
         return `<tr onclick="goToStudentFromSummary(${st.globalIdx})" style="cursor:pointer">
             <td>${localIdx + 1}</td><td><strong>${esc(st.name)}</strong>${groupTag}</td>
-            <td style="font-family:'JetBrains Mono',monospace;font-weight:600">${grade.nota}</td>
+            ${critCols}
             <td><span class="summary-grade ${grade.gClass}">${grade.gLabel}</span></td>
         </tr>`;
     }).join('');
@@ -4379,7 +4393,7 @@ function showSummary(filterListId) {
         </div>
         ${tabsHtml}
         <table class="summary-table">
-            <thead><tr><th>#</th><th>${t('student_default')}</th><th>${t('score_word')}</th><th>${t('grade_word')}</th></tr></thead>
+            <thead><tr><th>#</th><th>${t('student_default')}</th>${criteriaList.length > 1 ? criteriaList.map(c => `<th>${esc(c)}</th>`).join('') : `<th>${criteriaList.length === 1 ? esc(criteriaList[0]) : t('score_word')}</th>`}<th>${t('grade_word')}</th></tr></thead>
             <tbody>${rows}</tbody>
         </table>
         <div class="summary-avg">
@@ -4403,10 +4417,21 @@ function copySummaryTable() {
         ? allStudents.map((st, i) => ({ ...st, globalIdx: i })).filter(st => st.listId === summaryFilter)
         : allStudents.map((st, i) => ({ ...st, globalIdx: i }));
 
-    // Header row: Alumno/a + criterion names as codes
+    // Parse criteria for copy columns
+    const criteriaStr = document.getElementById('cfgCriteria').value.trim();
+    const criteriaList = criteriaStr ? criteriaStr.split(/\s*,\s*/).filter(Boolean) : [];
+
+    // Header row: Alumno/a + criterion names (or indicators) + overall score + grade
     const headers = ['Alumno/a'];
     rubricData.forEach(c => headers.push(c.name));
-    headers.push(t('score_word'));
+    if (criteriaList.length > 1) {
+        criteriaList.forEach(c => headers.push(c));
+    } else if (criteriaList.length === 1) {
+        headers.push(criteriaList[0]);
+    } else {
+        headers.push(t('score_word'));
+    }
+    headers.push(t('grade_word'));
 
     // Data rows
     const rows = filtered.map(st => {
@@ -4422,9 +4447,15 @@ function copySummaryTable() {
                 cols.push('');
             }
         });
-        // Overall grade
+        // Overall grade (repeated for each criteria column if multiple)
         const grade = calcStudentGrade(st.globalIdx);
-        cols.push(grade.nota ? grade.nota.replace('.', ',') : '');
+        const notaVal = grade.nota ? grade.nota.replace('.', ',') : '';
+        if (criteriaList.length > 1) {
+            criteriaList.forEach(() => cols.push(notaVal));
+        } else {
+            cols.push(notaVal);
+        }
+        cols.push(grade.gLabel || '');
         return cols;
     });
 

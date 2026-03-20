@@ -4493,12 +4493,14 @@ document.addEventListener('keydown', (e) => {
     const numLevels = rubricLevels.length;
     const numRows = rubricData.length;
 
-    // Number keys 1-9: select level for focused row
+    // Number keys 0-9: select the level whose POINTS match the pressed number
     const keyNum = parseInt(e.key);
-    if (keyNum >= 1 && keyNum <= 9 && keyNum <= numLevels) {
+    if (!isNaN(keyNum) && keyNum >= 0 && keyNum <= 9) {
+        // Find the level index whose pts matches the pressed number
+        const levelIdx = rubricLevels.findIndex(l => l.pts === keyNum);
+        if (levelIdx === -1) return; // no level with those points — ignore
         e.preventDefault();
         if (kbFocusRow < 0) setKbFocus(0);
-        const levelIdx = keyNum - 1;
         const row = document.querySelectorAll('#rubTbody tr')[kbFocusRow];
         if (row) {
             const cell = row.querySelectorAll('.lvl')[levelIdx];

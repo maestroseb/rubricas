@@ -1817,8 +1817,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <label><span data-i18n="subtitle_label">Subt&#xED;tulo</span> <span class="hint" data-i18n="subtitle_hint">(opcional &middot; puedes indicar los criterios de evaluaci&#xF3;n asociados)</span></label>
-                <input class="form-input" type="text" id="cfgSubtitle" data-i18n-placeholder="subtitle_placeholder" placeholder="Ej: CE 3.1, 4.2 &middot; 6.o Primaria - CEIP Carlos III">
+                <label><span data-i18n="subtitle_label">Subt&#xED;tulo</span> <span class="hint" data-i18n="subtitle_hint">(opcional)</span></label>
+                <input class="form-input" type="text" id="cfgSubtitle" data-i18n-placeholder="subtitle_placeholder" placeholder="Ej: 6.o Primaria - CEIP Carlos III">
+            </div>
+            <div class="form-group">
+                <label><span data-i18n="criteria_label">Criterio(s) de evaluaci&#xF3;n</span> <span class="hint" data-i18n="criteria_hint">(opcional &middot; se autodetecta de los datos si es posible)</span></label>
+                <input class="form-input" type="text" id="cfgCriteria" data-i18n-placeholder="criteria_placeholder" placeholder="Ej: CE 3.1, 4.2">
+                <p class="criteria-suggestion" id="criteriaSuggestion" style="display:none;font-size:0.8rem;color:var(--brand);margin-top:4px;cursor:pointer"></p>
             </div>
         </div>
 
@@ -1904,6 +1909,7 @@
                     <div>
                         <h1 id="rubTitle"></h1>
                         <div class="subtitle" id="rubSubtitle"></div>
+                        <div class="subtitle" id="rubCriteria" style="color:var(--slate-500);font-weight:500"></div>
                     </div>
                 </div>
                 <div class="top-actions">
@@ -2012,8 +2018,13 @@ es: {
     rubric_title_label: 'Título de la rúbrica',
     title_placeholder: 'Ej: Mi Instrumento de la Orquesta',
     subtitle_label: 'Subtítulo',
-    subtitle_hint: '(opcional · puedes indicar los criterios de evaluación asociados)',
-    subtitle_placeholder: 'Ej: CE 3.1, 4.2 · 6.º Primaria - CEIP Carlos III',
+    subtitle_hint: '(opcional)',
+    subtitle_placeholder: 'Ej: 6.º Primaria - CEIP Carlos III',
+    criteria_label: 'Criterio(s) de evaluación',
+    criteria_hint: '(opcional · se autodetecta de los datos si es posible)',
+    criteria_placeholder: 'Ej: CE 3.1, 4.2',
+    criteria_suggestion: 'Sugerencia detectada: ',
+    criteria_use: 'Usar',
     student_fields: 'Campos del alumno',
     student_fields_help: 'Campos que aparecen encima de la tabla para rellenar (nombre, grupo, etc.)',
     student_default: 'Alumno/a',
@@ -2117,8 +2128,13 @@ ca: {
     rubric_title_label: 'Títol de la rúbrica',
     title_placeholder: 'Ex: El meu Instrument de l\'Orquestra',
     subtitle_label: 'Subtítol',
-    subtitle_hint: '(opcional · pots indicar els criteris d\'avaluació associats)',
-    subtitle_placeholder: 'Ex: CE 3.1, 4.2 · 6è Primària - CEIP Carlos III',
+    subtitle_hint: '(opcional)',
+    subtitle_placeholder: 'Ex: 6è Primària - CEIP Carlos III',
+    criteria_label: 'Criteri(s) d\'avaluació',
+    criteria_hint: '(opcional · s\'autodetecta de les dades si és possible)',
+    criteria_placeholder: 'Ex: CE 3.1, 4.2',
+    criteria_suggestion: 'Suggeriment detectat: ',
+    criteria_use: 'Usar',
     student_fields: 'Camps de l\'alumne',
     student_fields_help: 'Camps que apareixen a sobre de la taula per omplir (nom, grup, etc.)',
     student_default: 'Alumne/a',
@@ -2222,8 +2238,13 @@ eu: {
     rubric_title_label: 'Errubrikaren izenburua',
     title_placeholder: 'Ad: Nire Orkestra Tresna',
     subtitle_label: 'Azpititulua',
-    subtitle_hint: '(aukerakoa · ebaluazio-irizpide lotesgarriak adieraz ditzakezu)',
-    subtitle_placeholder: 'Ad: EI 3.1, 4.2 · LH 6. maila - Carlos III HLHI',
+    subtitle_hint: '(aukerakoa)',
+    subtitle_placeholder: 'Ad: LH 6. maila - Carlos III HLHI',
+    criteria_label: 'Ebaluazio-irizpidea(k)',
+    criteria_hint: '(aukerakoa · datuetatik automatikoki detektatzen da ahal bada)',
+    criteria_placeholder: 'Ad: EI 3.1, 4.2',
+    criteria_suggestion: 'Detektatutako iradokizuna: ',
+    criteria_use: 'Erabili',
     student_fields: 'Ikaslearen eremuak',
     student_fields_help: 'Taularen gainean bete beharreko eremuak (izena, taldea, etab.)',
     student_default: 'Ikaslea',
@@ -2327,8 +2348,13 @@ gl: {
     rubric_title_label: 'Título da rúbrica',
     title_placeholder: 'Ex: O meu Instrumento da Orquestra',
     subtitle_label: 'Subtítulo',
-    subtitle_hint: '(opcional · podes indicar os criterios de avaliación asociados)',
-    subtitle_placeholder: 'Ex: CE 3.1, 4.2 · 6.º Primaria - CEIP Carlos III',
+    subtitle_hint: '(opcional)',
+    subtitle_placeholder: 'Ex: 6.º Primaria - CEIP Carlos III',
+    criteria_label: 'Criterio(s) de avaliación',
+    criteria_hint: '(opcional · autodetéctase dos datos se é posible)',
+    criteria_placeholder: 'Ex: CE 3.1, 4.2',
+    criteria_suggestion: 'Suxestión detectada: ',
+    criteria_use: 'Usar',
     student_fields: 'Campos do alumno',
     student_fields_help: 'Campos que aparecen enriba da táboa para cubrir (nome, grupo, etc.)',
     student_default: 'Alumno/a',
@@ -2432,8 +2458,13 @@ va: {
     rubric_title_label: 'Títol de la rúbrica',
     title_placeholder: 'Ex: El meu Instrument de l\'Orquestra',
     subtitle_label: 'Subtítol',
-    subtitle_hint: '(opcional · pots indicar els criteris d\'avaluació associats)',
-    subtitle_placeholder: 'Ex: CE 3.1, 4.2 · 6é Primària - CEIP Carlos III',
+    subtitle_hint: '(opcional)',
+    subtitle_placeholder: 'Ex: 6é Primària - CEIP Carlos III',
+    criteria_label: 'Criteri(s) d\'avaluació',
+    criteria_hint: '(opcional · s\'autodetecta de les dades si és possible)',
+    criteria_placeholder: 'Ex: CE 3.1, 4.2',
+    criteria_suggestion: 'Suggeriment detectat: ',
+    criteria_use: 'Usar',
     student_fields: 'Camps de l\'alumne',
     student_fields_help: 'Camps que apareixen damunt de la taula per a omplir (nom, grup, etc.)',
     student_default: 'Alumne/a',
@@ -2537,8 +2568,13 @@ en: {
     rubric_title_label: 'Rubric title',
     title_placeholder: 'E.g.: My Orchestra Instrument',
     subtitle_label: 'Subtitle',
-    subtitle_hint: '(optional · you can specify associated assessment criteria)',
-    subtitle_placeholder: 'E.g.: SC 3.1, 4.2 · Grade 6 - Springfield Elementary',
+    subtitle_hint: '(optional)',
+    subtitle_placeholder: 'E.g.: Grade 6 - Springfield Elementary',
+    criteria_label: 'Assessment criteria',
+    criteria_hint: '(optional · auto-detected from data if possible)',
+    criteria_placeholder: 'E.g.: SC 3.1, 4.2',
+    criteria_suggestion: 'Detected suggestion: ',
+    criteria_use: 'Use',
     student_fields: 'Student fields',
     student_fields_help: 'Fields that appear above the table to fill in (name, group, etc.)',
     student_default: 'Student',
@@ -3030,7 +3066,34 @@ function clearData() {
     generateBtn.disabled = true;
     parsedResult = null;
     document.getElementById('clearDataBtn').style.display = 'none';
+    document.getElementById('criteriaSuggestion').style.display = 'none';
     dataArea.focus();
+}
+
+function suggestCriteriaFromData(raw, headerRow, dataRows) {
+    const suggestionEl = document.getElementById('criteriaSuggestion');
+    const cfgCriteria = document.getElementById('cfgCriteria');
+    // Don't suggest if user already filled it
+    if (cfgCriteria.value.trim()) { suggestionEl.style.display = 'none'; return; }
+
+    // Look for criteria-code patterns like CE 3.1, CC 4.2, EI 3.1, SC 3.1, etc.
+    // Common Spanish curriculum patterns: CE, CC, CCL, STEM, CD, CPSAA, CC, CCEC, CP
+    const criteriaPattern = /\b(CE|CC|CCL|STEM|CD|CPSAA|CCEC|CP|EI|SC|AC)\s*\d+[\.\d]*/gi;
+
+    // Search in the first column (indicator names) of data rows
+    const allFirstCols = dataRows.map(r => r[0] || '').join(' ');
+    const headerFirst = headerRow ? headerRow[0] || '' : '';
+    const textToSearch = `${headerFirst} ${allFirstCols} ${raw.substring(0, 500)}`;
+
+    const matches = [...new Set((textToSearch.match(criteriaPattern) || []).map(m => m.trim().toUpperCase()))];
+
+    if (matches.length > 0) {
+        const suggestion = matches.join(', ');
+        suggestionEl.innerHTML = `${t('criteria_suggestion')}<strong>${esc(suggestion)}</strong> — <a style="color:var(--brand);text-decoration:underline;cursor:pointer" onclick="document.getElementById('cfgCriteria').value='${suggestion}';document.getElementById('criteriaSuggestion').style.display='none'">${t('criteria_use')}</a>`;
+        suggestionEl.style.display = 'block';
+    } else {
+        suggestionEl.style.display = 'none';
+    }
 }
 
 function parseAndPreview() {
@@ -3039,6 +3102,7 @@ function parseAndPreview() {
         previewArea.innerHTML = '';
         generateBtn.disabled = true;
         parsedResult = null;
+        document.getElementById('criteriaSuggestion').style.display = 'none';
         return;
     }
 
@@ -3132,6 +3196,9 @@ function parseAndPreview() {
     // Store initial weights in parsedResult
     parsedResult.weights = [...weights];
 
+    // Auto-suggest criteria from data
+    suggestCriteriaFromData(raw, headerRow, dataRows);
+
     // Attach edit listeners to sync back to parsedResult
     previewArea.querySelectorAll('td[contenteditable]').forEach(td => {
         td.addEventListener('blur', () => {
@@ -3200,6 +3267,7 @@ function removeField(btn) {
 function loadExample() {
     document.getElementById('cfgTitle').value = t('example_title');
     document.getElementById('cfgSubtitle').value = t('example_subtitle');
+    document.getElementById('cfgCriteria').value = '';
     selectIcon('pencil');
 
     const editor = document.getElementById('fieldsEditor');
@@ -3234,6 +3302,7 @@ function generate() {
 
     const title = document.getElementById('cfgTitle').value.trim() || t('rubric_default');
     const subtitle = document.getElementById('cfgSubtitle').value.trim();
+    const criteria = document.getElementById('cfgCriteria').value.trim();
     const iconSvg = getSelectedIconSvg();
     const fieldNames = Array.from(document.querySelectorAll('.field-entry input')).map(i => i.value.trim()).filter(Boolean);
 
@@ -3254,6 +3323,14 @@ function generate() {
     document.getElementById('rubIcon').innerHTML = iconSvg || '';
     document.getElementById('rubTitle').textContent = title;
     document.getElementById('rubSubtitle').textContent = subtitle ? `${t('eval_subtitle')} \u00B7 ${subtitle}` : t('eval_subtitle');
+    const rubCriteriaEl = document.getElementById('rubCriteria');
+    if (criteria) {
+        rubCriteriaEl.textContent = `${t('criteria_label')}: ${criteria}`;
+        rubCriteriaEl.style.display = '';
+    } else {
+        rubCriteriaEl.textContent = '';
+        rubCriteriaEl.style.display = 'none';
+    }
     document.title = `${title} | RubricApp`;
 
     // Fields
@@ -3547,6 +3624,7 @@ function downloadPDF() {
 function copyResults() {
     const title = document.getElementById('rubTitle').textContent;
     const subtitle = document.getElementById('rubSubtitle').textContent;
+    const criteriaText = document.getElementById('rubCriteria').textContent;
     const filled = Object.keys(rubricScores).length;
 
     // Gather field values
@@ -3557,6 +3635,7 @@ function copyResults() {
     }).filter(Boolean);
 
     let text = `${title}\n${subtitle}\n`;
+    if (criteriaText) text += `${criteriaText}\n`;
     if (fields.length) text += fields.join(' | ') + '\n';
     text += '\n';
 
@@ -3623,12 +3702,14 @@ function saveLibrary(lib) {
 function saveRubricToLibrary() {
     const title = document.getElementById('cfgTitle').value.trim() || document.getElementById('rubTitle').textContent || t('untitled');
     const subtitle = document.getElementById('cfgSubtitle').value.trim();
+    const criteria = document.getElementById('cfgCriteria').value.trim();
     const fieldNames = Array.from(document.querySelectorAll('.field-entry input')).map(i => i.value.trim()).filter(Boolean);
 
     const entry = {
         id: Date.now(),
         title,
         subtitle,
+        criteria,
         icon: selectedIconId,
         fields: fieldNames,
         rawData: document.getElementById('cfgData').value,
@@ -3660,6 +3741,7 @@ function loadFromLibrary(id) {
 
     document.getElementById('cfgTitle').value = entry.title;
     document.getElementById('cfgSubtitle').value = entry.subtitle || '';
+    document.getElementById('cfgCriteria').value = entry.criteria || '';
     selectIcon(entry.icon || 'file-text');
 
     // Restore fields
@@ -4372,6 +4454,7 @@ function downloadAllPDF() {
     const totalWeight = rubricData.reduce((s, c) => s + c.weight, 0);
     const title = document.getElementById('rubTitle').textContent || 'Rúbrica';
     const subtitle = document.getElementById('rubSubtitle').textContent || '';
+    const criteriaText = document.getElementById('rubCriteria').textContent || '';
 
     // Build groups for summary
     const groups = [];
@@ -4492,6 +4575,7 @@ function downloadAllPDF() {
     </style></head><body>
     <h1>${esc(title)}</h1>
     <h2>${esc(subtitle)}</h2>
+    ${criteriaText ? `<p style="font-size:9pt;color:#475569;font-weight:500;margin-bottom:12px">${esc(criteriaText)}</p>` : ''}
     ${summaryHtml}
     ${rubricPages}
     </body></html>`;

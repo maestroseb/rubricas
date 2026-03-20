@@ -696,6 +696,8 @@
         .rubric-table tbody tr { border-bottom: 1px solid var(--slate-100); }
         .rubric-table tbody tr:last-child { border-bottom: none; }
         .rubric-table tbody tr:nth-child(even) .criterion-cell { background: var(--slate-50); }
+        .rubric-table tbody tr.kb-focus { outline: 2px solid var(--brand); outline-offset: -2px; border-radius: 2px; }
+        .rubric-table tbody tr.kb-focus .criterion-cell { background: var(--brand-light); }
 
         .criterion-cell {
             padding: 14px;
@@ -1487,44 +1489,47 @@
         /* Student navigation bar in rubric screen */
         .student-nav {
             display: none;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            padding: 12px 16px;
             background: var(--slate-50);
             border: 1px solid var(--slate-200);
             border-radius: var(--radius-sm);
             margin-bottom: 16px;
+            overflow: hidden;
         }
-        .student-nav-row {
+        .student-nav-inner {
             display: flex;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
+            align-items: stretch;
+        }
+        .student-nav-arrows {
+            display: flex;
+            flex-shrink: 0;
+            border-right: 1px solid var(--slate-200);
         }
         .student-nav-btn {
-            width: 28px; height: 28px;
-            border: 1px solid var(--slate-200);
-            border-radius: var(--radius-xs);
+            width: 36px;
+            border: none;
             background: white;
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            color: var(--slate-500);
+            color: var(--slate-400);
             transition: all 0.15s;
-            flex-shrink: 0;
         }
-        .student-nav-btn:hover { border-color: var(--brand); color: var(--brand); }
+        .student-nav-btn:first-child { border-right: 1px solid var(--slate-200); }
+        .student-nav-btn:hover { color: var(--brand); background: var(--brand-light); }
         .student-nav-btn:disabled { opacity: 0.3; cursor: default; }
-        .student-nav-btn:disabled:hover { border-color: var(--slate-200); color: var(--slate-500); }
+        .student-nav-btn:disabled:hover { background: white; color: var(--slate-400); }
         .student-nav-btn svg { width: 14px; height: 14px; }
-        .student-nav-center {
+        .student-nav-body {
             flex: 1;
-            text-align: center;
             min-width: 0;
+            padding: 8px 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4px;
         }
         .student-nav-name {
             font-weight: 700;
-            font-size: 0.92rem;
+            font-size: 0.88rem;
             color: var(--slate-800);
             white-space: nowrap;
             overflow: hidden;
@@ -1536,28 +1541,13 @@
             color: var(--slate-400);
             margin-left: 6px;
         }
-        .student-summary-btn {
-            padding: 5px 12px;
-            border: 1px solid var(--slate-200);
-            border-radius: var(--radius-xs);
-            background: white;
-            font-size: 0.76rem;
-            font-weight: 600;
-            color: var(--slate-600);
-            cursor: pointer;
-            transition: all 0.15s;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        .student-summary-btn:hover { border-color: var(--brand); color: var(--brand); }
         .student-nav-dots {
             display: flex;
             gap: 3px;
-            justify-content: center;
             flex-wrap: wrap;
         }
         .student-nav-dot {
-            width: 7px; height: 7px;
+            width: 6px; height: 6px;
             border-radius: 50%;
             background: var(--slate-200);
             transition: background 0.2s;
@@ -1566,6 +1556,20 @@
         .student-nav-dot.current { background: var(--brand); box-shadow: 0 0 0 2px var(--brand-light); }
         .student-nav-dot.evaluated { background: var(--emerald); }
         .student-nav-dot.current.evaluated { background: var(--brand); box-shadow: 0 0 0 2px var(--brand-light); }
+        .student-summary-btn {
+            padding: 0 16px;
+            border: none;
+            border-left: 1px solid var(--slate-200);
+            background: white;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--slate-600);
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .student-summary-btn:hover { color: var(--brand); background: var(--brand-light); }
 
         /* Confirm dialog */
         .confirm-overlay {
@@ -1930,19 +1934,21 @@
 
             <!-- Student navigation (multi-student mode) -->
             <div class="student-nav" id="studentNav">
-                <div class="student-nav-row">
-                    <button class="student-nav-btn" id="navPrev" onclick="navStudent(-1)">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-                    </button>
-                    <div class="student-nav-center">
-                        <div class="student-nav-name" id="navName"></div>
+                <div class="student-nav-inner">
+                    <div class="student-nav-arrows">
+                        <button class="student-nav-btn" id="navPrev" onclick="navStudent(-1)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+                        </button>
+                        <button class="student-nav-btn" id="navNext" onclick="navStudent(1)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
                     </div>
-                    <button class="student-nav-btn" id="navNext" onclick="navStudent(1)">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
-                    </button>
+                    <div class="student-nav-body">
+                        <div class="student-nav-name" id="navName"></div>
+                        <div class="student-nav-dots" id="navDots"></div>
+                    </div>
                     <button class="student-summary-btn" onclick="showSummary()" data-i18n="btn_summary">Resumen</button>
                 </div>
-                <div class="student-nav-dots" id="navDots"></div>
             </div>
 
             <div class="rubric-wrapper">
@@ -4455,6 +4461,110 @@ function goToStudentFromSummary(idx) {
     closeSummary();
     goToStudent(idx);
 }
+
+/* ═══════════════════════════════════════════════════
+   KEYBOARD NAVIGATION (rubric screen)
+   Keys 1-9: select level for focused row
+   Enter: advance to next row, or next student if last row
+   Arrow Up/Down: move focus between rows
+   ═══════════════════════════════════════════════════ */
+
+let kbFocusRow = -1; // -1 = no keyboard focus
+
+function setKbFocus(rowIdx) {
+    // Remove old focus
+    document.querySelectorAll('#rubTbody tr.kb-focus').forEach(tr => tr.classList.remove('kb-focus'));
+    kbFocusRow = rowIdx;
+    if (rowIdx < 0 || rowIdx >= rubricData.length) { kbFocusRow = -1; return; }
+    const tr = document.querySelectorAll('#rubTbody tr')[rowIdx];
+    if (tr) {
+        tr.classList.add('kb-focus');
+        tr.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+}
+
+document.addEventListener('keydown', (e) => {
+    // Only act on rubric screen
+    if (document.getElementById('rubricScreen').style.display !== 'block') return;
+    // Don't capture when typing in inputs/textareas or when modals are open
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+    if (document.querySelector('.summary-overlay.open, .confirm-overlay.open, .slist-modal-overlay.open')) return;
+
+    const numLevels = rubricLevels.length;
+    const numRows = rubricData.length;
+
+    // Number keys 1-9: select level for focused row
+    const keyNum = parseInt(e.key);
+    if (keyNum >= 1 && keyNum <= 9 && keyNum <= numLevels) {
+        e.preventDefault();
+        if (kbFocusRow < 0) setKbFocus(0);
+        const levelIdx = keyNum - 1;
+        const row = document.querySelectorAll('#rubTbody tr')[kbFocusRow];
+        if (row) {
+            const cell = row.querySelectorAll('.lvl')[levelIdx];
+            if (cell) {
+                const selClass = cell.dataset.selClass;
+                pickRubric(cell, kbFocusRow, rubricLevels[levelIdx].pts, selClass);
+            }
+        }
+        return;
+    }
+
+    // Enter: advance to next row, or next student
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        if (kbFocusRow < 0) {
+            setKbFocus(0);
+            return;
+        }
+        if (kbFocusRow < numRows - 1) {
+            setKbFocus(kbFocusRow + 1);
+        } else {
+            // Last row — advance to next student if multi-mode
+            const students = getActiveStudents();
+            if (MULTI_MODE && students.length > 0 && currentStudentIdx < students.length - 1) {
+                navStudent(1);
+                setKbFocus(0);
+            }
+        }
+        return;
+    }
+
+    // Arrow keys: move focus
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setKbFocus(kbFocusRow < 0 ? 0 : Math.min(kbFocusRow + 1, numRows - 1));
+        return;
+    }
+    if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setKbFocus(kbFocusRow <= 0 ? 0 : kbFocusRow - 1);
+        return;
+    }
+
+    // Left/Right arrows: navigate students
+    if (e.key === 'ArrowLeft' && MULTI_MODE && getActiveStudents().length > 0) {
+        e.preventDefault();
+        navStudent(-1);
+        setKbFocus(0);
+        return;
+    }
+    if (e.key === 'ArrowRight' && MULTI_MODE && getActiveStudents().length > 0) {
+        e.preventDefault();
+        navStudent(1);
+        setKbFocus(0);
+        return;
+    }
+});
+
+// Reset keyboard focus when generating or switching students
+const _origGenerate = generate;
+// Auto-reset kb focus when loading a student
+const _origLoadStudentEval = loadStudentEval;
+loadStudentEval = function(idx) {
+    _origLoadStudentEval(idx);
+    setKbFocus(0);
+};
 </script>
 </body>
 </html>

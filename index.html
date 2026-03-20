@@ -3982,17 +3982,21 @@ function loadStudentEval(idx) {
 
     // Restore field values
     const fields = document.querySelectorAll('#rubFields .field-box input');
+    const students = getActiveStudents();
+    const activeList = activeListId ? getStudentLists().find(l => l.id === activeListId) : null;
+
     if (data && data.fieldValues) {
         fields.forEach((input, i) => { input.value = data.fieldValues[i] || ''; });
     } else {
-        // Auto-fill: first field = student name, second field = group name
-        const students = getActiveStudents();
-        const activeList = activeListId ? getStudentLists().find(l => l.id === activeListId) : null;
-        fields.forEach((input, i) => {
-            if (i === 0) input.value = students[idx] || '';
-            else if (i === 1 && activeList) input.value = activeList.name;
-            else input.value = '';
-        });
+        fields.forEach((input, i) => { input.value = ''; });
+    }
+
+    // Always auto-fill name + group if empty
+    if (fields.length > 0 && !fields[0].value) {
+        fields[0].value = students[idx] || '';
+    }
+    if (fields.length > 1 && !fields[1].value && activeList) {
+        fields[1].value = activeList.name;
     }
 
     recalcRubric();

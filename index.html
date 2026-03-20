@@ -3137,7 +3137,7 @@ function generate() {
     if (!parsedResult) return;
 
     // Multi-mode: ensure Nombre + Grupo fields before reading them
-    if (MULTI_MODE && activeListId) updateFieldsForMulti();
+    if (MULTI_MODE && activeListIds.size > 0) updateFieldsForMulti();
 
     const title = document.getElementById('cfgTitle').value.trim() || t('rubric_default');
     const subtitle = document.getElementById('cfgSubtitle').value.trim();
@@ -3242,7 +3242,7 @@ function generate() {
 
     // Multi-student: init or hide navigation
     if (MULTI_MODE) {
-        if (activeListId && getActiveStudents().length > 0) {
+        if (activeListIds.size > 0 && getActiveStudents().length > 0) {
             initStudentNav();
         } else {
             document.getElementById('studentNav').style.display = 'none';
@@ -3411,7 +3411,7 @@ function resetRubric() {
 }
 
 function backToSetup() {
-    if (MULTI_MODE && activeListId) saveCurrentStudentEval();
+    if (MULTI_MODE && activeListIds.size > 0) saveCurrentStudentEval();
     document.getElementById('rubricScreen').style.display = 'none';
     document.getElementById('setupScreen').style.display = 'block';
     document.title = 'RubricApp';
@@ -3646,7 +3646,7 @@ const MULTI_MODE = new URLSearchParams(window.location.search).has('multi');
 const SLIST_KEY = 'rubricapp_studentlists';
 const EVAL_KEY = 'rubricapp_evaluations';
 
-let activeListId = null;
+let activeListIds = new Set();
 let currentStudentIdx = 0;
 let evaluationSessionId = null; // unique per generate() to scope evaluations
 
@@ -3742,7 +3742,7 @@ function removeStudentFromListModal(listId, studentIdx) {
     if (list.students.length === 0) {
         const idx = lists.indexOf(list);
         lists.splice(idx, 1);
-        if (activeListId === listId) activeListId = null;
+        activeListIds.delete(listId);
         saveStudentListsStore(lists);
         closeStudentModal();
         renderStudentLists();
@@ -3782,10 +3782,10 @@ function saveStudentList() {
         const existIdx = lists.findIndex(l => l.name === name);
         if (existIdx >= 0) {
             lists[existIdx] = entry;
-            activeListId = entry.id;
+            activeListIds.add(entry.id);
         } else {
             lists.unshift(entry);
-            activeListId = entry.id;
+            activeListIds.add(entry.id);
         }
     }
 
@@ -3806,13 +3806,13 @@ function renderStudentLists() {
 
     if (lists.length === 0) {
         chips.innerHTML = `<span class="library-empty" data-i18n="no_lists">${t('no_lists')}</span>`;
-        activeListId = null;
+        activeListIds.clear();
         updateFieldsForMulti();
         return;
     }
 
     chips.innerHTML = lists.map(l => {
-        const isActive = l.id === activeListId;
+        const isActive = activeListIds.has(l.id);
         return `<div class="slist-chip ${isActive ? 'active' : ''}" onclick="selectStudentList(${l.id})">
             ${esc(l.name)}
             <span class="chip-count">${l.students.length}</span>
@@ -3824,7 +3824,8 @@ function renderStudentLists() {
 }
 
 function selectStudentList(id) {
-    activeListId = activeListId === id ? null : id;
+    if (activeListIds.has(id)) activeListIds.delete(id);
+    else activeListIds.add(id);
     renderStudentLists();
     updateFieldsForMulti();
 }
@@ -3833,7 +3834,7 @@ function selectStudentList(id) {
 function updateFieldsForMulti() {
     if (!MULTI_MODE) return;
     const editor = document.getElementById('fieldsEditor');
-    if (activeListId) {
+    if (activeListIds.size > 0) {
         editor.innerHTML = `
             <div class="field-entry">
                 <input class="form-input" type="text" value="${t('student_default')}" data-i18n-placeholder="field_placeholder" placeholder="${t('field_placeholder')}">
@@ -3886,7 +3887,7 @@ function confirmDeleteList(id, name, count, evt) {
 function deleteStudentList(id) {
     const lists = getStudentLists().filter(l => l.id !== id);
     saveStudentListsStore(lists);
-    if (activeListId === id) activeListId = null;
+    activeListIds.delete(id);
     closeStudentModal();
     renderStudentLists();
     updateFieldsForMulti();
@@ -3895,10 +3896,18 @@ function deleteStudentList(id) {
 // ── Student navigation in rubric screen ──
 
 function getActiveStudents() {
-    if (!activeListId) return [];
+    if (activeListIds.size === 0) return [];
     const lists = getStudentLists();
-    const list = lists.find(l => l.id === activeListId);
-    return list ? list.students : [];
+    const result = [];
+    for (const id of activeListIds) {
+        const list = lists.find(l => l.id === id);
+        if (list) {
+            list.students.forEach(name => {
+                result.push({ name, listName: list.name, listId: list.id });
+            });
+        }
+    }
+    return result;
 }
 
 function getEvaluations() {
@@ -3983,7 +3992,7 @@ function loadStudentEval(idx) {
     // Restore field values
     const fields = document.querySelectorAll('#rubFields .field-box input');
     const students = getActiveStudents();
-    const activeList = activeListId ? getStudentLists().find(l => l.id === activeListId) : null;
+    const student = students[idx];
 
     if (data && data.fieldValues) {
         fields.forEach((input, i) => { input.value = data.fieldValues[i] || ''; });
@@ -3992,11 +4001,11 @@ function loadStudentEval(idx) {
     }
 
     // Always auto-fill name + group if empty
-    if (fields.length > 0 && !fields[0].value) {
-        fields[0].value = students[idx] || '';
+    if (fields.length > 0 && !fields[0].value && student) {
+        fields[0].value = student.name;
     }
-    if (fields.length > 1 && !fields[1].value && activeList) {
-        fields[1].value = activeList.name;
+    if (fields.length > 1 && !fields[1].value && student) {
+        fields[1].value = student.listName;
     }
 
     recalcRubric();
@@ -4010,11 +4019,12 @@ function initStudentNav() {
     }
 
     document.getElementById('studentNav').style.display = 'flex';
-    evaluationSessionId = `${activeListId}_${Date.now()}`;
+    const listKey = [...activeListIds].sort().join('+');
+    evaluationSessionId = `${listKey}_${Date.now()}`;
 
-    // Check if there's a previous session for this list
+    // Check if there's a previous session for this combination of lists
     const evals = getEvaluations();
-    const existingKeys = Object.keys(evals).filter(k => k.startsWith(`${activeListId}_`));
+    const existingKeys = Object.keys(evals).filter(k => k.startsWith(`${listKey}_`));
     if (existingKeys.length > 0) {
         // Use the most recent session
         evaluationSessionId = existingKeys.sort().pop();
@@ -4029,7 +4039,8 @@ function updateStudentNav() {
     const students = getActiveStudents();
     const n = students.length;
 
-    document.getElementById('navName').textContent = students[currentStudentIdx] || '';
+    const cur = students[currentStudentIdx];
+    document.getElementById('navName').textContent = cur ? cur.name : '';
     document.getElementById('navCounter').textContent = `${currentStudentIdx + 1} / ${n}`;
     document.getElementById('navPrev').disabled = currentStudentIdx === 0;
     document.getElementById('navNext').disabled = currentStudentIdx === n - 1;
@@ -4085,14 +4096,15 @@ function showSummary() {
 
     let evaluated = 0;
     let totalNota = 0;
-    const rows = students.map((name, i) => {
+    const rows = students.map((st, i) => {
         const data = session[i];
         const scores = data ? data.scores || {} : {};
         const filled = Object.keys(scores).length;
+        const groupTag = activeListIds.size > 1 ? ` <span style="color:var(--slate-400);font-size:0.75rem">(${esc(st.listName)})</span>` : '';
 
         if (filled === 0) {
             return `<tr onclick="goToStudentFromSummary(${i})" style="cursor:pointer">
-                <td>${i + 1}</td><td>${esc(name)}</td>
+                <td>${i + 1}</td><td>${esc(st.name)}${groupTag}</td>
                 <td style="color:var(--slate-400)">—</td>
                 <td><span class="summary-grade sg-none">${t('not_evaluated')}</span></td>
             </tr>`;
@@ -4115,7 +4127,7 @@ function showSummary() {
         else { gClass = 'sg-ins'; gLabel = t('scale_ins'); }
 
         return `<tr onclick="goToStudentFromSummary(${i})" style="cursor:pointer">
-            <td>${i + 1}</td><td><strong>${esc(name)}</strong></td>
+            <td>${i + 1}</td><td><strong>${esc(st.name)}</strong>${groupTag}</td>
             <td style="font-family:'JetBrains Mono',monospace;font-weight:600">${nota}</td>
             <td><span class="summary-grade ${gClass}">${gLabel}</span></td>
         </tr>`;
